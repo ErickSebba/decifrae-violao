@@ -1,0 +1,110 @@
+
+================================================================
+1. BENCH PRINCIPAL  (12 raízes x tríades+tétrades x ruídos)
+================================================================
+
+[Cosseno]
+  ... 91/364 casos  ... 182/364 casos  ... 273/364 casos  ... 364/364 casos  364 casos concluídos.            
+
+[V4 baseline]
+  ... 91/364 casos  ... 182/364 casos  ... 273/364 casos  ... 364/364 casos  364 casos concluídos.            
+
+--- Acurácia por CONDIÇÃO de ruído ---
+condição       |  cosseno |       V4
+--------------------------------------
+clean          |    67.3% |    15.4%
+white_30dB     |    67.3% |    15.4%
+white_15dB     |    67.3% |    15.4%
+white_5dB      |    67.3% |    15.4%
+pink_15dB      |    67.3% |    15.4%
+percussive     |    67.3% |    15.4%
+reverb         |    67.3% |    15.4%
+
+--- Acurácia por TIPO de acorde ---
+tipo     |  cosseno |       V4
+------------------------------
+6        |     0.0% |     0.0%
+7        |   100.0% |     0.0%
+aug      |    50.0% |     0.0%
+dim      |   100.0% |     0.0%
+dim7     |    25.0% |     0.0%
+m        |   100.0% |   100.0%
+m6       |   100.0% |     0.0%
+m7       |   100.0% |     0.0%
+m7b5     |     0.0% |     0.0%
+maj      |   100.0% |   100.0%
+maj7     |   100.0% |     0.0%
+sus2     |   100.0% |     0.0%
+sus4     |     0.0% |     0.0%
+
+--- Top confusões (cosseno) ---
+   Csus4 -> Fsus2   (7x)
+      C6 -> Am7     (7x)
+   Cm7b5 -> D#m6    (7x)
+  D#sus4 -> G#sus2  (7x)
+     D#6 -> Cm7     (7x)
+  D#dim7 -> Cdim7   (7x)
+  D#m7b5 -> F#m6    (7x)
+   F#aug -> Daug    (7x)
+  F#sus4 -> Bsus2   (7x)
+     F#6 -> D#m7    (7x)
+
+================================================================
+2. TESTE DE PAUSA  (ideal: 0% rotulado como acorde)
+================================================================
+
+[Cosseno]
+  ruído 0.005:   0.0% rotulado como acorde (0/30)
+  ruído 0.010:   0.0% rotulado como acorde (0/30)
+  ruído 0.020:   0.0% rotulado como acorde (0/30)
+  ruído 0.050:   0.0% rotulado como acorde (0/30)
+
+[V4 baseline]
+  ruído 0.005:   0.0% rotulado como acorde (0/30)
+  ruído 0.010:   0.0% rotulado como acorde (0/30)
+  ruído 0.020:  36.7% rotulado como acorde (11/30)
+  ruído 0.050: 100.0% rotulado como acorde (30/30)
+
+================================================================
+3. VARREDURA DE HARMÔNICOS  (maj/m/7/maj7, sem ruído)
+================================================================
+
+[Cosseno]
+  harmônicos= 1: acurácia 100.0%
+  harmônicos= 2: acurácia 100.0%
+  harmônicos= 3: acurácia 100.0%
+  harmônicos= 4: acurácia 100.0%
+  harmônicos= 5: acurácia 100.0%
+  harmônicos= 6: acurácia 100.0%
+  harmônicos= 7: acurácia 100.0%
+  harmônicos= 8: acurácia 100.0%
+  harmônicos= 9: acurácia 100.0%
+  harmônicos=10: acurácia 100.0%
+  harmônicos=11: acurácia 100.0%
+  harmônicos=12: acurácia 100.0%
+
+[V4 baseline]
+  harmônicos= 1: acurácia  50.0%
+  harmônicos= 2: acurácia  50.0%
+  harmônicos= 3: acurácia  50.0%
+  harmônicos= 4: acurácia  50.0%
+  harmônicos= 5: acurácia  50.0%
+  harmônicos= 6: acurácia  50.0%
+  harmônicos= 7: acurácia  50.0%
+  harmônicos= 8: acurácia  50.0%
+  harmônicos= 9: acurácia  50.0%
+  harmônicos=10: acurácia  50.0%
+  harmônicos=11: acurácia  50.0%
+  harmônicos=12: acurácia  50.0%
+
+================================================================
+ARQUIVOS GERADOS
+================================================================
+  out/acuracia_cosseno.png
+  out/bench_sintetico_log
+  out/confusao_cosseno.png
+  out/confusao_v4.png
+  out/musicas
+  out/musicas_bench
+  out/varredura_harmonicos.png
+RUN_BENCH_EXIT=0

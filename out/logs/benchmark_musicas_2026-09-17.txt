@@ -1,0 +1,24 @@
+====================================================================
+BENCHMARK EM ÁUDIO REAL — V4 vs ATUAL (mir_eval)
+====================================================================
+
+--- Tempo_Perdido ---
+nível      |       V4 |    Atual |       Δ
+------------------------------------------
+root       |    78.8% |    98.2% |  +19.4
+majmin     |    78.8% |    98.2% |  +19.4
+sevenths   |    78.8% |    98.2% |  +19.4
+mirex      |    78.8% |    98.2% |  +19.4
+
+--- Boate_azul__Am__2 ---
+nível      |       V4 |    Atual |       Δ
+------------------------------------------
+root       |    84.7% |    94.1% |   +9.4
+majmin     |    63.0% |    90.6% |  +27.6
+sevenths   |    50.3% |    78.6% |  +28.3
+mirex      |    63.0% |    90.6% |  +27.6
+
+Arquivos em: C:\Users\erick\dev\Decifrae-Artigo\Artigo2(Acordes)\DecifraViolão\out\musicas_bench
+  out/musicas_bench/comparativo.png
+  out/musicas_bench/metrics.json
+BENCH_MUS_EXIT=0
