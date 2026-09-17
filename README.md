@@ -1,38 +1,74 @@
-# Decifrae — Bench sintético de reconhecimento de acordes
+# Decifrae — módulo de reconhecimento de acordes (violão)
 
-Bancada de testes modular para medir e melhorar a acurácia do reconhecimento de
-acordes, com foco em escalar das tríades para acordes de 4 notas (tétrades).
+Reconhecimento de acordes em áudio de violão para o [decifrae.com.br](https://decifrae.com.br):
+**HPSS → chroma CQT sincronizado por batida → similaridade de cosseno contra
+60 templates → Viterbi → segmentos de acorde**. Inclui o baseline V4 original,
+um bench sintético e um benchmark em áudio real pontuado com `mir_eval`.
 
-A ideia central: gerar acordes sintéticos com **série harmônica** (não senóide
-pura), aplicar uma **bateria de ruídos** controlados, classificar e montar uma
-**matriz de confusão por condição** — descobrindo *onde* o algoritmo falha.
+Documentação completa em [`docs/`](docs/):
+
+| Documento | Para quê |
+|---|---|
+| [docs/DOSSIE_TECNICO.md](docs/DOSSIE_TECNICO.md) | Referência central: fluxo, módulos, decisões, inconsistências conhecidas, resultados |
+| [docs/TEMPLATES_ACORDES.md](docs/TEMPLATES_ACORDES.md) | Os 13 tipos, os 60 templates do vocabulário MEDIUM, ambiguidades |
+| [docs/HIPERPARAMETROS.md](docs/HIPERPARAMETROS.md) | Todos os hiperparâmetros, onde vivem, valores e faixas |
+| [docs/GROUND_TRUTH.md](docs/GROUND_TRUTH.md) | Anotações de Tempo Perdido e Boate Azul; como anotar novas faixas |
+| [docs/BENCHMARK.md](docs/BENCHMARK.md) | Como rodar os benchmarks, saídas brutas, uso como regressão |
+| [docs/CHANGELOG.md](docs/CHANGELOG.md) | Progressão v0.1 (V4) → v1.0 |
+
+## Como rodar hoje
+
+Requer Python ≥ 3.10 (testado em 3.14.6, librosa 0.11.0). Rodar sempre **de
+dentro desta pasta** — os módulos se importam pelo nome de arquivo.
+
+```bash
+pip install -r requirements.txt
+
+python musicas.py             # analisa Musicas/ -> segmentos no terminal + out/musicas/*_timeline.png
+python benchmark_musicas.py   # V4 vs atual em Tempo Perdido e Boate Azul (mir_eval) -> out/musicas_bench/
+python run_bench.py           # bench sintético cosseno vs V4 -> out/*.png
+```
+
+Smoke tests individuais: `python chord_templates.py`, `python classifier.py`,
+`python viterbi.py`, `python pipeline.py`, `python evaluate.py`.
+
+Para usar o pipeline em código:
+
+```python
+import librosa
+from chord_templates import build_templates, MEDIUM
+from classifier import CosineChordClassifier
+from pipeline import analyze_track
+
+y, sr = librosa.load("Musicas/Tempo_Perdido.mp3", sr=22050, mono=True)
+clf = CosineChordClassifier(templates=build_templates(MEDIUM),
+                            complexity_penalty=0.06, ext_sharpness=4.0)
+for seg in analyze_track(y, sr, clf):          # defaults = valores de musicas.py
+    print(f"{seg['start']:.1f}-{seg['end']:.1f}s  {seg['label']}")
+```
 
 ## Módulos
 
 | Arquivo | Papel |
 |---|---|
-| `chord_templates.py` | Vocabulário de acordes + templates binários de 12 dim. Base de tudo. |
-| `synth.py` | Síntese de acordes por série harmônica + geração de pausas. |
-| `noise.py` | Bateria de ruídos: branco, rosa, desafinação, percussão, reverb. |
-| `classifier.py` | Classificador por **cosseno** + `emission()` (p/ Viterbi) + gates. |
+| `chord_templates.py` | Vocabulário de acordes (13 tipos) + templates binários de 12 dim. Base de tudo. |
+| `classifier.py` | Classificador por **cosseno** com viés pró-tríade **adaptativo** + `emission()` p/ Viterbi + gates. **Versão atual.** |
+| `classifier_V2.py` | Versão anterior da mesma classe (prior fixo). Ainda importada por `pipeline.py`, `bench.py` e `run_bench.py` — ver dossiê §4.1. |
 | `viterbi.py` | Suavização temporal por **Viterbi/HMM** sobre as emissões de cosseno. |
-| `pipeline.py` | Segmentação por **beat-sync** (igual V4) + classificação + Viterbi. |
-| `musicas.py` | Analisa a pasta `Musicas/` e gera timeline por faixa. |
-| `bench.py` | Motor do bench: matriz de confusão, teste de pausa, varredura. |
+| `pipeline.py` | Segmentação por **beat-sync** (igual V4) + emissão + Viterbi + merge → `analyze_track`. |
+| `evaluate.py` | Pontuação com `mir_eval.chord` (root / majmin / sevenths / mirex). |
+| `musicas.py` | Analisa a pasta `Musicas/` e gera timeline por faixa. Hiperparâmetros no topo. |
+| `benchmark_musicas.py` | Benchmark em áudio real: ground truth embutido, V4 vs atual → `out/musicas_bench/`. |
+| `synth.py` | Síntese de acordes por série harmônica + pausas (bench sintético). |
+| `noise.py` | Bateria de ruídos: branco, rosa, desafinação, percussão, reverb. |
+| `bench.py` | Motor do bench sintético: matriz de confusão, teste de pausa, varredura. |
 | `run_bench.py` | Bench sintético: compara **cosseno vs V4**. |
-| `legacy_v4.py` | Seu **V4 + comparar_metodos preservados** e intocados (baseline). |
+| `legacy_v4.py` | **V4 + comparar_metodos preservados** e intocados (baseline). |
+| `Api/` | Cópia do backend FastAPI: `audio_processing (1).py` é o pipeline novo standalone. Ver dossiê §2.5. |
+| `Musicas/` | Áudios de teste (Tempo_Perdido, Boate azul (Am) 2, Sol_1, Re_2, TrocaDeAcordes). |
+| `out/` | Saídas geradas (timelines, PNGs do bench, `metrics.json`, logs). |
 
-## Como rodar
-
-```bash
-pip install librosa numpy scipy scikit-learn matplotlib soundfile
-python3 run_bench.py        # bench sintético (cosseno vs V4)
-python3 musicas.py          # analisa Musicas/ -> out/musicas/*.png
-```
-
-Coloque os áudios em `Musicas/`. A timeline e o log de acordes saem por faixa.
-
-## Pipeline de análise de faixa (musicas.py)
+## Pipeline de análise de faixa
 
 Ordem: **HPSS → beat-sync chroma → cosseno (emissão) → Viterbi → mescla**.
 
@@ -48,7 +84,7 @@ Pontos-chave da V2 (frente à primeira versão do musicas.py):
   de "tudo N" — sem depender do gate fixo de 0.72.
 - **Bug corrigido**: não há mais HPSS duplicado.
 
-Parâmetros no topo de `musicas.py`:
+Parâmetros no topo de `musicas.py` (tabela completa em [docs/HIPERPARAMETROS.md](docs/HIPERPARAMETROS.md)):
 - `CHANGE_PENALTY` (≈2.0): maior = timeline mais suave/grudenta.
 - `TEMP` (≈0.1): menor = emissão mais decidida.
 - `N_LOGPROB` (≈-2.5): mais negativo = N só em silêncio real.
@@ -61,19 +97,24 @@ Parâmetros no topo de `musicas.py`:
   reais (jazz/MPB), reduza p/ ~0.02 ou 0. **No classificador o default é 0**
   (p/ o bench medir cosseno puro); o viés é setado só na instância do musicas.
 
-Vocabulário atual: **MEDIUM** (maior, menor, 7, maj7, m7).
+Vocabulário atual: **MEDIUM** (maior, menor, 7, maj7, m7) = 60 templates.
 
-## Resultados em áudio real (violão)
+## Resultados
 
-Com o pipeline acima nas faixas de teste:
-- **Tempo_Perdido** (cifra C Am Bm Em em loop): reconhecido como N (intro) +
-  três ciclos limpos de C Am Bm Em. A faixa que antes saía 100% N.
-- **Sol_1** (G): N (intro) + G limpo, sem flicker.
-- **TrocaDeAcordes** (C G A F): C, G, A, F na ordem, com pequenos resíduos de
-  transição (~0.9s) nas bordas de troca.
+### Áudio real (`out/musicas_bench/metrics.json`, mir_eval)
 
+| Faixa | Nível | V4 | Atual |
+|---|---|---:|---:|
+| Tempo_Perdido (C Am Bm Em) | root = majmin = sevenths = mirex | 78,8 % | **98,2 %** |
+| Boate azul (Am) 2 | root | 84,7 % | **94,1 %** |
+| | majmin | 63,0 % | **90,6 %** |
+| | sevenths | 50,3 % | **78,6 %** |
 
-## O que o bench já revelou
+Qualitativo (28/06): Tempo_Perdido sai N (intro) + três ciclos limpos de
+C Am Bm Em (antes: 100 % N); Sol_1 sai N + G limpo; TrocaDeAcordes sai
+C, G, A, F na ordem com resíduos de ~0,9 s nas trocas.
+
+### O que o bench sintético revelou
 
 1. **Cosseno escala para tétrades; V4 não.** O V4 só conhece maior/menor, então
    em qualquer acorde de 4 notas ele devolve uma tríade. O cosseno acerta 7,
@@ -88,8 +129,8 @@ Com o pipeline acima nas faixas de teste:
    - `Cm7b5 = Ebm6`   ({C,Eb,Gb,Bb})
    - Acordes simétricos: `aug` (3 raízes equivalentes → ~33%), `dim7` (4 →
      ~25%). O bench confirma a teoria: a ambiguidade é exatamente o fator de
-     simetria. **Solução:** detecção de baixo/raiz (conecta com o módulo de
-     baixo / PYIN).
+     simetria. Nenhuma dessas ambiguidades existe dentro de MEDIUM.
+     **Solução:** detecção de baixo/raiz (conecta com o módulo de baixo / PYIN).
 
 3. **Gate de "sem acorde" funciona.** Nas pausas com ruído crescente, o cosseno
    mantém 0% de falso-positivo; o V4 começa a alucinar acordes a partir de ruído
@@ -100,9 +141,12 @@ Com o pipeline acima nas faixas de teste:
    harmônicos a acurácia se mantém em 100% (maj/m/7/maj7) — o cosseno não cai
    no maj→7 que derrubaria um scoring por soma de energia.
 
-## Próximos passos sugeridos
+## Próximos passos
 
-- Detecção de raiz/baixo para quebrar as ambiguidades de rotação e simetria.
-- Suavização por Viterbi/HMM sobre as emissões de cosseno (sequência temporal).
-- Validar em áudio real rotulado (ex.: `TrocaDeAcordes(C-G-A-F).wav`) com
-  `mir_eval.chord` para um número comparável/publicável (TCC).
+- Unificar `classifier.py` / `classifier_V2.py` e centralizar os hiperparâmetros
+  (hoje em 4 lugares — ver dossiê §4.3).
+- Fazer a API importar o núcleo em vez da cópia standalone em `Api/`.
+- Detecção de raiz/baixo para quebrar as ambiguidades de rotação e simetria
+  (necessário só ao ampliar o vocabulário além de MEDIUM).
+- Anotar mais faixas (ex.: `TrocaDeAcordes(C-G-A-F)`) para um número
+  comparável/publicável.
