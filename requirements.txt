@@ -1,0 +1,11 @@
+# Módulo de acordes (raiz): o que os .py realmente importam.
+numpy
+scipy
+librosa
+matplotlib
+mir_eval        # evaluate.py / benchmark_musicas.py
+
+# Api/ (cópia do backend) precisa adicionalmente de:
+# fastapi
+# python-multipart
+# uvicorn
