@@ -91,6 +91,19 @@ def test_E_bate_com_os_defaults_de_config():
     assert E.post == POST_CHROMA
 
 
+def test_nao_existe_variante_G_porque_seria_D():
+    """
+    "E com min_dur=0" é D campo por campo. Este teste existe para que ninguém
+    recrie uma variante G achando que ela mede outra coisa.
+    """
+    from dataclasses import replace
+    V = runner.VARIANTES
+    assert "G" not in V
+    G_seria = replace(V["E"].post, min_dur=0.0)
+    assert G_seria == V["D"].post
+    assert V["E"].pre == V["D"].pre
+
+
 def test_variantes_sao_incrementais():
     """Cada variante muda UM campo em relação à anterior."""
     V = runner.VARIANTES
@@ -195,6 +208,124 @@ def test_csv_tem_as_colunas_de_config_e_os_niveis():
         assert campo in runner.CSV_FIELDS
     for campo in POST_CHROMA.__dataclass_fields__:
         assert campo in runner.CSV_FIELDS
+
+
+# ==========================================================================
+# 5. F: vocabulário BASIC
+# ==========================================================================
+def test_F_usa_basic_e_D_usa_medium(faixa):
+    """F só pode emitir maj/min; D tem as 5 qualidades do MEDIUM."""
+    V = runner.VARIANTES
+    clf_d = runner.classificador_de(V["D"].post, V["D"].vocab)
+    clf_f = runner.classificador_de(V["F"].post, V["F"].vocab)
+
+    assert clf_d is not clf_f, "BASIC e MEDIUM compartilharam classificador"
+    assert len(clf_d.names) == 60
+    assert len(clf_f.names) == 24
+    assert not any(n.endswith(('7', 'maj7', 'm7')) for n in clf_f.names)
+
+    # F e D só diferem no vocabulário: o resto da config é o mesmo
+    assert V["F"].post == V["D"].post
+    assert V["F"].pre == V["D"].pre
+
+
+def test_F_nunca_emite_tetrade(faixa):
+    """Uma faixa com Cmaj7 sintético: D pode acertar a tétrade, F não pode."""
+    y = np.concatenate([synth_chord(0, 'maj7', sr=SR, dur=2.0, n_harmonics=6),
+                        synth_chord(7, '7', sr=SR, dur=2.0, n_harmonics=6)])
+    V = runner.VARIANTES
+    features = P.extract_features(y, SR, V["F"].pre)
+    rotulos_f = {lab for _, _, lab in runner.estimar(V["F"], features)}
+    assert all(lab in ('N',) or lab.rstrip('m') in
+               ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+               for lab in rotulos_f), f"F emitiu algo fora de BASIC: {rotulos_f}"
+
+
+# ==========================================================================
+# 6. V4b: o V4 sem os termos temporais
+# ==========================================================================
+def test_v4b_nao_tem_os_dois_termos_temporais():
+    """
+    V4b é stateless: o mesmo chroma dá o mesmo rótulo, e o resultado não
+    depende de nenhum acorde anterior. No V4 original, o +0.5 de inércia faz
+    o rótulo anterior mudar a resposta.
+    """
+    from legacy_v4 import classificar_segmento_v4
+
+    anteriores = ("C", "Cm", "G", "Am", "F", "Dm", "E", "A")
+    rng = np.random.default_rng(7)     # seed fixa: o teste não pode ser sorteio
+
+    sensiveis_v4 = 0
+    sensiveis_v4b = 0
+    for _ in range(300):
+        chroma = rng.random(12)
+        base_v4 = classificar_segmento_v4(chroma, "")
+        if any(classificar_segmento_v4(chroma, a) != base_v4 for a in anteriores):
+            sensiveis_v4 += 1
+        # V4b não recebe contexto: a resposta é uma só, por construção
+        base_v4b = runner.classificar_segmento_v4b(chroma)
+        if runner.classificar_segmento_v4b(chroma) != base_v4b:
+            sensiveis_v4b += 1
+
+    assert sensiveis_v4 > 0, ("o V4 original não mostrou dependência do acorde "
+                              "anterior na amostra: o teste não provaria nada")
+    assert sensiveis_v4b == 0
+
+
+def test_v4b_concorda_com_v4_quando_a_inercia_nao_pesa():
+    """
+    Sem acorde anterior o V4 não aplica nenhum dos dois termos, então V4b tem
+    de dar exatamente o mesmo rótulo. É o que garante que a cópia não divergiu
+    do original em outra coisa.
+    """
+    from legacy_v4 import classificar_segmento_v4
+    rng = np.random.default_rng(0)
+    for _ in range(200):
+        chroma = rng.random(12)
+        assert (runner.classificar_segmento_v4b(chroma)
+                == classificar_segmento_v4(chroma, "")), chroma.tolist()
+
+
+def test_v4b_gate_de_energia_preservado():
+    """O gate `sum < 0.1 -> ''` da cópia é o mesmo do original."""
+    from legacy_v4 import classificar_segmento_v4
+    quieto = np.zeros(12)
+    assert runner.classificar_segmento_v4b(quieto) == ""
+    assert classificar_segmento_v4(quieto, "") == ""
+
+
+# ==========================================================================
+# 7. Diagnóstico
+# ==========================================================================
+def test_diagnostico_em_caso_montado_a_mao():
+    """
+    4 s: 1 s certo, 1 s com tônica certa e qualidade errada, 1 s com tônica
+    errada, 1 s estimado como N (que conta como tônica errada -- N não tem
+    tônica).
+    """
+    ref = [(0.0, 1.0, 'C:maj'), (1.0, 2.0, 'C:maj'),
+           (2.0, 3.0, 'C:maj'), (3.0, 4.0, 'C:maj')]
+    est = [(0.0, 1.0, 'C'), (1.0, 2.0, 'Cm'), (2.0, 3.0, 'G'), (3.0, 4.0, 'N')]
+
+    d = runner.diagnostico(est, ref)
+    assert d["frac_n_est"] == pytest.approx(0.25)
+    assert d["frac_tonica_ok_qualidade_erro"] == pytest.approx(0.25)
+    assert d["frac_tonica_erro"] == pytest.approx(0.50)
+
+
+def test_diagnostico_perfeito_e_zero():
+    ref = [(0.0, 2.0, 'C:maj'), (2.0, 4.0, 'A:min')]
+    est = [(0.0, 2.0, 'C'), (2.0, 4.0, 'Am')]
+    d = runner.diagnostico(est, ref)
+    assert d["frac_n_est"] == pytest.approx(0.0)
+    assert d["frac_tonica_ok_qualidade_erro"] == pytest.approx(0.0)
+    assert d["frac_tonica_erro"] == pytest.approx(0.0)
+
+
+def test_colunas_de_diagnostico_no_csv():
+    for campo in runner.DIAG_FIELDS:
+        assert campo in runner.CSV_FIELDS
+    assert "n_segmentos_ref" in runner.CSV_FIELDS
 
 
 def test_linhas_do_manifest_respeitam_split_e_exclusao(tmp_path):
