@@ -17,7 +17,7 @@ import numpy as np
 
 from chord_templates import TRIADS, TETRADS, BASIC, build_templates
 from synth import synth_chord
-from classifier_V2 import CosineChordClassifier, chroma_vector, NO_CHORD
+from classifier import CosineChordClassifier, chroma_vector, NO_CHORD
 from legacy_v4 import classificar_segmento_v4
 import bench
 
