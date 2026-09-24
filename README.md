@@ -13,6 +13,7 @@ Documentação completa em [`docs/`](docs/):
 | [docs/TEMPLATES_ACORDES.md](docs/TEMPLATES_ACORDES.md) | Os 13 tipos, os 60 templates do vocabulário MEDIUM, ambiguidades |
 | [docs/HIPERPARAMETROS.md](docs/HIPERPARAMETROS.md) | Todos os hiperparâmetros, onde vivem, valores e faixas |
 | [docs/GROUND_TRUTH.md](docs/GROUND_TRUTH.md) | Anotações de Tempo Perdido e Boate Azul; como anotar novas faixas |
+| [docs/DATASETS.md](docs/DATASETS.md) | Organização, hashes e critérios dos datasets externos |
 | [docs/BENCHMARK.md](docs/BENCHMARK.md) | Como rodar os benchmarks, saídas brutas, uso como regressão |
 | [docs/CHANGELOG.md](docs/CHANGELOG.md) | Progressão v0.1 (V4) → v1.0 |
 
@@ -27,6 +28,7 @@ pip install -r requirements.txt
 python musicas.py             # analisa Musicas/ -> segmentos no terminal + out/musicas/*_timeline.png
 python benchmark_musicas.py   # V4 vs atual em Tempo Perdido e Boate Azul (mir_eval) -> out/musicas_bench/
 python run_bench.py           # bench sintético cosseno vs V4 -> out/*.png
+python prepare_manifests.py   # gera os manifests dos datasets externos -> data/manifests/
 ```
 
 Smoke tests individuais: `python chord_templates.py`, `python classifier.py`,

@@ -1,0 +1,4 @@
+# Dependências só de teste. As de execução ficam em requirements.txt.
+-r requirements.txt
+
+pytest          # tests/test_regression.py (oráculo out/musicas_bench/metrics.json)
