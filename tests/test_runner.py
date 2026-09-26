@@ -322,6 +322,134 @@ def test_diagnostico_perfeito_e_zero():
     assert d["frac_tonica_erro"] == pytest.approx(0.0)
 
 
+# ==========================================================================
+# 7b. As variantes que desligam as fontes de N
+# ==========================================================================
+def test_C0_muda_a_saida_em_relacao_a_C(faixa):
+    """
+    C0 = C com confidence_gate=0. O gate vive no CLASSIFICADOR, então C0 só
+    funciona se um classificador novo for construído -- é o mesmo alçapão do
+    complexity_penalty. Aqui a prova é de ponta a ponta: as saídas diferem.
+    """
+    V = runner.VARIANTES
+    C, C0 = V["C"], V["C0"]
+
+    assert C.post.confidence_gate == 0.72
+    assert C0.post.confidence_gate == 0.0
+    clf_c = runner.classificador_de(C.post, C.vocab)
+    clf_c0 = runner.classificador_de(C0.post, C0.vocab)
+    assert clf_c is not clf_c0, "o classificador não foi reconstruído para C0"
+    assert clf_c.confidence_gate == 0.72
+    assert clf_c0.confidence_gate == 0.0
+
+    # Um chroma fraco/ambíguo: o cosseno fica abaixo de 0.72 e C devolve N,
+    # enquanto C0 é obrigado a escolher um acorde.
+    chroma = np.full(12, 0.5)
+    chroma[[0, 4, 7]] = 0.55
+    assert clf_c.classify_vector(chroma) == 'N'
+    assert clf_c0.classify_vector(chroma) != 'N'
+
+    # e na faixa inteira as duas variantes não podem dar o mesmo
+    features = P.extract_features(faixa, SR, C.pre)
+    est_c = runner.estimar(C, features)
+    est_c0 = runner.estimar(C0, features)
+    n_c = sum(e - s for s, e, lab in est_c if lab == 'N')
+    n_c0 = sum(e - s for s, e, lab in est_c0 if lab == 'N')
+    assert n_c0 <= n_c, "C0 devolveu MAIS tempo como N que C"
+
+
+def test_variantes_zero_derivam_das_originais():
+    """Cada variante 0 muda exatamente um campo em relação à sua base."""
+    V = runner.VARIANTES
+    pares = [("C", "C0", "confidence_gate"), ("D", "D0", "n_logprob"),
+             ("E", "E0", "n_logprob"), ("F", "F0", "n_logprob")]
+    for base, zero, campo in pares:
+        pb, pz = V[base].post, V[zero].post
+        diferentes = [f for f in type(pb).__dataclass_fields__
+                      if getattr(pb, f) != getattr(pz, f)]
+        assert diferentes == [campo], f"{base}->{zero} mudou {diferentes}"
+        assert V[base].vocab == V[zero].vocab
+        assert V[base].pre == V[zero].pre
+
+
+def test_variantes_rg_desligam_o_gate_de_rms():
+    V = runner.VARIANTES
+    for base, rg in [("C0", "C0rg"), ("D0", "D0rg"), ("E0", "E0rg"),
+                     ("F0", "F0rg")]:
+        pb, pr = V[base].post, V[rg].post
+        diferentes = [f for f in type(pb).__dataclass_fields__
+                      if getattr(pb, f) != getattr(pr, f)]
+        assert diferentes == ["rel_gate"], f"{base}->{rg} mudou {diferentes}"
+        assert pr.rel_gate == 0.0
+        assert V[base].vocab == V[rg].vocab
+
+
+def test_force_n_sobrepoe_n_logprob():
+    """
+    A afirmação em que as variantes 0 se apoiam: nem n_logprob=-1e9 impede o N
+    onde force_n é True. Se isso mudasse no viterbi.py, o N residual de
+    D0/E0/F0 passaria a ter outra explicação.
+    """
+    import viterbi
+    emissoes = np.array([[0.9, 0.1], [0.9, 0.1], [0.9, 0.1]])
+    nomes = ['C', 'G']
+    force_n = np.array([False, True, False])
+
+    rotulos = viterbi.decode(emissoes, nomes, n_logprob=-1e9, force_n=force_n)
+    assert rotulos[1] == 'N', "force_n deixou de sobrepor o n_logprob"
+    assert rotulos[0] != 'N' and rotulos[2] != 'N'
+
+    # sem force_n, n_logprob=-1e9 elimina o N de vez
+    assert 'N' not in viterbi.decode(emissoes, nomes, n_logprob=-1e9)
+
+
+# ==========================================================================
+# 7c. Acerto no tempo rotulado
+# ==========================================================================
+def test_acerto_no_tempo_rotulado_ignora_o_tempo_n():
+    """
+    4 s: 2 s certos, 1 s errado, 1 s devolvido como N.
+    Métrica normal = 2/3 (o N conta como erro nos 3 s julgados... na verdade
+    o N entra no denominador); a coluna nova = 2/3 sobre os 3 s rotulados.
+    """
+    from evaluate import score_segments
+    ref = [(0.0, 1.0, 'C:maj'), (1.0, 2.0, 'C:maj'),
+           (2.0, 3.0, 'C:maj'), (3.0, 4.0, 'C:maj')]
+    est = [(0.0, 2.0, 'C'), (2.0, 3.0, 'G'), (3.0, 4.0, 'N')]
+
+    normal = score_segments(est, ref, levels=['root'], ref_is_harte=True)
+    rotulado = runner.acerto_no_tempo_rotulado(est, ref)
+
+    # faixa toda: 2 s certos de 4 s = 0.50
+    assert normal['root'] == pytest.approx(0.50)
+    # tempo rotulado: 2 s certos de 3 s rotulados = 0.6667
+    assert rotulado['root_rotulado'] == pytest.approx(2 / 3)
+
+
+def test_acerto_no_tempo_rotulado_igual_quando_nao_ha_n():
+    """Sem nenhum N estimado, a coluna nova tem de bater com a normal."""
+    from evaluate import score_segments
+    ref = [(0.0, 2.0, 'C:maj'), (2.0, 4.0, 'A:min')]
+    est = [(0.0, 2.0, 'C'), (2.0, 4.0, 'G')]
+    normal = score_segments(est, ref, levels=runner.LEVELS, ref_is_harte=True)
+    rotulado = runner.acerto_no_tempo_rotulado(est, ref)
+    for n in runner.LEVELS:
+        assert rotulado[f"{n}_rotulado"] == pytest.approx(normal[n])
+
+
+def test_tudo_n_deixa_a_coluna_vazia():
+    """Se nada foi rotulado, não há acurácia a reportar -- e não é zero."""
+    ref = [(0.0, 2.0, 'C:maj')]
+    est = [(0.0, 2.0, 'N')]
+    assert runner.acerto_no_tempo_rotulado(est, ref)["root_rotulado"] == ""
+
+
+def test_colunas_novas_no_csv():
+    for n in runner.LEVELS:
+        assert f"{n}_rotulado" in runner.CSV_FIELDS
+    assert "confidence_gate" in runner.CSV_FIELDS
+
+
 def test_colunas_de_diagnostico_no_csv():
     for campo in runner.DIAG_FIELDS:
         assert campo in runner.CSV_FIELDS
