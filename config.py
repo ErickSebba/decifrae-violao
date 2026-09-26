@@ -67,12 +67,20 @@ class PostChromaConfig:
     """
     Parâmetros da etapa de decisão (baratos: operam sobre o chroma pronto).
 
-    Todos estão efetivamente ligados: `complexity_penalty` e `ext_sharpness`
-    vão para `CosineChordClassifier`; os demais, para `analyze_track`.
+    Três deles configuram o CLASSIFICADOR e não o `decode`:
+    `complexity_penalty`, `ext_sharpness` e `confidence_gate`. Quem varia um
+    desses precisa construir outro `CosineChordClassifier` -- é o que
+    `runner.classificador_de` faz. Os demais vão para `analyze_track`.
+
+    `confidence_gate` entrou depois dos outros: ele é INERTE quando
+    `use_viterbi=True` (só `classify_vector` o consulta), e por isso tinha
+    ficado fora. As variantes sem Viterbi da ablação precisam dele, porque
+    nelas o gate é justamente o que decide entre rotular e devolver N.
     """
 
     complexity_penalty: float = 0.06   # viés pró-tríade (default da classe é 0.0)
     ext_sharpness: float = 4.0         # limiar p/ aceitar a 6ª/7ª como real
+    confidence_gate: float = 0.72      # cosseno mínimo; inerte com Viterbi
     use_viterbi: bool = True           # False = argmax por segmento
     change_penalty: float = 2.0        # custo (log) de trocar de acorde
     temp: float = 0.1                  # temperatura do softmax das emissões
