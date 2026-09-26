@@ -143,6 +143,15 @@ SPLITS_PROTEGIDOS = {"test"}
 DIAG_FIELDS = ["frac_n_est", "frac_tonica_ok_qualidade_erro",
                "frac_tonica_erro", "n_segmentos_est", "n_segmentos_ref"]
 
+# Segmentação do próprio mir_eval, que `chord.evaluate` já devolve junto dos
+# níveis -- não custa uma avaliação a mais. Dependem SÓ dos intervalos, não
+# dos rótulos, então são idênticas nas duas camadas do GuitarSet (mesmas
+# fronteiras) e não são afetadas por `ref_is_harte`.
+#   overseg  : 1 = não supersegmentou (fronteiras a mais)
+#   underseg : 1 = não subsegmentou (fronteiras de menos)
+#   seg      : min(overseg, underseg), o 'MeanSeg' do MIREX
+SEG_FIELDS = ["overseg", "underseg", "seg"]
+
 
 @dataclass(frozen=True)
 class Variante:
@@ -449,7 +458,9 @@ def _duracao(segmentos):
 
 
 def _linha_csv(variante, row, ref, est, dur_ref, ref_camada):
-    scores = score_segments(est, ref, levels=LEVELS, ref_is_harte=True)
+    # uma única chamada: o mir_eval devolve níveis e segmentação juntos
+    scores = score_segments(est, ref, levels=LEVELS + SEG_FIELDS,
+                            ref_is_harte=True)
     saida = {
         "variante": variante.nome,
         "track_id": row.get("track_id", ""),
@@ -465,7 +476,7 @@ def _linha_csv(variante, row, ref, est, dur_ref, ref_camada):
         saida[nome] = campos_pre.get(nome, "")
     for nome in PostChromaConfig.__dataclass_fields__:
         saida[nome] = campos_post.get(nome, "")
-    for nivel in LEVELS:
+    for nivel in LEVELS + SEG_FIELDS:
         saida[nivel] = round(scores[nivel], 9)
     saida.update(acerto_no_tempo_rotulado(est, ref))
     saida.update(diagnostico(est, ref))
@@ -480,7 +491,7 @@ CSV_FIELDS = (["variante", "track_id", "split", "ref_camada", "motor",
                "vocabulario", "duracao_s"]
               + list(PreChromaConfig.__dataclass_fields__)
               + list(PostChromaConfig.__dataclass_fields__)
-              + LEVELS + LEVELS_ROTULADO + DIAG_FIELDS)
+              + LEVELS + LEVELS_ROTULADO + DIAG_FIELDS + SEG_FIELDS)
 
 
 def rodar(manifest, splits, nomes_variantes, ref_camada=REF_CAMADA,
@@ -618,6 +629,7 @@ def resumir(resultados, nomes, ref_camada):
             **{c: _media_ponderada(linhas, c) for c in
                ("frac_n_est", "frac_tonica_ok_qualidade_erro",
                 "frac_tonica_erro")},
+            **{c: _media_ponderada(linhas, c) for c in SEG_FIELDS},
             "seg_est": sum(l["n_segmentos_est"] for l in linhas) / len(linhas),
             "seg_ref": sum(l["n_segmentos_ref"] for l in linhas) / len(linhas),
         }
@@ -653,6 +665,18 @@ def resumir(resultados, nomes, ref_camada):
               + " | ".join(f"{t[f'{n}_rotulado']*100:7.2f}%" for n in LEVELS)
               + f" | {t['frac_n_est']*100:6.2f}%"
               + f" | {delta*100:+7.2f}")
+
+    print("\n" + "=" * 62)
+    print("3. Segmentação do mir_eval (1 = fronteiras perfeitas)")
+    print("=" * 62)
+    cab3 = (f"{'variante':<9} | {'overseg':>9} | {'underseg':>9} | {'seg':>9}"
+            f" | {'seg.est':>7}")
+    print(cab3)
+    print("-" * len(cab3))
+    for nome, t in tabela.items():
+        print(f"{nome:<9} | {t['overseg']*100:8.2f}% | "
+              f"{t['underseg']*100:8.2f}% | {t['seg']*100:8.2f}% | "
+              f"{t['seg_est']:7.1f}")
     return tabela
 
 
