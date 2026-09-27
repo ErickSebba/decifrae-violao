@@ -58,8 +58,8 @@ p ajustados diretamente.
 Duas contagens diferentes aparecem neste texto e as duas estão certas: a
 **família de Holm** tem 11 comparações por camada no teste, e é ela que define
 a correção; o número de **células de valor distinto** é 14, porque três das 11
-métricas (`majmin` e `sevenths` nos pares que as usam) dão valores diferentes
-em chord[0] e chord[1], e as outras oito são idênticas nas duas camadas.
+comparações — as que usam `majmin` ou `sevenths` — dão valores diferentes em
+chord[0] e chord[1], e as outras oito são idênticas nas duas camadas.
 
 **A camada principal declarada e a camada do protocolo estatístico divergem.**
 O `docs/CONGELAMENTO.md` §6 declara `chord[1]` como referência principal,
@@ -321,8 +321,10 @@ formulação mais forte que essa não se sustenta nos dados de teste.
 Nenhuma comparação inverteu de sinal **e** permaneceu confirmada. Cinco
 comparações perderam força em chord[0] e nenhuma ganhou.
 
-São **cinco** as inversões de sinal entre os conjuntos, das quais **quatro**
-mudaram de classificação e estão na tabela abaixo. A quinta é o `majmin` de
+As inversões de sinal também são **cinco**, mas **não são as mesmas cinco** que
+perderam força: os dois conjuntos coincidem em três comparações. Das cinco
+inversões, **quatro** mudaram de classificação e estão na tabela abaixo. A
+quinta é o `majmin` de
 chord[1] no par `D0rg vs F0rg`: +1,56 na validação e −3,68 no teste, `empate`
 nos dois lados — inverte o sinal sem mudar o que se pode concluir, e por isso
 não entra na tabela, cujo critério é a perda de força.
