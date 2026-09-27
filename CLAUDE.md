@@ -115,6 +115,21 @@ Não trabalhe nestes itens sem pedido explícito:
 - Faixas, splits e exclusões vivem em `docs/DATASETS.md` — não hardcodar
   listas de faixas em script.
 
+## Sub-agentes
+
+- Use sub-agentes **em paralelo** quando as tarefas forem independentes.
+- Só a sessão principal executa `runner.py` e faz commits. Sub-agentes escrevem
+  apenas nos arquivos que lhes forem atribuídos e **não commitam**.
+- Nenhum sub-agente lê o split `test` antes de o CSV do teste estar commitado
+  pela sessão principal.
+
+## Entregáveis do artigo
+
+- Resultados validados são commitados em `artigo-ACDSA/` assim que ficam
+  prontos, com as figuras e dois arquivos: `METODOLOGIA.md` e `RESULTADOS.md`.
+- Todo número em `artigo-ACDSA/` sai de um CSV em `data/results/`, com a origem
+  indicada.
+
 ## Estilo
 
 - Português nos comentários e na documentação, como o resto do repositório.

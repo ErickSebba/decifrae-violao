@@ -179,6 +179,109 @@ def test_wilcoxon_ignora_magnitude():
 
 
 # ==========================================================================
+# Holm
+# ==========================================================================
+def test_holm_caso_conhecido():
+    """
+    Caso clássico com resposta calculável à mão. n = 4, p ordenados
+    0.01, 0.02, 0.03, 0.04:
+
+        k=0: (4-0)*0.01 = 0.04
+        k=1: (4-1)*0.02 = 0.06
+        k=2: (4-2)*0.03 = 0.06   -> monotonicidade mantém 0.06
+        k=3: (4-3)*0.04 = 0.04   -> monotonicidade eleva para 0.06
+    """
+    obtido = stats.holm([0.01, 0.02, 0.03, 0.04])
+    assert obtido == pytest.approx([0.04, 0.06, 0.06, 0.06])
+
+
+def test_holm_respeita_a_ordem_de_entrada():
+    """O ajustado volta na posição do p original, não na ordem crescente."""
+    obtido = stats.holm([0.04, 0.01, 0.03, 0.02])
+    assert obtido == pytest.approx([0.06, 0.04, 0.06, 0.06])
+
+
+def test_holm_e_monotono_e_limitado_a_um():
+    ps = [0.001, 0.2, 0.3, 0.5, 0.9]
+    ajustados = stats.holm(ps)
+    ordem = np.argsort(ps)
+    seq = np.array(ajustados)[ordem]
+    assert np.all(np.diff(seq) >= -1e-12), "Holm não saiu monótono"
+    assert np.all(np.array(ajustados) <= 1.0)
+
+
+def test_holm_de_uma_comparacao_nao_corrige():
+    assert stats.holm([0.03]) == pytest.approx([0.03])
+
+
+def test_holm_e_mais_conservador_que_o_p_bruto_e_menos_que_bonferroni():
+    ps = np.array([0.001, 0.01, 0.02, 0.04, 0.3])
+    h = stats.holm(ps)
+    bonferroni = np.minimum(1.0, ps * len(ps))
+    assert np.all(h >= ps - 1e-12)
+    assert np.all(h <= bonferroni + 1e-12)
+    assert np.any(h < bonferroni), "Holm ficou igual a Bonferroni em tudo"
+
+
+def test_holm_ignora_nan_sem_inflar_a_familia():
+    """
+    Um NaN não deve encolher o poder dos outros: a família é só o que tem p.
+    Com [0.01, NaN, 0.02], n = 2 e não 3.
+    """
+    obtido = stats.holm([0.01, float("nan"), 0.02])
+    assert obtido[1] != obtido[1]                    # NaN preservado
+    assert obtido[0] == pytest.approx(0.02)          # 2 * 0.01
+    assert obtido[2] == pytest.approx(0.02)          # monotonicidade
+
+
+# ==========================================================================
+# p-valor do bootstrap e classificação
+# ==========================================================================
+def test_p_bootstrap_pequeno_quando_o_efeito_e_claro():
+    d = np.full(60, 0.10)
+    w = np.full(60, 10.0)
+    lo, hi, p = stats.bootstrap(d, w)
+    assert lo > 0 and p == pytest.approx(1 / stats.N_BOOTSTRAP)
+
+
+def test_p_bootstrap_grande_quando_nao_ha_efeito():
+    rng = np.random.default_rng(5)
+    d = rng.normal(0.0, 0.05, size=80)
+    w = rng.uniform(5, 40, size=80)
+    lo, hi, p = stats.bootstrap(d, w)
+    assert lo < 0 < hi
+    assert p > 0.05
+
+
+def test_p_bootstrap_tem_piso():
+    """Nunca reportar p = 0 a partir de um número finito de reamostragens."""
+    d = np.full(40, 1.0)
+    w = np.full(40, 1.0)
+    _, _, p = stats.bootstrap(d, w)
+    assert p >= 1 / stats.N_BOOTSTRAP
+
+
+@pytest.mark.parametrize("cruza,p_holm,esperado", [
+    (False, 0.001, "confirmado"),
+    (False, 0.049, "confirmado"),
+    (False, 0.051, "fragil"),
+    (False, float("nan"), "fragil"),
+    (True, 0.001, "empate"),      # IC manda: cruzar zero é empate
+    (True, 0.9, "empate"),
+])
+def test_classificacao_segue_a_regra_do_congelamento(cruza, p_holm, esperado):
+    assert stats.classificar(cruza, p_holm) == esperado
+
+
+def test_classificacao_prioriza_o_ic_sobre_o_p():
+    """
+    O critério principal é o IC. Um p minúsculo com IC cruzando zero continua
+    empate -- é o que impede escolher o critério que favorece a conclusão.
+    """
+    assert stats.classificar(True, 1e-9) == "empate"
+
+
+# ==========================================================================
 # Células vazias
 # ==========================================================================
 def test_celula_vazia_descarta_a_faixa_em_vez_de_virar_zero(tmp_path):
@@ -235,6 +338,24 @@ def test_parametros_do_bootstrap_sao_os_pedidos():
     assert stats.N_BOOTSTRAP == 10_000
     assert stats.SEED == 0
     assert stats.ALFA == 0.05
+
+
+def test_familia_de_holm_tem_15_comparacoes():
+    """O congelamento declara 15; a família tem de ser exatamente essa."""
+    assert sum(len(m) for _, _, m, _ in stats.PARES) == 15
+
+
+def test_rodar_preenche_holm_e_classificacao(csv_pequeno, monkeypatch):
+    """A saída de `rodar` não pode ter coluna de Holm vazia nem campo interno."""
+    monkeypatch.setattr(stats, "PARES",
+                        [("A", "B", ["root", "majmin"], "teste")])
+    linhas, avisos = stats.rodar(csv_pequeno)
+    assert not avisos
+    for l in linhas:
+        assert l["p_bootstrap_holm"] != ""
+        assert l["classificacao"] in ("confirmado", "empate", "fragil")
+        assert not any(k.startswith("_") for k in l), "campo interno vazou"
+        assert set(l) == set(stats.CSV_FIELDS)
 
 
 # ==========================================================================

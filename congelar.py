@@ -64,6 +64,11 @@ def _commit():
 _PROVENIENCIA = ("- Gerado em:", "- Commit que define", "- Árvore suja")
 
 
+def _n_comparacoes():
+    """Quantas comparações a família de Holm tem: soma das métricas dos pares."""
+    return sum(len(metricas) for _, _, metricas, _ in stats.PARES)
+
+
 def _so_conteudo(texto):
     """O documento sem as linhas de proveniência, para comparação."""
     return "\n".join(l for l in texto.splitlines()
@@ -176,6 +181,40 @@ def gerar():
     add("por bootstrap pareado (10 000 reamostragens de faixas, semente 0),")
     add("Wilcoxon pareado e a contagem de faixas em que `b` ganha, perde ou")
     add("empata.")
+    add("")
+    add("### 5.1 Critério de decisão")
+    add("")
+    add("Declarado antes de ler o teste, para que a leitura não possa escolher")
+    add("o critério que favorece a conclusão:")
+    add("")
+    add("**(a) O critério PRINCIPAL é o IC 95 % do bootstrap pareado sobre a")
+    add("média ponderada por duração.** O Wilcoxon pareado é SECUNDÁRIO: ele")
+    add("complementa dizendo se a diferença é consistente faixa a faixa, e")
+    add("nunca decide sozinho. Os dois medem coisas diferentes e podem")
+    add("discordar — a média ponderada é dominada por faixas longas, o teste")
+    add("de ranks conta faixas. Quando discordarem, ambos são reportados.")
+    add("")
+    add(f"**(b) Os p-valores são corrigidos por Holm-Bonferroni sobre as")
+    add(f"{_n_comparacoes()} comparações desta tabela**, em duas famílias")
+    add("separadas (uma para o bootstrap, uma para o Wilcoxon), com")
+    add(f"α = {stats.ALFA}. O p do bootstrap é o nível de significância")
+    add("atingido: duas vezes a menor cauda da distribuição bootstrap em")
+    add("relação a zero, com piso em 1/10 000.")
+    add("")
+    add("**(c) Classificação de cada efeito:**")
+    add("")
+    add("| Classe | Regra |")
+    add("|---|---|")
+    add("| `confirmado` | o IC 95 % exclui zero **e** o p de Holm do bootstrap "
+        f"< {stats.ALFA} |")
+    add("| `empate` | o IC 95 % cruza zero — não há efeito distinguível de "
+        "ruído |")
+    add("| `fragil` | o IC 95 % exclui zero mas Holm não rejeita |")
+    add("")
+    add("Um efeito `empate` **não** é descrito como ganho em nenhum texto do")
+    add("artigo. Um efeito `fragil` é reportado com a ressalva explícita. A")
+    add("classificação é calculada por `stats.classificar`, não atribuída à")
+    add("mão.")
     add("")
     add("| # | Par | Métricas | O que isola |")
     add("|---|---|---|---|")
