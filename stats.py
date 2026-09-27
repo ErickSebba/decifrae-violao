@@ -140,6 +140,29 @@ def _csv_mais_recente():
     return candidatos[-1]
 
 
+def _camada_de(csv_path):
+    """
+    A camada de anotação, lida do NOME do arquivo de entrada.
+
+    Fixar 'chord[0]' aqui gravaria procedência errada ao rodar sobre o CSV do
+    chord[1] -- e procedência errada num meta.json é pior que ausente, porque
+    parece confiável.
+    """
+    nome = Path(csv_path).name
+    if "_ref1" in nome:
+        return "chord[1]"
+    if "_ref0" in nome:
+        return "chord[0]"
+    return "desconhecida"
+
+
+def _split_de(csv_path):
+    """O split, lido das linhas do CSV -- não do nome, que não o carrega."""
+    with Path(csv_path).open(encoding="utf-8", newline="") as fp:
+        splits = sorted({r.get("split", "") for r in csv.DictReader(fp)})
+    return ",".join(s for s in splits if s) or "desconhecido"
+
+
 def carregar(csv_path):
     """{variante: {track_id: linha}} e a duração de cada faixa."""
     with Path(csv_path).open(encoding="utf-8", newline="") as fp:
@@ -377,8 +400,8 @@ def main(argv=None):
     meta = {
         "gerado_em": datetime.now().isoformat(timespec="seconds"),
         "entrada": csv_path.name,
-        "split": "val",
-        "ref_camada": "chord[0]",
+        "split": _split_de(csv_path),
+        "ref_camada": _camada_de(csv_path),
         "n_bootstrap": N_BOOTSTRAP,
         "seed": SEED,
         "alfa": ALFA,
