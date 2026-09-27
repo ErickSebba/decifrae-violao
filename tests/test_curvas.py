@@ -166,9 +166,30 @@ def test_congelamento_no_disco_bate_com_o_codigo():
     """
     Se este teste falhar, uma configuração mudou depois de congelada. O
     conserto é entender a mudança, não rodar `python congelar.py` por reflexo.
+
+    A comparação ignora as linhas de proveniência (data e commit): elas mudam
+    a cada execução e a cada commit, e comparar o hash faria o teste falhar
+    para sempre depois do primeiro commit do documento.
     """
     assert congelar.main(["--check"]) == 0, (
         "docs/CONGELAMENTO.md divergiu das variantes em runner.py")
+
+
+def test_check_ignora_proveniencia_mas_nao_configuracao():
+    """
+    O `--check` tem de ser cego à data e ao commit, e sensível a qualquer
+    mudança nas tabelas de configuração.
+    """
+    doc = congelar.gerar()
+
+    trocado = doc.replace("- Gerado em: ", "- Gerado em: 1999-01-01 ")
+    trocado = trocado.replace("Commit que define estas configurações: `",
+                              "Commit que define estas configurações: `outro")
+    assert congelar._so_conteudo(trocado) == congelar._so_conteudo(doc)
+
+    # já uma mudança de valor de campo tem de aparecer
+    alterado = doc.replace("| `min_dur` |", "| `min_dur_trocado` |")
+    assert congelar._so_conteudo(alterado) != congelar._so_conteudo(doc)
 
 
 def test_congelamento_nao_promete_split_test_rodado():

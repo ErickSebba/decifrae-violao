@@ -55,6 +55,20 @@ def _commit():
             "suja": bool(_git("status", "--porcelain"))}
 
 
+# Linhas de PROVENIÊNCIA da geração: mudam a cada execução (a data) ou a cada
+# commit (o hash), e não descrevem as configurações. O `--check` pergunta "as
+# configurações mudaram?", não "o documento foi regerado?" -- comparar o hash
+# faria o check falhar para sempre depois do primeiro commit, que é o que
+# aconteceu na primeira versão deste script.
+_PROVENIENCIA = ("- Gerado em:", "- Commit que define", "- Árvore suja")
+
+
+def _so_conteudo(texto):
+    """O documento sem as linhas de proveniência, para comparação."""
+    return "\n".join(l for l in texto.splitlines()
+                     if not l.startswith(_PROVENIENCIA))
+
+
 def _valor(v):
     if v == "" or v is None:
         return "—"
@@ -152,14 +166,10 @@ def main(argv=None):
     novo = gerar()
     if args.check:
         atual = DESTINO.read_text(encoding="utf-8") if DESTINO.exists() else ""
-        # a linha "Gerado em" muda a cada execução: ignorada na comparação
-        def sem_data(t):
-            return "\n".join(l for l in t.splitlines()
-                             if not l.startswith("- Gerado em:"))
-        if sem_data(novo) != sem_data(atual):
+        if _so_conteudo(novo) != _so_conteudo(atual):
             print("docs/CONGELAMENTO.md está DESATUALIZADO em relação ao código")
             return 1
-        print("docs/CONGELAMENTO.md está atualizado")
+        print("docs/CONGELAMENTO.md está atualizado (conteúdo congelado)")
         return 0
 
     DESTINO.parent.mkdir(parents=True, exist_ok=True)
