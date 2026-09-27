@@ -1,0 +1,5 @@
+split,status,ref_camada,nivel,mascara,variante_a,variante_b,n_faixas,acerto_a,acerto_b,diferenca,ic95_min,ic95_max,ic_cruza_zero,p_bootstrap,frac_tempo_na_mascara,b_melhor,b_pior,empate
+val,exploratoria,chord[0],root,M_C,C,D,120,0.772954614,0.733883244,-0.03907137,-0.060556357,-0.018842273,nao,0.0001,0.592637,40,71,9
+val,exploratoria,chord[0],root,M_CD,C,D,120,0.794836939,0.802695304,0.007858365,-0.009059587,0.024188201,sim,0.3674,0.540808,54,48,18
+test,post_hoc,chord[0],root,M_C,C,D,58,0.727035979,0.663184667,-0.063851312,-0.098259236,-0.03490112,nao,0.0001,0.545591,14,41,3
+test,post_hoc,chord[0],root,M_CD,C,D,58,0.775659218,0.777842859,0.002183642,-0.017373493,0.021044297,sim,0.8246,0.458722,22,25,11

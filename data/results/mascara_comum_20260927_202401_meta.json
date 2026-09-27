@@ -1,0 +1,42 @@
+{
+  "gerado_em": "2026-09-27T20:24:01",
+  "manifest": "data/manifests/guitarset_comping.csv",
+  "splits": [
+    "val",
+    "test"
+  ],
+  "status": {
+    "val": "exploratoria",
+    "test": "post_hoc"
+  },
+  "aviso": "A análise sobre o split test é PÓS-ESPECIFICADA (post hoc): não consta dos pares pré-registrados do §5 de docs/CONGELAMENTO.md e foi concebida depois da leitura do teste. Não substitui nem reinterpreta comparação pré-registrada.",
+  "ref_camada": "chord[0]",
+  "nivel": "root",
+  "variantes": [
+    "C",
+    "D"
+  ],
+  "mascaras": {
+    "M_C": "células em que C não estimou N",
+    "M_CD": "células em que nenhum dos dois estimou N"
+  },
+  "peso_da_faixa": "tempo que a faixa contribui para a máscara",
+  "n_bootstrap": 10000,
+  "seed": 0,
+  "alfa": 0.05,
+  "features": "decodificadas do cache; nenhuma extração de chroma refeita",
+  "n_linhas": 4,
+  "falhas": [],
+  "segundos": 7.9,
+  "versoes": {
+    "python": "3.14.6",
+    "numpy": "2.4.6",
+    "scipy": "1.18.0",
+    "librosa": "0.11.0",
+    "mir_eval": "0.8.2"
+  },
+  "projeto": {
+    "commit": "38c772cb5fd54b2dcd833bdbd539a65705e62f03",
+    "arvore_suja": true
+  }
+}
