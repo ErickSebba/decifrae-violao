@@ -1,0 +1,82 @@
+{
+  "gerado_em": "2026-09-27T01:30:02",
+  "entrada": "ablation_20260927_005629_ref0.csv",
+  "split": "val",
+  "ref_camada": "chord[0]",
+  "n_bootstrap": 10000,
+  "seed": 0,
+  "alfa": 0.05,
+  "unidade_de_reamostragem": "faixa",
+  "wilcoxon": "scipy.stats.wilcoxon, two-sided, zero_method=wilcox",
+  "pares": [
+    {
+      "a": "C",
+      "b": "D",
+      "metricas": [
+        "root",
+        "root_rotulado"
+      ],
+      "isola": "o Viterbi na métrica usual"
+    },
+    {
+      "a": "C0rg",
+      "b": "D0rg",
+      "metricas": [
+        "root",
+        "majmin"
+      ],
+      "isola": "o Viterbi com cobertura igualada (nenhuma fonte de N)"
+    },
+    {
+      "a": "D",
+      "b": "E",
+      "metricas": [
+        "root",
+        "seg",
+        "overseg"
+      ],
+      "isola": "o trade-off do min_dur: acurácia contra segmentação"
+    },
+    {
+      "a": "V4b",
+      "b": "V4",
+      "metricas": [
+        "root",
+        "overseg"
+      ],
+      "isola": "a inércia temporal do baseline"
+    },
+    {
+      "a": "V4",
+      "b": "F0rg",
+      "metricas": [
+        "root",
+        "majmin",
+        "seg"
+      ],
+      "isola": "baseline contra a melhor variante"
+    },
+    {
+      "a": "D0rg",
+      "b": "F0rg",
+      "metricas": [
+        "root",
+        "majmin",
+        "sevenths"
+      ],
+      "isola": "o vocabulário (MEDIUM vs BASIC) com cobertura igualada"
+    }
+  ],
+  "n_comparacoes": 15,
+  "avisos": [],
+  "segundos": 0.2,
+  "versoes": {
+    "python": "3.14.6",
+    "numpy": "2.4.6",
+    "scipy": "1.18.0"
+  },
+  "projeto": {
+    "commit": "b1f8ce52966f02ae6f1f6695529184646a61b7d4",
+    "arvore_suja": false
+  }
+}
