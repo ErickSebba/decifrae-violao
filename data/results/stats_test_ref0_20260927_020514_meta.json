@@ -1,0 +1,102 @@
+{
+  "gerado_em": "2026-09-27T02:05:14",
+  "entrada": "ablation_20260927_014253_ref0.csv",
+  "split": "test",
+  "ref_camada": "chord[0]",
+  "n_bootstrap": 10000,
+  "seed": 0,
+  "alfa": 0.05,
+  "unidade_de_reamostragem": "faixa",
+  "criterio_principal": "IC 95 % do bootstrap pareado sobre a média ponderada por duração",
+  "criterio_secundario": "Wilcoxon pareado (complementa, não decide)",
+  "correcao_multipla": "Holm-Bonferroni sobre as 11 comparações, famílias separadas para bootstrap e Wilcoxon",
+  "p_bootstrap": "nível de significância atingido: 2x a menor cauda da distribuição bootstrap em relação a zero, piso 1/n",
+  "classificacao": {
+    "confirmado": "IC exclui zero E p de Holm (bootstrap) < alfa",
+    "empate": "IC cruza zero",
+    "fragil": "IC exclui zero mas Holm não rejeita"
+  },
+  "wilcoxon": "scipy.stats.wilcoxon, two-sided, zero_method=wilcox",
+  "pares": [
+    {
+      "a": "C",
+      "b": "D",
+      "metricas": [
+        "root",
+        "root_rotulado"
+      ],
+      "isola": "o Viterbi na métrica usual"
+    },
+    {
+      "a": "C0rg",
+      "b": "D0rg",
+      "metricas": [
+        "root",
+        "majmin"
+      ],
+      "isola": "o Viterbi com cobertura igualada (nenhuma fonte de N)"
+    },
+    {
+      "a": "D",
+      "b": "E",
+      "metricas": [
+        "root",
+        "seg",
+        "overseg"
+      ],
+      "isola": "o trade-off do min_dur: acurácia contra segmentação"
+    },
+    {
+      "a": "V4b",
+      "b": "V4",
+      "metricas": [
+        "root",
+        "overseg"
+      ],
+      "isola": "a inércia temporal do baseline"
+    },
+    {
+      "a": "V4",
+      "b": "F0rg",
+      "metricas": [
+        "root",
+        "majmin",
+        "seg"
+      ],
+      "isola": "baseline contra a melhor variante"
+    },
+    {
+      "a": "D0rg",
+      "b": "F0rg",
+      "metricas": [
+        "root",
+        "majmin",
+        "sevenths"
+      ],
+      "isola": "o vocabulário (MEDIUM vs BASIC) com cobertura igualada"
+    }
+  ],
+  "n_comparacoes": 11,
+  "n_comparacoes_pre_registradas": 15,
+  "variantes_pre_registradas_ausentes": [
+    "C0rg",
+    "V4b"
+  ],
+  "familia_holm_completa": false,
+  "avisos": [
+    "C0rg vs D0rg / root: \"variante(s) ausente(s) no CSV: ['C0rg']\"",
+    "C0rg vs D0rg / majmin: \"variante(s) ausente(s) no CSV: ['C0rg']\"",
+    "V4b vs V4 / root: \"variante(s) ausente(s) no CSV: ['V4b']\"",
+    "V4b vs V4 / overseg: \"variante(s) ausente(s) no CSV: ['V4b']\""
+  ],
+  "segundos": 0.1,
+  "versoes": {
+    "python": "3.14.6",
+    "numpy": "2.4.6",
+    "scipy": "1.18.0"
+  },
+  "projeto": {
+    "commit": "fb2dc13ff7d7ef483ce9815c47ec79c0103c94e6",
+    "arvore_suja": false
+  }
+}
