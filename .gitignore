@@ -8,9 +8,11 @@ data/raw/
 data/extracted/
 data/cache/
 
-# Resultados: os CSVs entram no Git (nenhum número do artigo é digitado à mão,
-# CLAUDE.md), o resto não. Precisa ser `data/results/*` e não `data/results/`:
-# uma pasta ignorada não é percorrida pelo Git, e a exceção abaixo não teria
-# efeito nenhum.
+# Resultados: os CSVs e os meta.json entram no Git (nenhum número do artigo é
+# digitado à mão, CLAUDE.md), o resto não. Sem o meta.json o CSV não carrega
+# versão de biblioteca nem commit, e deixa de ser reproduzível. Precisa ser
+# `data/results/*` e não `data/results/`: uma pasta ignorada não é percorrida
+# pelo Git, e as exceções abaixo não teriam efeito nenhum.
 data/results/*
 !data/results/*.csv
+!data/results/*_meta.json
