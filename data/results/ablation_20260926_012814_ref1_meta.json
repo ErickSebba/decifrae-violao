@@ -1,0 +1,62 @@
+{
+  "gerado_em": "2026-09-26T01:28:14",
+  "manifest": "data/manifests/guitarset_comping.csv",
+  "splits": [
+    "val"
+  ],
+  "variantes": [
+    "V4",
+    "V4b",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "C0",
+    "D0",
+    "E0",
+    "F0",
+    "C0rg",
+    "D0rg",
+    "E0rg",
+    "F0rg"
+  ],
+  "ref_camada": "chord[1]",
+  "ref_is_harte": true,
+  "n_linhas": 1920,
+  "falhas": [],
+  "segundos": 337.0,
+  "versoes": {
+    "python": "3.14.6",
+    "implementacao": "CPython",
+    "numpy": "2.4.6",
+    "librosa": "0.11.0",
+    "mir_eval": "0.8.2"
+  },
+  "projeto": {
+    "commit": "30dc3adbbb87fc55a8063d1a942b342babc6b477",
+    "arvore_suja": false
+  },
+  "config_base": {
+    "pre": {
+      "sr": 22050,
+      "method": "cqt",
+      "smooth": 21,
+      "hpss_margin": 3.0,
+      "bins_per_octave": 36
+    },
+    "post": {
+      "complexity_penalty": 0.06,
+      "ext_sharpness": 4.0,
+      "confidence_gate": 0.72,
+      "use_viterbi": true,
+      "change_penalty": 2.0,
+      "temp": 0.1,
+      "n_logprob": -2.5,
+      "rel_gate": 0.2,
+      "abs_floor": 0.0005,
+      "min_dur": 0.8
+    }
+  }
+}
