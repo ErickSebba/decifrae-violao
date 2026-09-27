@@ -1,0 +1,16 @@
+par,variante_a,variante_b,metrica,isola,n_faixas,n_descartadas,media_a,media_b,diferenca,ic95_min,ic95_max,ic_cruza_zero,wilcoxon_estatistica,wilcoxon_p,b_melhor,b_pior,empate,mediana_diferenca
+C vs D,C,D,root,o Viterbi na métrica usual,120,0,0.467341943,0.606296465,0.138954522,0.116579811,0.161687197,nao,362.0,1.14381e-17,108,12,0,0.121455385
+C vs D,C,D,root_rotulado,o Viterbi na métrica usual,120,0,0.746850739,0.674247381,-0.072603358,-0.102669098,-0.044379148,nao,1764.0,1.02483e-06,37,83,0,-0.05312362
+C0rg vs D0rg,C0rg,D0rg,root,o Viterbi com cobertura igualada (nenhuma fonte de N),120,0,0.637826235,0.658007678,0.020181443,0.006680587,0.033988821,nao,2710.0,0.0225746,70,49,1,0.014118477
+C0rg vs D0rg,C0rg,D0rg,majmin,o Viterbi com cobertura igualada (nenhuma fonte de N),120,0,0.546136609,0.578220984,0.032084375,0.015929239,0.048861693,nao,2253.0,0.000732937,74,44,2,0.025575553
+D vs E,D,E,root,o trade-off do min_dur: acurácia contra segmentação,120,0,0.606296465,0.590421472,-0.015874993,-0.024355775,-0.007784097,nao,1882.0,0.000481604,44,66,10,-0.012771444
+D vs E,D,E,seg,o trade-off do min_dur: acurácia contra segmentação,120,0,0.708724073,0.743420956,0.034696883,0.018466781,0.050468166,nao,1985.0,0.000104931,85,31,4,0.035221777
+D vs E,D,E,overseg,o trade-off do min_dur: acurácia contra segmentação,120,0,0.740262478,0.834134706,0.093872228,0.082261545,0.105612687,nao,0.0,8.98512e-21,116,0,4,0.092782013
+V4b vs V4,V4b,V4,root,a inércia temporal do baseline,120,0,0.671689507,0.679479605,0.007790098,-0.008194123,0.023820465,sim,3148.0,0.330317,63,55,2,0.000791072
+V4b vs V4,V4b,V4,overseg,a inércia temporal do baseline,120,0,0.626707806,0.802144272,0.175436466,0.156595676,0.194571554,nao,13.0,4.00461e-21,116,3,1,0.173833384
+V4 vs F0rg,V4,F0rg,root,baseline contra a melhor variante,120,0,0.679479605,0.691468541,0.011988936,0.000595535,0.023511603,nao,2595.0,0.0536444,61,53,6,0.004875512
+V4 vs F0rg,V4,F0rg,majmin,baseline contra a melhor variante,120,0,0.568697876,0.608918781,0.040220905,0.02255097,0.058489157,nao,2022.0,0.000385532,67,47,6,0.019830745
+V4 vs F0rg,V4,F0rg,seg,baseline contra a melhor variante,120,0,0.778812561,0.76301436,-0.015798201,-0.026784124,-0.004555988,nao,2268.0,0.00194004,43,73,4,-0.016093475
+D0rg vs F0rg,D0rg,F0rg,root,o vocabulário (MEDIUM vs BASIC) com cobertura igualada,120,0,0.658007678,0.691468541,0.033460863,0.010210625,0.057960362,nao,2521.0,0.0231062,68,47,5,0.011064971
+D0rg vs F0rg,D0rg,F0rg,majmin,o vocabulário (MEDIUM vs BASIC) com cobertura igualada,120,0,0.578220984,0.608918781,0.030697797,0.007123035,0.055133131,nao,2634.0,0.0929123,63,50,7,0.004589019
+D0rg vs F0rg,D0rg,F0rg,sevenths,o vocabulário (MEDIUM vs BASIC) com cobertura igualada,120,0,0.405039563,0.55365508,0.148615517,0.122681936,0.176878057,nao,159.0,1.17324e-18,109,5,6,0.10735584
