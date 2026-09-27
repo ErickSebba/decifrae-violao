@@ -21,6 +21,7 @@ from datetime import datetime
 from pathlib import Path
 
 import runner
+import stats
 from config import PreChromaConfig, PostChromaConfig
 
 ROOT = Path(__file__).resolve().parent
@@ -140,7 +141,52 @@ def gerar():
             celulas.append(_valor(asdict(v.post)[campo] if v.post else ""))
         add(f"| `{campo}` | " + " | ".join(celulas) + " |")
     add("")
-    add("## 4. Protocolo do teste")
+    add("## 4. O que NÃO foi ablacionado")
+    add("")
+    add("Registrado para que a ausência seja uma decisão declarada e não um")
+    add("esquecimento que um revisor descubra:")
+    add("")
+    # Uma linha por célula: em Markdown, uma linha de tabela quebrada em
+    # várias linhas de texto deixa de ser tabela.
+    add("| Parâmetro | Valor fixo | Situação |")
+    add("|---|---|---|")
+    add("| `change_penalty` | 2.0 | **Nunca variado.** Nenhuma execução usou "
+        "outro valor, nem na ablação nem nas curvas. Vem da calibração manual "
+        "em `Musicas/` e entra no teste como constante, não como escolha "
+        "justificada por dado. |")
+    add("| `temp` | 0.1 | Nunca variado. |")
+    add("| `ext_sharpness` | 4.0 | Nunca variado. Só tem efeito quando "
+        "`complexity_penalty > 0`. |")
+    add("| `abs_floor` | 5e-4 | Nunca variado. Responde pelos 0,25 % de tempo "
+        "em N que sobram nas variantes `rg`. |")
+    add("| `bins_per_octave` | 36 | Nunca variado. Ligado à configuração no "
+        "T5, mas não varrido. |")
+    add("| `hpss_margin` | 3.0 | Idem. |")
+    add("")
+    add("## 5. Comparações pré-registradas")
+    add("")
+    add("Os pares abaixo, e as métricas de cada um, foram fixados **antes** de")
+    add("ler o conjunto de teste. Cada par isola uma etapa; a diferença")
+    add("reportada é sempre `b − a`, positivo quando `b` é melhor. São os")
+    add("mesmos pares que `stats.py` roda na validação — a lista vive em")
+    add("`stats.PARES` e é importada por este script, para que o documento não")
+    add("possa divergir do código.")
+    add("")
+    add("Cada comparação traz: diferença média ponderada por duração, IC 95 %")
+    add("por bootstrap pareado (10 000 reamostragens de faixas, semente 0),")
+    add("Wilcoxon pareado e a contagem de faixas em que `b` ganha, perde ou")
+    add("empata.")
+    add("")
+    add("| # | Par | Métricas | O que isola |")
+    add("|---|---|---|---|")
+    for i, (a, b, metricas, isola) in enumerate(stats.PARES, start=1):
+        mets = ", ".join(f"`{m}`" for m in metricas)
+        add(f"| {i} | `{a}` vs `{b}` | {mets} | {isola} |")
+    add("")
+    add("Nenhum par novo entra depois de o teste ser lido. Um par acrescentado")
+    add("depois é análise exploratória e precisa ser reportado como tal.")
+    add("")
+    add("## 6. Protocolo do teste")
     add("")
     add("1. O split `test` é lido **uma única vez**, com")
     add("   `python runner.py --manifest data/manifests/guitarset_comping.csv`")
