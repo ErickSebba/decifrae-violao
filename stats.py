@@ -172,15 +172,33 @@ def _split_de(csv_path):
     return ",".join(s for s in splits if s) or "desconhecido"
 
 
-def carregar(csv_path):
-    """{variante: {track_id: linha}} e a duração de cada faixa."""
-    with Path(csv_path).open(encoding="utf-8", newline="") as fp:
-        linhas = list(csv.DictReader(fp))
+def carregar(*csv_paths):
+    """
+    {variante: {track_id: linha}} e a duração de cada faixa.
+
+    Aceita mais de um CSV porque a matriz de uma camada pode estar partida em
+    vários arquivos -- foi o que aconteceu no teste, cujas seis variantes
+    congeladas e as duas do adendo (`C0rg`, `V4b`) foram executadas em commits
+    separados. A união é por variante; a mesma variante em dois arquivos é erro
+    e levanta, em vez de um deles silenciosamente vencer.
+    """
+    if len(csv_paths) == 1 and isinstance(csv_paths[0], (list, tuple)):
+        csv_paths = tuple(csv_paths[0])
     por_variante = defaultdict(dict)
     duracoes = {}
-    for l in linhas:
-        por_variante[l["variante"]][l["track_id"]] = l
-        duracoes[l["track_id"]] = float(l["duracao_s"])
+    origem = {}
+    for caminho in csv_paths:
+        with Path(caminho).open(encoding="utf-8", newline="") as fp:
+            linhas = list(csv.DictReader(fp))
+        for l in linhas:
+            v = l["variante"]
+            if v in origem and origem[v] != str(caminho):
+                raise ValueError(
+                    f"variante {v!r} aparece em dois CSVs ({origem[v]} e "
+                    f"{caminho}); não há como escolher entre eles")
+            origem[v] = str(caminho)
+            por_variante[v][l["track_id"]] = l
+            duracoes[l["track_id"]] = float(l["duracao_s"])
     return por_variante, duracoes
 
 
@@ -313,14 +331,14 @@ def comparar(por_variante, duracoes, a, b, metrica, isola):
     }
 
 
-def rodar(csv_path):
+def rodar(*csv_paths):
     """
     Roda as comparações e aplica Holm sobre a família inteira.
 
     A correção é feita AQUI, e não em `comparar`, porque Holm depende de todos
     os p da família: uma comparação isolada não tem p ajustado.
     """
-    por_variante, duracoes = carregar(csv_path)
+    por_variante, duracoes = carregar(*csv_paths)
     linhas, avisos = [], []
     for a, b, metricas, isola in PARES:
         for metrica in metricas:
@@ -423,26 +441,37 @@ def escrever(linhas, meta, timestamp, split="val", camada="chord[0]"):
 def main(argv=None):
     ap = argparse.ArgumentParser(
         description="Comparações pareadas entre variantes no split val.")
-    ap.add_argument("--csv", default=None,
-                    help="default: o ablation_*_ref0.csv mais recente")
+    ap.add_argument("--csv", default=None, nargs="+",
+                    help="um ou mais CSVs de ablação da MESMA camada e do "
+                         "mesmo split; default: o ablation_*_ref0.csv mais "
+                         "recente")
     args = ap.parse_args(argv)
 
     # `--csv` aceita caminho relativo OU absoluto: resolver contra ROOT antes
     # de usar, senão `relative_to` estoura com a forma relativa que a própria
     # docstring sugere.
     if args.csv:
-        csv_path = Path(args.csv)
-        if not csv_path.is_absolute():
-            csv_path = (ROOT / csv_path).resolve()
+        caminhos = []
+        for bruto in args.csv:
+            p = Path(bruto)
+            caminhos.append(p if p.is_absolute() else (ROOT / p).resolve())
     else:
-        csv_path = _csv_mais_recente()
-    print(f"lendo {_relativo(csv_path)}")
+        caminhos = [_csv_mais_recente()]
+    csv_path = caminhos[0]
+    print("lendo " + ", ".join(_relativo(p) for p in caminhos))
+
+    camadas = {_camada_de(p) for p in caminhos}
+    splits = {_split_de(p) for p in caminhos}
+    if len(camadas) > 1 or len(splits) > 1:
+        raise SystemExit(f"os CSVs têm de ser da mesma camada e do mesmo "
+                         f"split; recebi camadas {sorted(camadas)} e splits "
+                         f"{sorted(splits)}")
 
     t0 = time.perf_counter()
-    linhas, avisos = rodar(csv_path)
+    linhas, avisos = rodar(*caminhos)
     segundos = time.perf_counter() - t0
 
-    por_variante, _ = carregar(csv_path)
+    por_variante, _ = carregar(*caminhos)
     ausentes = variantes_pre_registradas_ausentes(por_variante)
     imprimir(linhas, csv_path, ausentes)
     for aviso in avisos:
@@ -453,6 +482,7 @@ def main(argv=None):
     meta = {
         "gerado_em": datetime.now().isoformat(timespec="seconds"),
         "entrada": csv_path.name,
+        "entradas": [p.name for p in caminhos],
         "split": _split_de(csv_path),
         "ref_camada": _camada_de(csv_path),
         "n_bootstrap": N_BOOTSTRAP,
