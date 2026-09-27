@@ -345,6 +345,58 @@ def test_familia_de_holm_tem_15_comparacoes():
     assert sum(len(m) for _, _, m, _ in stats.PARES) == 15
 
 
+def test_lacuna_conhecida_entre_pares_e_variantes_congeladas():
+    """
+    DEFEITO REGISTRADO, não estado desejado.
+
+    O `docs/CONGELAMENTO.md` congelou seis configurações (§1) mas pré-registrou
+    seis pares que exigem OITO variantes (§5): `C0rg` e `V4b` ficaram de fora.
+    Consequência: 4 das 15 comparações não podem ser avaliadas no split test,
+    e a família de Holm do teste tem 11 e não 15 -- logo os p de Holm do teste
+    NÃO são comparáveis com os da validação.
+
+    Não se conserta rodando as duas variantes que faltam: isso seria uma
+    segunda leitura do teste com variante não congelada. Fica registrado.
+
+    Este teste fixa a lacuna exata. Se alguém mexer em qualquer das duas
+    listas, ele dispara e força a decisão a ser consciente.
+    """
+    exigidas = {v for a, b, _, _ in stats.PARES for v in (a, b)}
+    ausentes = sorted(exigidas - set(congelar.CONGELADAS))
+    assert ausentes == ["C0rg", "V4b"], (
+        f"a lacuna entre §1 e §5 do congelamento mudou: agora faltam "
+        f"{ausentes}. Isso não é um teste a atualizar por reflexo -- decida o "
+        f"que a mudança significa para o pré-registro.")
+
+    perdidas = sum(len(m) for a, b, m, _ in stats.PARES
+                   if a in ausentes or b in ausentes)
+    assert perdidas == 4
+
+
+def test_detecta_variantes_pre_registradas_ausentes():
+    """A função avisa quando o CSV não tem as variantes que os pares exigem."""
+    so_seis = {v: {} for v in congelar.CONGELADAS}
+    assert stats.variantes_pre_registradas_ausentes(so_seis) == ["C0rg", "V4b"]
+
+    todas = {v: {} for a, b, _, _ in stats.PARES for v in (a, b)}
+    assert stats.variantes_pre_registradas_ausentes(todas) == []
+
+
+def test_nome_do_arquivo_carrega_split_e_camada(tmp_path, monkeypatch):
+    """
+    O prefixo era `stats_val_` fixo e batizava de "val" a saída do teste.
+    Um arquivo que mente no nome é pior que um arquivo sem nome.
+    """
+    monkeypatch.setattr(stats, "RESULTS", tmp_path)
+    for split, camada, esperado in [("val", "chord[0]", "stats_val_ref0_T"),
+                                    ("test", "chord[0]", "stats_test_ref0_T"),
+                                    ("test", "chord[1]", "stats_test_ref1_T")]:
+        csv_out, meta_out = stats.escrever([], {}, "T", split=split,
+                                           camada=camada)
+        assert csv_out.name == f"{esperado}.csv"
+        assert meta_out.name == f"{esperado}_meta.json"
+
+
 def test_rodar_preenche_holm_e_classificacao(csv_pequeno, monkeypatch):
     """A saída de `rodar` não pode ter coluna de Holm vazia nem campo interno."""
     monkeypatch.setattr(stats, "PARES",
