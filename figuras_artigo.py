@@ -259,11 +259,14 @@ def fig_cobertura_acerto(fontes) -> tuple[list[Path], dict]:
             "rotulado": {n: wmean(rs, f"{n}_rotulado") for n in NIVEIS_CURVA},
         }
 
-    # A cobertura máxima do sistema que abstém: o topo das curvas da validação.
+    # A cobertura máxima ALCANÇADA PELAS CURVAS da validação. Note que as
+    # curvas mantêm rel_gate = 0,2: é esse gate, e não o piso absoluto de RMS,
+    # que impede as curvas de chegarem a 100 %. As variantes `rg` (rel_gate=0),
+    # que não estão nas curvas, chegam a 100,00 % exatos na validação.
     cob_max = max(p["cobertura"] for c in ("C", "D", "F")
                   for p in curvas.get(c, []))
     cob_v4 = pontos["V4"]["cobertura"]
-    abs_floor = _meta(fontes["abl_val_ref0"][0])["config_base"]["post"]["abs_floor"]
+    rel_gate = _meta(fontes["abl_val_ref0"][0])["config_base"]["post"]["rel_gate"]
 
     _rc()
     fig, axs = plt.subplots(2, 1, figsize=(LARGURA_POL, 4.4), sharex=True)
@@ -315,17 +318,18 @@ def fig_cobertura_acerto(fontes) -> tuple[list[Path], dict]:
                       title="pontos: variantes congeladas, medidas no teste")
     leg2._legend_box.align = "left"
 
-    nota = (f"Cobertura máxima do sistema: {pct(cob_max)} %, não 100 % — o piso "
-            f"absoluto de RMS (abs_floor = {num(abs_floor, 4)}) força N em "
-            f"{pct(1 - cob_max)} % do tempo mesmo com todas as outras fontes "
-            f"de N desligadas (linha pontilhada). Só o V4, que não abstém, "
-            f"chega a {pct(cob_v4)} %.")
+    nota = (f"As curvas param em {pct(cob_max)} % de cobertura (linha "
+            f"pontilhada), não em 100 %: mesmo com o gate de confiança e o "
+            f"estado N do Viterbi desligados, o gate RELATIVO de silêncio "
+            f"(rel_gate = {num(rel_gate, 1)}) força N em {pct(1 - cob_max)} % "
+            f"do tempo. As variantes rg, que zeram esse gate, e o V4, que não "
+            f"abstém, chegam a {pct(cob_v4)} %.")
     fig.text(0.5, -0.30, textwrap.fill(nota, 62), ha="center", va="top",
              fontsize=FONTE, transform=fig.transFigure)
 
     saidas = _salvar(fig, FIGURAS / "fig_cobertura_acerto")
     return saidas, {"cob_max": cob_max, "cob_v4": cob_v4,
-                    "abs_floor": abs_floor, "nota": nota}
+                    "rel_gate": rel_gate, "nota": nota}
 
 
 # --------------------------------------------------------------------------- #
