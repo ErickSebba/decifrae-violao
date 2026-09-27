@@ -140,6 +140,15 @@ def _csv_mais_recente():
     return candidatos[-1]
 
 
+def _relativo(caminho):
+    """Caminho relativo à raiz quando possível; absoluto quando fora dela."""
+    caminho = Path(caminho)
+    try:
+        return caminho.resolve().relative_to(ROOT).as_posix()
+    except ValueError:
+        return caminho.as_posix()
+
+
 def _camada_de(csv_path):
     """
     A camada de anotação, lida do NOME do arquivo de entrada.
@@ -335,10 +344,32 @@ def rodar(csv_path):
 # ==========================================================================
 # Saída
 # ==========================================================================
-def imprimir(linhas):
+def variantes_pre_registradas_ausentes(por_variante):
+    """
+    Variantes que os pares pré-registrados exigem e que o CSV não tem.
+
+    Existe porque o congelamento saiu inconsistente: a §1 congelou seis
+    configurações e a §5 pré-registrou pares que exigem oito. No CSV do teste
+    faltam `C0rg` e `V4b`, e com elas quatro das quinze comparações. Isso não
+    pode passar em silêncio: uma família de Holm menor dá p-valores menos
+    conservadores, e comparar Holm entre splits de famílias diferentes é
+    inválido.
+    """
+    exigidas = {v for a, b, _, _ in PARES for v in (a, b)}
+    return sorted(exigidas - set(por_variante))
+
+
+def imprimir(linhas, csv_path=None, ausentes=()):
+    titulo = "Comparações pareadas"
+    if csv_path is not None:
+        titulo += f" — split {_split_de(csv_path)}, {_camada_de(csv_path)}"
+    titulo += ". Diferença = b − a (positivo: b melhor)"
     print("=" * 118)
-    print("Comparações pareadas — split val, chord[0]. Diferença = b − a "
-          "(positivo: b melhor)")
+    print(titulo)
+    if ausentes:
+        print(f"ATENÇÃO: variantes pré-registradas ausentes do CSV: "
+              f"{', '.join(ausentes)}. As comparações que dependem delas NÃO "
+              f"foram avaliadas.")
     print("=" * 118)
     cab = (f"{'par':<14} | {'métrica':<14} | {'dif':>7} | {'IC 95 %':>17} | "
            f"{'p boot':>9} | {'Holm boot':>9} | {'Holm Wilc':>9} | "
@@ -362,16 +393,28 @@ def imprimir(linhas):
     print(f"confirmado = IC exclui zero E Holm(boot) < {ALFA};  "
           f"empate = IC cruza zero;  fragil = IC exclui zero mas Holm não "
           f"rejeita.")
+    esperadas = sum(len(m) for _, _, m, _ in PARES)
+    print(f"Família de Holm: {len(linhas)} comparações"
+          + (f" de {esperadas} pré-registradas — os p de Holm NÃO são "
+             f"comparáveis com uma família de tamanho diferente."
+             if len(linhas) != esperadas else " (a família pré-registrada)"))
 
 
-def escrever(linhas, meta, timestamp):
+def escrever(linhas, meta, timestamp, split="val", camada="chord[0]"):
+    """
+    O nome carrega o split e a camada. O prefixo era `stats_val_` fixo, o que
+    batizava de "val" a saída do teste -- um arquivo que mente no nome é pior
+    que um arquivo sem nome.
+    """
     RESULTS.mkdir(parents=True, exist_ok=True)
-    csv_path = RESULTS / f"stats_val_{timestamp}.csv"
+    sufixo_camada = "ref1" if camada == "chord[1]" else "ref0"
+    base = f"stats_{split}_{sufixo_camada}_{timestamp}"
+    csv_path = RESULTS / f"{base}.csv"
     with csv_path.open("w", newline="", encoding="utf-8") as fp:
         w = csv.DictWriter(fp, fieldnames=CSV_FIELDS)
         w.writeheader()
         w.writerows(linhas)
-    meta_path = RESULTS / f"stats_val_{timestamp}_meta.json"
+    meta_path = RESULTS / f"{base}_meta.json"
     meta_path.write_text(json.dumps(meta, indent=2, ensure_ascii=False),
                          encoding="utf-8")
     return csv_path, meta_path
@@ -384,14 +427,24 @@ def main(argv=None):
                     help="default: o ablation_*_ref0.csv mais recente")
     args = ap.parse_args(argv)
 
-    csv_path = Path(args.csv) if args.csv else _csv_mais_recente()
-    print(f"lendo {csv_path.relative_to(ROOT).as_posix()}")
+    # `--csv` aceita caminho relativo OU absoluto: resolver contra ROOT antes
+    # de usar, senão `relative_to` estoura com a forma relativa que a própria
+    # docstring sugere.
+    if args.csv:
+        csv_path = Path(args.csv)
+        if not csv_path.is_absolute():
+            csv_path = (ROOT / csv_path).resolve()
+    else:
+        csv_path = _csv_mais_recente()
+    print(f"lendo {_relativo(csv_path)}")
 
     t0 = time.perf_counter()
     linhas, avisos = rodar(csv_path)
     segundos = time.perf_counter() - t0
 
-    imprimir(linhas)
+    por_variante, _ = carregar(csv_path)
+    ausentes = variantes_pre_registradas_ausentes(por_variante)
+    imprimir(linhas, csv_path, ausentes)
     for aviso in avisos:
         print(f"AVISO: {aviso}")
 
@@ -423,6 +476,9 @@ def main(argv=None):
         "pares": [{"a": a, "b": b, "metricas": m, "isola": i}
                   for a, b, m, i in PARES],
         "n_comparacoes": len(linhas),
+        "n_comparacoes_pre_registradas": sum(len(m) for _, _, m, _ in PARES),
+        "variantes_pre_registradas_ausentes": ausentes,
+        "familia_holm_completa": not ausentes,
         "avisos": avisos,
         "segundos": round(segundos, 1),
         "versoes": {
@@ -433,11 +489,12 @@ def main(argv=None):
         "projeto": runner._commit(),
     }
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    csv_out, meta_out = escrever(linhas, meta, timestamp)
+    csv_out, meta_out = escrever(linhas, meta, timestamp,
+                                 split=_split_de(csv_path),
+                                 camada=_camada_de(csv_path))
     print(f"\ntempo: {segundos:.1f}s")
-    print(f"escrito {csv_out.relative_to(ROOT).as_posix()} "
-          f"({len(linhas)} comparações)")
-    print(f"escrito {meta_out.relative_to(ROOT).as_posix()}")
+    print(f"escrito {_relativo(csv_out)} ({len(linhas)} comparações)")
+    print(f"escrito {_relativo(meta_out)}")
 
 
 if __name__ == "__main__":

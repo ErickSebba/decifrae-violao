@@ -1,0 +1,30 @@
+% gerado por figuras_artigo.py -- não editar à mão
+\begin{table*}[t]
+  \centering
+  \caption{Comparações pareadas no split \emph{val}, camada \texttt{chord[0]}. Fonte: \texttt{stats\_val\_20260927\_013818.csv}.}
+  \label{tab:stats-val}
+  \footnotesize
+  \begin{tabular}{llrrrrl}
+    \toprule
+    Comparação & Métrica & $\Delta$ (p.p.) & IC 95 \% (p.p.) & $p$ bruto & $p$ Holm & Classificação \\
+    \midrule
+    \texttt{C} vs. \texttt{D} & \texttt{root} & +13,90 & [+11,66; +16,17] & 0,0001 & 0,0015 & confirmado \\
+    \texttt{C} vs. \texttt{D} & \texttt{root\_rotulado} & $-$7,26 & [$-$10,27; $-$4,44] & 0,0001 & 0,0015 & confirmado \\
+    \texttt{C0rg} vs. \texttt{D0rg} & \texttt{root} & +2,02 & [+0,67; +3,40] & 0,0040 & 0,0240 & confirmado \\
+    \texttt{C0rg} vs. \texttt{D0rg} & \texttt{majmin} & +3,21 & [+1,59; +4,89] & 0,0001 & 0,0015 & confirmado \\
+    \texttt{D} vs. \texttt{E} & \texttt{root} & $-$1,59 & [$-$2,44; $-$0,78] & 0,0004 & 0,0028 & confirmado \\
+    \texttt{D} vs. \texttt{E} & \texttt{seg} & +3,47 & [+1,85; +5,05] & 0,0001 & 0,0015 & confirmado \\
+    \texttt{D} vs. \texttt{E} & \texttt{overseg} & +9,39 & [+8,23; +10,56] & 0,0001 & 0,0015 & confirmado \\
+    \texttt{V4b} vs. \texttt{V4} & \texttt{root} & +0,78 & [$-$0,82; +2,38] & 0,3428 & 0,3428 & empate \\
+    \texttt{V4b} vs. \texttt{V4} & \texttt{overseg} & +17,54 & [+15,66; +19,46] & 0,0001 & 0,0015 & confirmado \\
+    \texttt{V4} vs. \texttt{F0rg} & \texttt{root} & +1,20 & [+0,06; +2,35] & 0,0396 & 0,0792 & frágil \\
+    \texttt{V4} vs. \texttt{F0rg} & \texttt{majmin} & +4,02 & [+2,26; +5,85] & 0,0001 & 0,0015 & confirmado \\
+    \texttt{V4} vs. \texttt{F0rg} & \texttt{seg} & $-$1,58 & [$-$2,68; $-$0,46] & 0,0060 & 0,0290 & confirmado \\
+    \texttt{D0rg} vs. \texttt{F0rg} & \texttt{root} & +3,35 & [+1,02; +5,80] & 0,0058 & 0,0290 & confirmado \\
+    \texttt{D0rg} vs. \texttt{F0rg} & \texttt{majmin} & +3,07 & [+0,71; +5,51] & 0,0088 & 0,0290 & confirmado \\
+    \texttt{D0rg} vs. \texttt{F0rg} & \texttt{sevenths} & +14,86 & [+12,27; +17,69] & 0,0001 & 0,0015 & confirmado \\
+    \bottomrule
+  \end{tabular}
+  \vspace{2pt}
+  \parbox{\linewidth}{\footnotesize $\Delta$ = média de B menos média de A, em pontos percentuais, média ponderada pela duração; IC 95 \% do bootstrap pareado por faixa ($n = 10000$ reamostragens, semente 0). O $p$ do bootstrap tem piso $1/10000$ (0,0001): os valores nesse piso são o mínimo mensurável, não zero. $p$ Holm: Holm--Bonferroni sobre as 15 comparações. \emph{confirmado} = IC exclui zero e Holm rejeita; \emph{frágil} = IC exclui zero mas Holm não rejeita; \emph{empate} = IC cruza zero.}
+\end{table*}
