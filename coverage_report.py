@@ -64,9 +64,9 @@ CAMADAS = [
      ds.load_idmt_lab),
 ]
 
-CSV_FIELDS = ["dataset", "camada", "nivel", "n_faixas", "duracao_total_s",
-              "comparavel_frac", "comparavel_s", "descartado_frac",
-              "n_frac", "n_s", "top_qualidades"]
+CSV_FIELDS = ["dataset", "camada", "split", "nivel", "n_faixas",
+              "duracao_total_s", "comparavel_frac", "comparavel_s",
+              "descartado_frac", "n_frac", "n_s", "top_qualidades"]
 
 
 # ==========================================================================
@@ -104,12 +104,21 @@ def _qualidade(label):
     return quality or 'maj'
 
 
-def medir_camada(dataset, camada, manifest, loader):
+def medir_camada(dataset, camada, manifest, loader, split=None):
     """
-    Agrega todas as faixas não excluídas do manifest e devolve uma linha por
-    nível, mais a tabela de qualidades (que não depende do nível).
+    Agrega as faixas não excluídas do manifest e devolve uma linha por nível,
+    mais a tabela de qualidades (que não depende do nível).
+
+    `split=None` agrega tudo; um valor (`'val'`, `'test'`, `'eval'`) restringe.
+    O recorte existe porque a distribuição de qualidades NÃO é a mesma nos dois
+    splits -- o tempo de `7` em chord[0] é 9,02 % no conjunto todo e 9,15 % só
+    no teste. Quem usar a fração agregada para normalizar um resultado do teste
+    erra na terceira casa, e erra a favor da própria conclusão.
     """
     linhas_manifest = _linhas(manifest)
+    if split is not None:
+        linhas_manifest = [r for r in linhas_manifest
+                           if (r.get("split") or "") == split]
     labels, duracoes = [], []
     anotacoes_lidas = 0
 
@@ -140,6 +149,7 @@ def medir_camada(dataset, camada, manifest, loader):
         linhas.append({
             "dataset": dataset,
             "camada": camada,
+            "split": split if split is not None else "todos",
             "nivel": nivel,
             "n_faixas": anotacoes_lidas,
             "duracao_total_s": round(total, 3),
@@ -148,7 +158,10 @@ def medir_camada(dataset, camada, manifest, loader):
             "descartado_frac": round(1 - comparavel / total, 6) if total else 0.0,
             "n_frac": round(tempo_n / total, 6) if total else 0.0,
             "n_s": round(tempo_n, 3),
-            "top_qualidades": "|".join(f"{q}:{f:.4f}" for q, f in top),
+            # 6 casas, não 4: a fração de '7' é usada para normalizar um
+            # resultado do teste, e 4 casas mudariam a terceira casa do
+            # número publicado.
+            "top_qualidades": "|".join(f"{q}:{f:.6f}" for q, f in top),
         })
     return linhas, top
 
@@ -160,8 +173,24 @@ def _linhas(manifest):
                 if (r.get("excluded") or "false").strip().lower() != "true"]
 
 
+def _splits_do_manifest(manifest):
+    """Os splits presentes no manifest, na ordem em que aparecem."""
+    vistos = []
+    for r in _linhas(manifest):
+        s = r.get("split") or ""
+        if s and s not in vistos:
+            vistos.append(s)
+    return vistos
+
+
 def medir_tudo():
-    """Devolve (linhas_do_csv, {(dataset, camada): top_qualidades})."""
+    """
+    Devolve (linhas_do_csv, {(dataset, camada): top_qualidades}).
+
+    Emite o agregado (`split=todos`) e um recorte por split, para que um
+    resultado medido num split possa ser normalizado pela distribuição daquele
+    mesmo split e não pela do dataset inteiro.
+    """
     linhas, tops = [], {}
     for dataset, camada, manifest, loader in CAMADAS:
         if not (ROOT / manifest).exists():
@@ -170,6 +199,10 @@ def medir_tudo():
         parciais, top = medir_camada(dataset, camada, manifest, loader)
         linhas.extend(parciais)
         tops[(dataset, camada)] = top
+        for split in _splits_do_manifest(manifest):
+            parciais_split, _ = medir_camada(dataset, camada, manifest, loader,
+                                             split=split)
+            linhas.extend(parciais_split)
     return linhas, tops
 
 
