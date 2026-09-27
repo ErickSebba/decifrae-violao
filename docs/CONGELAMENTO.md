@@ -5,8 +5,8 @@
 > depois de congelada — nesse caso o congelamento é que está errado,
 > não o script.
 
-- Gerado em: 2026-09-26T01:52:28
-- Commit que define estas configurações: `159993387b9a0c17a3830eaf9ce3b5e1885ec91c`
+- Gerado em: 2026-09-27T01:27:51
+- Commit que define estas configurações: `ee2d0de04dcdaed1f7ac331a7835713aca3156dd`
 - Árvore suja na geração: **sim**
 
 O conjunto de teste (60 excertos dos músicos 04 e 05) **não foi lido**
@@ -60,7 +60,47 @@ Três destes campos configuram o **classificador**, não o `decode`:
 | `abs_floor` | — | 0.0005 | 0.0005 | 0.0005 | 0.0005 | 0.0005 |
 | `min_dur` | — | 0.0 | 0.0 | 0.8 | 0.0 | 0.0 |
 
-## 4. Protocolo do teste
+## 4. O que NÃO foi ablacionado
+
+Registrado para que a ausência seja uma decisão declarada e não um
+esquecimento que um revisor descubra:
+
+| Parâmetro | Valor fixo | Situação |
+|---|---|---|
+| `change_penalty` | 2.0 | **Nunca variado.** Nenhuma execução usou outro valor, nem na ablação nem nas curvas. Vem da calibração manual em `Musicas/` e entra no teste como constante, não como escolha justificada por dado. |
+| `temp` | 0.1 | Nunca variado. |
+| `ext_sharpness` | 4.0 | Nunca variado. Só tem efeito quando `complexity_penalty > 0`. |
+| `abs_floor` | 5e-4 | Nunca variado. Responde pelos 0,25 % de tempo em N que sobram nas variantes `rg`. |
+| `bins_per_octave` | 36 | Nunca variado. Ligado à configuração no T5, mas não varrido. |
+| `hpss_margin` | 3.0 | Idem. |
+
+## 5. Comparações pré-registradas
+
+Os pares abaixo, e as métricas de cada um, foram fixados **antes** de
+ler o conjunto de teste. Cada par isola uma etapa; a diferença
+reportada é sempre `b − a`, positivo quando `b` é melhor. São os
+mesmos pares que `stats.py` roda na validação — a lista vive em
+`stats.PARES` e é importada por este script, para que o documento não
+possa divergir do código.
+
+Cada comparação traz: diferença média ponderada por duração, IC 95 %
+por bootstrap pareado (10 000 reamostragens de faixas, semente 0),
+Wilcoxon pareado e a contagem de faixas em que `b` ganha, perde ou
+empata.
+
+| # | Par | Métricas | O que isola |
+|---|---|---|---|
+| 1 | `C` vs `D` | `root`, `root_rotulado` | o Viterbi na métrica usual |
+| 2 | `C0rg` vs `D0rg` | `root`, `majmin` | o Viterbi com cobertura igualada (nenhuma fonte de N) |
+| 3 | `D` vs `E` | `root`, `seg`, `overseg` | o trade-off do min_dur: acurácia contra segmentação |
+| 4 | `V4b` vs `V4` | `root`, `overseg` | a inércia temporal do baseline |
+| 5 | `V4` vs `F0rg` | `root`, `majmin`, `seg` | baseline contra a melhor variante |
+| 6 | `D0rg` vs `F0rg` | `root`, `majmin`, `sevenths` | o vocabulário (MEDIUM vs BASIC) com cobertura igualada |
+
+Nenhum par novo entra depois de o teste ser lido. Um par acrescentado
+depois é análise exploratória e precisa ser reportado como tal.
+
+## 6. Protocolo do teste
 
 1. O split `test` é lido **uma única vez**, com
    `python runner.py --manifest data/manifests/guitarset_comping.csv`
