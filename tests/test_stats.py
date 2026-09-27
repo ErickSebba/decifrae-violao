@@ -18,6 +18,7 @@ reprodutibilidade pela semente) e a recusa em inventar dado quando não há.
 import csv
 import os
 import sys
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -308,6 +309,41 @@ def test_celula_vazia_descarta_a_faixa_em_vez_de_virar_zero(tmp_path):
     assert r["n_faixas"] == 1
     assert r["n_descartadas"] == 1
     assert r["diferenca"] == pytest.approx(0.2)
+
+
+def test_carregar_une_varios_csvs(csv_pequeno, tmp_path):
+    """
+    A matriz de uma camada pode estar partida em vários arquivos -- no teste,
+    as seis variantes congeladas e as duas do adendo saíram em commits
+    separados. A união é por variante.
+    """
+    extra = tmp_path / "ablation_extra_ref0.csv"
+    campos = ["variante", "track_id", "duracao_s", "root", "majmin",
+              "root_rotulado"]
+    with extra.open("w", newline="", encoding="utf-8") as fp:
+        w = csv.DictWriter(fp, fieldnames=campos)
+        w.writeheader()
+        for tid, dur in [("t1", 10), ("t2", 10), ("t3", 10), ("t4", 70)]:
+            w.writerow({"variante": "Z", "track_id": tid, "duracao_s": dur,
+                        "root": 0.7, "majmin": 0.7, "root_rotulado": 0.7})
+
+    por_variante, duracoes = stats.carregar(csv_pequeno, extra)
+    assert set(por_variante) == {"A", "B", "Z"}
+    assert len(duracoes) == 4
+    r = stats.comparar(por_variante, duracoes, "A", "Z", "root", "t")
+    assert r["n_faixas"] == 4
+
+
+def test_variante_repetida_em_dois_csvs_levanta(csv_pequeno, tmp_path):
+    """
+    A mesma variante em dois arquivos é ambiguidade, não união: um deles
+    venceria em silêncio e ninguém saberia qual.
+    """
+    copia = tmp_path / "ablation_copia_ref0.csv"
+    copia.write_text(Path(csv_pequeno).read_text(encoding="utf-8"),
+                     encoding="utf-8")
+    with pytest.raises(ValueError, match="dois CSVs"):
+        stats.carregar(csv_pequeno, copia)
 
 
 def test_variante_ausente_levanta():
