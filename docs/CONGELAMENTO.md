@@ -5,8 +5,8 @@
 > depois de congelada — nesse caso o congelamento é que está errado,
 > não o script.
 
-- Gerado em: 2026-09-27T01:27:51
-- Commit que define estas configurações: `ee2d0de04dcdaed1f7ac331a7835713aca3156dd`
+- Gerado em: 2026-09-27T01:36:51
+- Commit que define estas configurações: `b68033d50796683143ae8c914af5732b56c2da52`
 - Árvore suja na geração: **sim**
 
 O conjunto de teste (60 excertos dos músicos 04 e 05) **não foi lido**
@@ -87,6 +87,38 @@ Cada comparação traz: diferença média ponderada por duração, IC 95 %
 por bootstrap pareado (10 000 reamostragens de faixas, semente 0),
 Wilcoxon pareado e a contagem de faixas em que `b` ganha, perde ou
 empata.
+
+### 5.1 Critério de decisão
+
+Declarado antes de ler o teste, para que a leitura não possa escolher
+o critério que favorece a conclusão:
+
+**(a) O critério PRINCIPAL é o IC 95 % do bootstrap pareado sobre a
+média ponderada por duração.** O Wilcoxon pareado é SECUNDÁRIO: ele
+complementa dizendo se a diferença é consistente faixa a faixa, e
+nunca decide sozinho. Os dois medem coisas diferentes e podem
+discordar — a média ponderada é dominada por faixas longas, o teste
+de ranks conta faixas. Quando discordarem, ambos são reportados.
+
+**(b) Os p-valores são corrigidos por Holm-Bonferroni sobre as
+15 comparações desta tabela**, em duas famílias
+separadas (uma para o bootstrap, uma para o Wilcoxon), com
+α = 0.05. O p do bootstrap é o nível de significância
+atingido: duas vezes a menor cauda da distribuição bootstrap em
+relação a zero, com piso em 1/10 000.
+
+**(c) Classificação de cada efeito:**
+
+| Classe | Regra |
+|---|---|
+| `confirmado` | o IC 95 % exclui zero **e** o p de Holm do bootstrap < 0.05 |
+| `empate` | o IC 95 % cruza zero — não há efeito distinguível de ruído |
+| `fragil` | o IC 95 % exclui zero mas Holm não rejeita |
+
+Um efeito `empate` **não** é descrito como ganho em nenhum texto do
+artigo. Um efeito `fragil` é reportado com a ressalva explícita. A
+classificação é calculada por `stats.classificar`, não atribuída à
+mão.
 
 | # | Par | Métricas | O que isola |
 |---|---|---|---|
