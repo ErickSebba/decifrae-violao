@@ -124,3 +124,67 @@ def test_agregacao_respeita_exclusoes_e_pondera_por_tempo(manifest_minimo):
     assert por_nivel['majmin']["n_frac"] == pytest.approx(0.25)
 
     assert dict(top)['dim7'] == pytest.approx(0.5)
+    assert por_nivel['majmin']["split"] == "todos"
+
+
+def test_recorte_por_split_muda_a_distribuicao(tmp_path, monkeypatch):
+    """
+    O recorte por split existe porque a distribuição de qualidades difere
+    entre os splits. Usar a fração agregada para normalizar um resultado de um
+    split só erra a favor de quem escolhe a normalização.
+    """
+    import dataset_io as ds
+    a = tmp_path / "a.lab"
+    a.write_text("0.0\t2.0\tC:maj\n", encoding="utf-8")       # val: só tríade
+    b = tmp_path / "b.lab"
+    b.write_text("0.0\t2.0\tC:7\n", encoding="utf-8")         # test: só sétima
+    manifest = tmp_path / "m.csv"
+    manifest.write_text(
+        "dataset,track_id,annotation_path,split,excluded\n"
+        f"t,t1,{a.name},val,false\n"
+        f"t,t2,{b.name},test,false\n", encoding="utf-8")
+    monkeypatch.setattr(cov, "ROOT", tmp_path)
+
+    def frac7(split):
+        linhas, top = cov.medir_camada("t", "lab", manifest.name,
+                                       ds.load_idmt_lab, split=split)
+        return dict(top).get("7", 0.0), linhas[0]["split"]
+
+    assert frac7("val") == (pytest.approx(0.0), "val")
+    assert frac7("test") == (pytest.approx(1.0), "test")
+    agregado, rotulo = frac7(None)
+    assert agregado == pytest.approx(0.5) and rotulo == "todos"
+
+
+def test_medir_tudo_emite_agregado_e_recortes(tmp_path, monkeypatch):
+    """
+    O CSV precisa ter a linha agregada E uma por split, para cada camada.
+
+    A versão anterior deste teste só afirmava `"split" in CSV_FIELDS`, e uma
+    regressão que fizesse `medir_tudo` parar de emitir os recortes passaria
+    por ele. Agora a asserção é sobre a saída.
+    """
+    import dataset_io as ds
+    assert "split" in cov.CSV_FIELDS
+
+    lab = tmp_path / "a.lab"
+    lab.write_text("0.0\t2.0\tC:maj\n", encoding="utf-8")
+    manifest = tmp_path / "m.csv"
+    manifest.write_text(
+        "dataset,track_id,annotation_path,split,excluded\n"
+        f"d,t1,{lab.name},val,false\n"
+        f"d,t2,{lab.name},test,false\n"
+        f"d,t3,{lab.name},val,true\n", encoding="utf-8")
+    monkeypatch.setattr(cov, "ROOT", tmp_path)
+    monkeypatch.setattr(cov, "CAMADAS",
+                        [("d", "lab", manifest.name, ds.load_idmt_lab)])
+
+    linhas, _ = cov.medir_tudo()
+    splits = {l["split"] for l in linhas}
+    assert splits == {"todos", "val", "test"}, splits
+    # uma linha por (split, nível), e a excluída não conta em nenhum
+    assert len(linhas) == 3 * len(cov.LEVELS)
+    por_split = {l["split"]: l for l in linhas if l["nivel"] == "root"}
+    assert por_split["todos"]["n_faixas"] == 2
+    assert por_split["val"]["n_faixas"] == 1
+    assert por_split["test"]["n_faixas"] == 1

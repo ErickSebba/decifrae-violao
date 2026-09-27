@@ -1,7 +1,8 @@
 # Resultados
 
 Todos os números desta seção vêm de CSVs em `data/results/`; a §6 lista a
-origem de cada um. Os valores do **conjunto de teste** (58 excertos dos
+origem de cada um, com o filtro que o reproduz. A única exceção é o tamanho dos
+dois vocabulários (24 e 60 templates), que é definição de código e não medida. Os valores do **conjunto de teste** (58 excertos dos
 músicos 04 e 05) são os principais; os da validação (120 excertos dos músicos
 00–03) aparecem entre parênteses, sempre identificados como tais. O conjunto
 de teste foi medido em duas invocações do runner, uma por camada de referência
@@ -9,6 +10,15 @@ de teste foi medido em duas invocações do runner, uma por camada de referênci
 congeladas em `docs/CONGELAMENTO.md` antes da leitura, e cada uma commitada
 antes da seguinte. Não houve nenhuma execução adicional sobre o conjunto de
 teste, com nenhuma outra configuração.
+
+**Cobertura das afirmações em chord[1].** Os níveis sensíveis à qualidade do
+acorde ponderam bem menos tempo nessa camada, e menos ainda no recorte de
+teste: `sevenths` pondera 59,2 % do tempo anotado dos 58 excertos e `majmin`
+62,9 %, contra 95,4 % nos dois níveis em chord[0]. Na validação as frações
+correspondentes são 66,8 % e 68,5 %. Toda afirmação sobre `majmin` ou
+`sevenths` em chord[1] — inclusive as da §4.1 e as da tabela da §5, e as da
+validação — repousa sobre tempo parcial. Não repetimos a ressalva em cada
+ocorrência; ela vale para todas.
 
 A camada de referência é indicada em cada afirmação. As colunas `root`,
 `N est`, `overseg`, `underseg`, `seg` e as contagens de segmentos são
@@ -19,15 +29,17 @@ diferem apenas na qualidade do acorde. Por isso as afirmações sobre `majmin`,
 **Convenção para os p-valores de Holm.** Toda correção de Holm citada é a da
 camada **chord[0]**, salvo menção contrária. Isso vale mesmo para métricas cujo
 valor bruto é idêntico nas duas camadas: o p ajustado depende da família
-inteira de comparações, e a família muda quando `majmin`, `sevenths` e `mirex`
-mudam. As diferenças são pequenas — a maior é `V4b vs V4` em `root`, 0,343 em
-chord[0] contra 0,649 em chord[1] — e **em nenhum dos doze casos afetados a
-classificação muda de camada**. Onde o número da outra camada importa para a
-leitura, ele está citado.
+inteira de comparações, e a família muda quando `majmin` e `sevenths` mudam —
+as duas únicas métricas sensíveis à camada entre as seis que os pares
+pré-registrados usam. São doze os casos afetados, e **em nenhum deles a
+classificação muda de camada**, embora o p possa quase dobrar: o maior desvio é
+`V4b vs V4` em `root`, 0,343 em chord[0] contra 0,649 em chord[1]. Onde o
+número da outra camada importa para a leitura, ele está citado com a camada
+nomeada.
 
 ## 0. Limitações do pré-registro que afetam a leitura desta seção
 
-Três ressalvas que condicionam tudo o que segue.
+Quatro ressalvas que condicionam tudo o que segue.
 
 **Duas das seis comparações pré-registradas não foram avaliadas no teste.** O
 `docs/CONGELAMENTO.md` congelou seis configurações (§1) mas pré-registrou
@@ -43,6 +55,12 @@ razão acima. A correção do teste é, portanto, sistematicamente menos
 conservadora. Comparamos classificações e sinais entre os conjuntos, nunca os
 p ajustados diretamente.
 
+Duas contagens diferentes aparecem neste texto e as duas estão certas: a
+**família de Holm** tem 11 comparações por camada no teste, e é ela que define
+a correção; o número de **células de valor distinto** é 14, porque três das 11
+métricas (`majmin` e `sevenths` nos pares que as usam) dão valores diferentes
+em chord[0] e chord[1], e as outras oito são idênticas nas duas camadas.
+
 **A camada principal declarada e a camada do protocolo estatístico divergem.**
 O `docs/CONGELAMENTO.md` §6 declara `chord[1]` como referência principal,
 seguindo `docs/DATASETS.md` §2, mas o protocolo estatístico pré-registrado foi
@@ -54,12 +72,13 @@ uma como principal nesta seção.
 `docs/CONGELAMENTO.md` atribui ao piso absoluto de RMS (`abs_floor = 5e-4`) os
 0,25 % de tempo rotulado como `N` que restam nas variantes sem outras fontes
 de `N`. A atribuição está errada: na validação, as variantes `rg`
-(`rel_gate = 0`) têm `frac_n_est` **exatamente zero** em todas as 120 faixas,
-e os 0,25 % pertencem ao gate **relativo** de silêncio, que as variantes `C0`,
-`D0` e `F0` mantêm em 0,2. O documento congelado não foi corrigido — alterá-lo
-depois da leitura do teste destruiria seu valor como pré-registro —, e o
-registro correto fica aqui. No conjunto de teste o `abs_floor` tem efeito, mas
-em **1 excerto de 58**.
+(`rel_gate = 0`) têm `frac_n_est` **exatamente zero** em todas as 120 faixas, e
+os 0,25 % pertencem ao gate **relativo** de silêncio. Quem os exibe são `C0`,
+`D0` e `F0`, que mantêm `rel_gate = 0,2` com `min_dur = 0`; `E0`, que mantém o
+mesmo gate mas absorve segmentos curtos (`min_dur = 0,8`), fica em 0,08 %. O
+documento congelado não foi corrigido — alterá-lo depois da leitura do teste
+destruiria seu valor como pré-registro —, e o registro correto fica aqui. No
+conjunto de teste o `abs_floor` tem efeito, mas em **1 excerto de 58**.
 
 ## 1. Cobertura e acerto: o que o Viterbi realmente faz
 
@@ -76,9 +95,9 @@ Na métrica usual, sobre a faixa toda, o Viterbi vale **+7,88 pontos** em
 manteve, com efeito menor.
 
 No tempo que o sistema de fato rotula, o mesmo Viterbi **piora** o acerto:
-**−5,49 pontos** em `root` (IC [−9,23, −1,85], Holm 0,028 em chord[0] e 0,032
-em chord[1], **confirmado** nas duas; validação −7,26, confirmado; 16 faixas
-melhores contra 41). A direção também se manteve.
+**−5,49 pontos** em `root` (IC [−9,23, −1,85], Holm 0,028, **confirmado**;
+validação −7,26, confirmado; 16 faixas melhores contra 41). A direção também se
+manteve.
 
 As duas medidas juntas dizem que o ganho do Viterbi na métrica usual **não vem
 de classificar melhor**: vem de cobrir tempo que o argmax recusava. A variante
@@ -95,20 +114,23 @@ pré-registro, não desta leitura. E **a comparação não existe no teste**, pe
 lacuna da §0 — de modo que qualquer decomposição dos 7,88 pontos em "cobertura"
 e "classificação" fica restrita à validação e sujeita a essa ressalva.
 
-Sobre o eixo horizontal da figura: as curvas param em **99,75 %** de
-cobertura, não em 100 %. A causa não é o piso absoluto de RMS — é o gate
+Sobre o eixo horizontal da figura: as três curvas varridas param em **99,75 %**
+de cobertura, não em 100 %. A causa não é o piso absoluto de RMS — é o gate
 **relativo** de silêncio, que as curvas mantêm em `rel_gate = 0,2`. As
 variantes `rg`, que zeram esse gate e por isso não aparecem nas curvas,
 alcançam **100,00 % exatos** na validação, assim como o V4. No conjunto de
 teste as mesmas variantes `rg` ficam em 99,97 %, e aí o responsável é o
 `abs_floor`, atuando em 1 excerto de 58.
 
-## 2. A abstenção é informativa
+## 2. Abstenção e acerto no tempo rotulado
 
-> **Análise exploratória.** Nenhuma comparação desta subseção consta dos pares
-> pré-registrados da §5 do congelamento, e portanto nenhuma tem IC, p-valor ou
-> classificação. São contrastes descritivos entre colunas da mesma tabela,
-> reportados como tais conforme a própria §5 exige.
+> **Análise exploratória.** Os contrastes que esta subseção desenha — C contra
+> `F0rg`, `D0rg` e o V4 no tempo rotulado, e C contra `C0rg` — **não** constam
+> dos pares pré-registrados da §5 do congelamento, e portanto não têm IC,
+> p-valor nem classificação. O mesmo vale para a coluna Δ e para os valores por
+> variante da tabela. São descritivos, e reportados como tais conforme a própria
+> §5 exige. (O par C contra D, que aparece nas duas primeiras linhas da tabela,
+> é o par pré-registrado nº 1, e está quantificado na §1.)
 
 | variante | cobertura | `root` faixa toda | `root` tempo rotulado | Δ |
 |---|---:|---:|---:|---:|
@@ -124,14 +146,14 @@ A variante que mais se abstém é a mais exata quando se arrisca: C acerta
 quase tudo (F0rg 56,91 %, D0rg 57,75 %, V4 55,87 %). O mesmo padrão aparece na
 validação, com valores mais altos (C 74,69 %; V4 67,95 %).
 
-O trecho descartado por C é, portanto, mais difícil que a média: a abstenção
-não é aleatória. Na validação, a configuração que rotula 100 % do tempo
-(`C0rg`) acerta **63,78 %**, contra os 74,69 % que C acerta no tempo que
-escolhe rotular. Atribuir essa diferença ao `confidence_gate` sozinho seria
-errado — `C0rg` difere de C também no `rel_gate` (0 contra 0,2) e no
-`min_dur` —, então o que os dados sustentam é que **desligar as fontes de
-abstenção** custa acurácia no tempo rotulado, não que um parâmetro específico
-seja responsável. No teste essa medida não existe, porque `C0rg` não foi
+Na validação, a configuração que rotula 100 % do tempo (`C0rg`) acerta
+**63,78 %**, contra os 74,69 % que C acerta no tempo que escolhe rotular.
+Atribuir essa diferença ao `confidence_gate` sozinho seria errado: `C0rg`
+difere de C em **dois** campos, o `confidence_gate` (0 contra 0,72) e o
+`rel_gate` (0 contra 0,2). O que os dados sustentam é que **desligar as fontes
+de abstenção** custa acurácia no tempo rotulado — não que um parâmetro
+específico seja responsável, e não que a abstenção selecione bem por algum
+mecanismo identificado. No teste essa medida não existe, porque `C0rg` não foi
 congelada.
 
 Esta é uma propriedade do sistema, não uma vantagem em nenhuma métrica
@@ -145,19 +167,20 @@ agregada: em `root` sobre a faixa toda, C é a **pior** das seis configurações
 ### 3.1 A absorção de segmentos curtos troca acurácia por fronteiras
 
 A etapa `min_dur = 0,8 s` (D → E) **custa** 1,68 pontos de `root` (IC
-[−2,79, −0,66], Holm 0,0064 em chord[0] e 0,0072 em chord[1], **confirmado**
-nas duas; validação −1,59, confirmado; 19 faixas melhores contra 31) e
-**rende** 9,54 pontos de `overseg` (IC [+7,80, +11,33], Holm 0,0011,
-**confirmado**; validação +9,39, confirmado; 54 faixas melhores contra 0
-piores). As duas direções se mantiveram do conjunto de validação para o de
-teste.
+[−2,79, −0,66], Holm 0,0064, **confirmado**; validação −1,59, confirmado; 19
+faixas melhores contra 31) e **rende** 9,54 pontos de `overseg` (IC
+[+7,80, +11,33], Holm 0,0011, **confirmado**; validação +9,39, confirmado; 54
+faixas melhores contra 0 piores). As duas direções se mantiveram do conjunto de
+validação para o de teste.
 
-No `seg` — o mínimo entre `overseg` e `underseg` — o efeito **não se
-sustentou**: −1,47 pontos, IC [−4,46, +1,47], Holm 1 em chord[0] e 0,985 em
-chord[1], **empate** nas duas, contra +3,47 confirmado na validação. É uma das
-quatro inversões de sinal entre os conjuntos — três delas em chord[0], mais
-uma exclusiva de chord[1] (§5). O ganho de `overseg` de E é real; o efeito
-líquido sobre o `seg` não é distinguível de ruído nestes 58 excertos.
+No `seg` — o mínimo entre `overseg` e `underseg`, tomado **por excerto** antes
+da média ponderada, razão pela qual os agregados publicados não satisfazem a
+relação entre si — o efeito **não se
+sustentou**: −1,47 pontos, IC [−4,46, +1,47], Holm 1, **empate**, contra +3,47
+confirmado na validação. É uma das quatro inversões de sinal **que mudaram de
+classificação** entre os conjuntos — três delas aparecem em chord[0], e uma é
+exclusiva de chord[1] (§5). O ganho de `overseg` de E é real; o efeito líquido
+sobre o `seg` não é distinguível de ruído nestes 58 excertos.
 
 A leitura defensável é que `min_dur` melhora a granularidade das fronteiras
 (`overseg`) ao custo de acurácia (`root`), e que o saldo no `seg` fica
@@ -179,15 +202,15 @@ Em `overseg`, manter os mesmos termos vale **+17,54 pontos** (IC
 configurações congeladas. A afirmação vale para a validação e não foi
 confirmada fora dela.
 
-### 3.3 Número de segmentos não prediz qualidade de fronteira
+### 3.3 Duas observações em que a contagem de segmentos e as métricas de fronteira discordam
 
 O V4 produz 62,7 segmentos por excerto contra 12,0 da referência — mais de
 cinco vezes — e ainda assim tem o **maior** `seg` das seis configurações
 (74,14 % no teste). "Maior" e não "melhor": o único par pré-registrado em `seg`
 que envolve o V4 é `V4 vs F0rg`, e ele é **empate** no teste (§4.1); as outras
-quatro comparações de `seg` entre as seis configurações não foram
-pré-registradas nem testadas. As duas contagens de segmentos desta subseção são
-médias simples por excerto, não ponderadas por duração (§6).
+quatro comparações do V4 em `seg` não foram pré-registradas nem testadas. As
+duas contagens de segmentos desta subseção são médias simples por excerto, não
+ponderadas por duração (§6).
 
 Dentro do conjunto de validação, V4 e V4b produzem exatamente o mesmo número
 de segmentos com `overseg` de 80,21 % e 62,67 %. A contagem de segmentos e a
@@ -207,31 +230,65 @@ melhores contra 6).
 **Esse resultado não significa que um vocabulário de 24 acordes reconheça
 sétimas melhor que um de 60 — ele não reconhece nenhuma.** O nível `sevenths`
 exige tônica, qualidade e sétima corretas. O lead sheet instruído é composto
-majoritariamente de tríades: 86,5 % do tempo é `maj` ou `min` e 9,0 % é `7`.
-`MEDIUM` emite sétimas sobretudo em tempo que a referência rotula como tríade,
-e cada uma dessas sétimas **falsas** é penalizada; `BASIC` não pode cometer
-esse erro porque não tem o rótulo. A vantagem é a ausência de uma classe de
-erro, não a presença de uma capacidade.
+majoritariamente de tríades: 86,5 % do tempo é `maj` ou `min` e 9,0 % é `7`
+(medido sobre os 178 excertos anotados do GuitarSet). `MEDIUM` pode emitir
+sétimas onde a referência tem tríade, e cada uma dessas sétimas **falsas** é
+penalizada em `sevenths`; `BASIC` não pode cometer esse erro, porque não tem o
+rótulo. A vantagem é a ausência de uma classe de erro, não a presença de uma
+capacidade.
+
+Os números do teste, somados à distribuição de qualidades da referência **nos
+mesmos 58 excertos**, permitem pôr um piso nessa classe de erro sem supor nada
+sobre o estimador. `D0rg` acerta 53,53 % em `majmin` e 34,50 % em `sevenths`:
+uma folga de **19,03 pontos** de tempo em que a tônica e a qualidade
+maior/menor estão certas e a sétima não. Os dois níveis ponderam exatamente o
+mesmo conjunto de segmentos comparáveis — 95,42 % do tempo anotado do teste, e
+o que fica fora é o `hdim7` nos dois casos —, e dentro dele a referência rotula
+como `7` no máximo 9,59 pontos (a mesma quantidade dos 9,0 % citados acima,
+agora restrita aos 58 excertos e normalizada pelo tempo comparável). Logo **pelo menos 9,43 pontos** dessa folga são
+sétimas emitidas sobre tempo que a referência rotula como tríade: cerca de
+metade. Para `F0rg` a folga é de 5,06 pontos, que cabe inteira no tempo de `7`
+que ela perde por não ter o rótulo.
+
+O que continua não medido é a distribuição das emissões em si — a coluna
+`frac_tonica_ok_qualidade_erro` existe na ablação e não foi usada nesta
+análise. O piso acima é um limite inferior dedutivo, não a medida direta.
 
 Na camada **chord[1]**, que registra o que foi efetivamente tocado, a vantagem
 **desaparece**: `F0rg` fica 5,33 pontos **abaixo** de `D0rg` em `sevenths` (IC
 [−12,07, +1,00], Holm 0,551, **empate**), contra +6,68 confirmado na validação
-da mesma camada — a quarta inversão de sinal. Isso é compatível com a leitura
+da mesma camada — a quarta inversão de sinal com mudança de classificação. Isso é compatível com a leitura
 acima, mas não a confirma: um empate é ausência de efeito detectável, não
 evidência a favor de um mecanismo.
 
-Duas ressalvas sobre essa comparação em chord[1]. Primeira: o nível `sevenths`
-dessa camada pondera apenas **64,3 %** do tempo anotado — o mir_eval descarta o
-resto, porque a referência sai do vocabulário do nível (contra 95,5 % em
-chord[0]). Segunda: com 58 excertos, o IC de [−12,07, +1,00] é largo o
-suficiente para acomodar tanto vantagem quanto desvantagem substancial de
-qualquer dos dois vocabulários.
+Duas ressalvas sobre essa comparação em chord[1]. Primeira: nos 58 excertos de
+teste, o nível `sevenths` dessa camada pondera apenas **59,2 %** do tempo
+anotado — o mir_eval descarta o resto, porque a referência sai do vocabulário
+do nível, e o descarte é maior no teste que no conjunto todo (64,3 %). Em
+chord[0] o mesmo nível pondera 95,4 %. Ou seja: a comparação que fundamenta
+este parágrafo roda sobre pouco mais da metade do tempo anotado — é a de IC
+mais largo (13,07 pontos) e menor cobertura comparável entre as catorze que
+reportamos. Pelo p de Holm ela não é a mais fraca: há quatro comparações do
+teste em chord[0] com p = 1.
+
+Segunda: o IC é **assimétrico**, e a assimetria diz mais que o empate. Como a
+diferença é `F0rg − D0rg`, o limite superior de +1,00 deixa de fora qualquer
+vantagem de `F0rg` maior que um ponto, enquanto o limite inferior admite uma
+desvantagem de até doze. Em chord[1], portanto, uma vantagem substancial de
+`MEDIUM` é compatível com os dados e uma vantagem substancial de `BASIC` **não
+é sustentada pelo IC 95 %** — sem que nenhuma das duas alcance significância
+com 58 excertos.
 
 Em `root` e `majmin`, as duas configurações **empatam** no teste: −0,84 pontos
 em `root` (IC [−3,96, +2,52], Holm 1) e −1,42 em `majmin` em chord[0] (IC
-[−4,70, +1,85], Holm 1). Na validação as duas eram confirmadas a favor de
-`F0rg` (+3,35 e +3,07). Não há base nos dados de teste para preferir um
-vocabulário ao outro em `root` ou `majmin`.
+[−4,70, +1,85], Holm 1). Em chord[1], o `majmin` do teste também é **empate**, e na mesma direção:
+**−3,68 pontos** (IC [−8,14, +0,62], Holm 0,551; 21 faixas melhores contra 28,
+com 9 empates). Na validação, as duas eram confirmadas a favor de `F0rg`:
++3,35 em `root` (nas duas camadas, já que `root` não depende da camada) e +3,07
+em `majmin` **em chord[0]** — em chord[1], o `majmin` da validação já era
+**empate** (+1,56, IC [−1,60, +4,57]).
+Não há base nos dados de teste para preferir um vocabulário ao outro em `root`
+ou `majmin`.
 
 ### 4.1 Contra o baseline
 
@@ -261,9 +318,14 @@ formulação mais forte que essa não se sustenta nos dados de teste.
 
 ## 5. Divergências entre validação e teste
 
-Nenhuma comparação inverteu de sinal **e** permaneceu confirmada; todas as
-inversões caíram para `empate`. Cinco comparações perderam força em chord[0] e
-nenhuma ganhou.
+Nenhuma comparação inverteu de sinal **e** permaneceu confirmada. Cinco
+comparações perderam força em chord[0] e nenhuma ganhou.
+
+São **cinco** as inversões de sinal entre os conjuntos, das quais **quatro**
+mudaram de classificação e estão na tabela abaixo. A quinta é o `majmin` de
+chord[1] no par `D0rg vs F0rg`: +1,56 na validação e −3,68 no teste, `empate`
+nos dois lados — inverte o sinal sem mudar o que se pode concluir, e por isso
+não entra na tabela, cujo critério é a perda de força.
 
 | par | métrica | camada | validação | teste | inverteu? |
 |---|---|---|---|---|---|
@@ -312,9 +374,15 @@ frações de tempo — ponderá-las daria 66,36 e 12,46 em vez de 62,7 e 12,0.
 | Estatística do teste, chord[1] | `data/results/stats_test_ref1_20260927_020516.csv` | idem |
 | Estatística da validação, chord[0] | `data/results/stats_val_ref0_20260927_020511.csv` | idem |
 | Estatística da validação, chord[1] | `data/results/stats_val_ref1_20260927_020513.csv` | idem |
-| Cobertura do nível `sevenths` em cada camada — 64,3 % e 95,5 % (§4) | `data/results/coverage.csv` | `dataset=guitarset`, `nivel=sevenths`, coluna `comparavel_frac`, por `camada` |
-| Distribuição de qualidades de chord[0] — 86,5 % de tríades, 9,0 % de `7` (§4) | `data/results/coverage.csv` | `camada=chord[0]`, coluna `top_qualidades` |
+| Cobertura em chord[1] no teste — 59,2 % em `sevenths` e 62,9 % em `majmin` (cabeçalho, §4) | `data/results/coverage.csv` | `camada=chord[1]`, **`split=test`**, coluna `comparavel_frac`, por `nivel`. O mesmo motivo da linha do piso vale aqui: a linha `split=todos` daria 64,3 % e 66,7 %, fazendo a comparação do teste parecer mais sólida do que é |
+| Cobertura de referência em chord[0] no teste — 95,4 % (cabeçalho, §4) | `data/results/coverage.csv` | `camada=chord[0]`, `split=test`, `nivel` em (`majmin`, `sevenths`), `comparavel_frac` — os dois dão 0,954234; `root` e `mirex` dariam 100 % |
+| Cobertura agregada em chord[1] — 64,3 % (§4, como contraste) | `data/results/coverage.csv` | `camada=chord[1]`, `nivel=sevenths`, `split=todos` |
+| Distribuição de qualidades de chord[0] — 86,5 % de tríades, 9,0 % de `7` (§4) | `data/results/coverage.csv` | `camada=chord[0]`, `split=todos`, coluna `top_qualidades`, frações do tempo total |
+| Tamanho dos vocabulários — 24 e 60 templates (§4) | `chord_templates.py` | `BASIC = ['', 'm']` e `MEDIUM = ['', 'm', '7', 'maj7', 'm7']`, × 12 tônicas. É definição de vocabulário, não resultado medido |
+| Comparável de 95,42 % e teto de 9,59 pontos (§4) | `data/results/coverage.csv` | `camada=chord[0]`, `nivel=sevenths`, **`split=test`**; `comparavel_frac` = 0,954234 e o `7` de `top_qualidades` = 0,091533, com o teto = 9,1533 % / 95,4234 % = 9,5923 pontos. A linha `split=todos` **não** serve aqui: ela agrega os 178 excertos, o teste tem mais `7` que a média (9,15 % contra 9,02 %) e usá-la inflaria o piso em 0,15 ponto |
+| Piso de 9,43 pontos de sétimas falsas (§4) | as duas linhas acima | `majmin − sevenths` de `D0rg` no teste (19,0266) menos o teto de 9,5923 |
 | Curvas de cobertura × acerto (figura §1) | `data/results/curvas_20260926_015602.csv` | `split=val`, chord[0]; agrupado por `(curva, valor)` |
+| `rel_gate = 0,2` das curvas (§1) | — | o CSV das curvas **não** tem coluna `rel_gate`; o valor é o das variantes-base C, D e F, das quais cada ponto deriva variando só `confidence_gate` ou `n_logprob` |
 | Cobertura = 1 − `frac_n_est` | os CSVs de ablação acima | coluna `frac_n_est` |
 | `rel_gate = 0,2` e `abs_floor = 5e-4` (§0, §1) | `data/results/ablation_20260927_005629_ref0_meta.json` | `config_base.post` |
 | Faixas com `N` residual: 0/120 nas variantes `rg` da validação, 1/58 no teste (§0, §1) | os CSVs de ablação acima | contagem de linhas com `frac_n_est > 0`, por `variante` |
