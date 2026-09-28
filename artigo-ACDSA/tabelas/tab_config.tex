@@ -1,0 +1,30 @@
+% gerado por tabelas_artigo.py -- não editar à mão
+\begin{table*}[t]
+  \centering
+  \caption{Campos de \texttt{PreChromaConfig} e \texttt{PostChromaConfig}. \emph{Estágio} distingue os campos que exigem recalcular o chroma (pré-chroma: HPSS, \emph{beat track}, CQT) dos que operam sobre o chroma já sincronizado por batida (pós-chroma: gate de silêncio, emissão, Viterbi, junção e absorção de segmentos). \emph{Valor} é a configuração de produção, lida dos defaults de \texttt{config.py}. \emph{Valores testados} são os valores que aparecem em alguma execução registrada da ablação ou das curvas; \emph{fixo} marca o campo que manteve o mesmo valor em todas elas.}
+  \label{tab:config}
+  \footnotesize
+  \begin{tabular}{llrl}
+    \toprule
+    Parâmetro & Estágio & Valor & Valores testados \\
+    \midrule
+    \texttt{sr} & pré-chroma & 22050 & fixo \\
+    \texttt{method} & pré-chroma & \texttt{cqt} & fixo \\
+    \texttt{smooth} & pré-chroma & 21 & 0; 21 \\
+    \texttt{hpss\_margin} & pré-chroma & 3,0 & fixo \\
+    \texttt{bins\_per\_octave} & pré-chroma & 36 & fixo \\
+    \texttt{complexity\_penalty} & pós-chroma & 0,06 & 0,0; 0,06 \\
+    \texttt{ext\_sharpness} & pós-chroma & 4,0 & fixo \\
+    \texttt{confidence\_gate} & pós-chroma & 0,72 & 0,0; 0,5; 0,55; 0,6; 0,65; 0,7; 0,72; 0,75; 0,8; 0,85; 0,9 \\
+    \texttt{use\_viterbi} & pós-chroma & \texttt{True} & \texttt{False}; \texttt{True} \\
+    \texttt{change\_penalty} & pós-chroma & 2,0 & fixo \\
+    \texttt{temp} & pós-chroma & 0,1 & fixo \\
+    \texttt{n\_logprob} & pós-chroma & $-$2,5 & $-10^{9}$; $-$8,0; $-$6,0; $-$5,0; $-$4,0; $-$3,0; $-$2,5; $-$2,0; $-$1,5; $-$1,0 \\
+    \texttt{rel\_gate} & pós-chroma & 0,2 & 0,0; 0,2 \\
+    \texttt{abs\_floor} & pós-chroma & 0,0005 & fixo \\
+    \texttt{min\_dur} & pós-chroma & 0,8 & 0,0; 0,8 \\
+    \bottomrule
+  \end{tabular}
+  \vspace{2pt}
+  \parbox{\linewidth}{\footnotesize Fontes: \texttt{ablation\_20260924\_000056.csv}, \texttt{ablation\_20260924\_025255\_ref0.csv}, \texttt{ablation\_20260926\_004652\_ref1.csv}, \texttt{ablation\_20260926\_011905\_ref0.csv}, \texttt{ablation\_20260926\_012814\_ref1.csv}, \texttt{ablation\_20260927\_005629\_ref0.csv}, \texttt{ablation\_20260927\_010621\_ref1.csv}, \texttt{ablation\_20260927\_014253\_ref0.csv}, \texttt{ablation\_20260927\_014445\_ref1.csv}, \texttt{ablation\_20260927\_201422\_ref0.csv}, \texttt{ablation\_20260927\_201649\_ref1.csv}, \texttt{curvas\_20260926\_015602.csv}.}
+\end{table*}
