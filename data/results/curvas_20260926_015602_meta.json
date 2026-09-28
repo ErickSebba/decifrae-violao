@@ -1,0 +1,59 @@
+{
+  "gerado_em": "2026-09-26T01:56:02",
+  "manifest": "data/manifests/guitarset_comping.csv",
+  "splits": [
+    "val"
+  ],
+  "ref_camada": "chord[0]",
+  "niveis": [
+    "root",
+    "majmin"
+  ],
+  "n_pontos": 31,
+  "n_linhas": 3720,
+  "gates_C": [
+    0.0,
+    0.5,
+    0.55,
+    0.6,
+    0.65,
+    0.7,
+    0.75,
+    0.8,
+    0.85,
+    0.9
+  ],
+  "n_logprobs": [
+    -1.0,
+    -1.5,
+    -2.0,
+    -2.5,
+    -3.0,
+    -4.0,
+    -5.0,
+    -6.0,
+    -8.0,
+    -1000000000.0
+  ],
+  "falhas": [],
+  "segundos": 203.8,
+  "versoes": {
+    "python": "3.14.6",
+    "numpy": "2.4.6",
+    "librosa": "0.11.0",
+    "mir_eval": "0.8.2"
+  },
+  "projeto": {
+    "commit": "148949543b81a91f434c9d0d61eaeaddfd0a3683",
+    "arvore_suja": false
+  },
+  "config_base": {
+    "pre": {
+      "sr": 22050,
+      "method": "cqt",
+      "smooth": 21,
+      "hpss_margin": 3.0,
+      "bins_per_octave": 36
+    }
+  }
+}

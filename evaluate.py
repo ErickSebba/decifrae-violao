@@ -59,34 +59,53 @@ def _to_mireval(label):
     return root if qual == 'maj' else f"{root}:{qual}"
 
 
-def _to_arrays(segments):
-    """Lista de (start, end, label) -> (intervals Nx2, labels mir_eval)."""
+def _to_arrays(segments, translate=True):
+    """
+    Lista de (start, end, label) -> (intervals Nx2, labels mir_eval).
+
+    translate=False mantém os rótulos como estão: usado quando a lista já vem
+    em notação Harte (anotações externas), que o mir_eval entende direto.
+    """
     if not segments:
         return np.zeros((0, 2), dtype=float), []
     intervals = np.array([[float(s), float(e)] for s, e, _ in segments],
                          dtype=float)
-    labels = [_to_mireval(lab) for _, _, lab in segments]
+    if translate:
+        labels = [_to_mireval(lab) for _, _, lab in segments]
+    else:
+        labels = [str(lab) for _, _, lab in segments]
     return intervals, labels
 
 
-def score_segments(est, ref, levels=('root', 'majmin', 'sevenths', 'mirex')):
+def score_segments(est, ref, levels=('root', 'majmin', 'sevenths', 'mirex'),
+                   ref_is_harte=False):
     """
     Acurácia ponderada por tempo do estimado vs. referência (ground truth).
 
     Parameters
     ----------
     est : list[(start, end, label)]
-        Segmentos estimados pelo classificador.
+        Segmentos estimados pelo classificador, no vocabulário do PROJETO
+        ('C', 'Am', 'E7', 'N') -- sempre traduzidos para a notação mir_eval.
     ref : list[(start, end, label)]
         Segmentos de referência (ground truth).
     levels : iterable[str]
         Quais métricas do mir_eval.chord retornar.
+    ref_is_harte : bool
+        False (default): a referência também está no vocabulário do projeto e
+        passa pela tradução -- é o caso do GT embutido em
+        `benchmark_musicas.py`.
+        True: a referência JÁ está em notação Harte e vai para o mir_eval sem
+        tocar em `_to_mireval`. É o caso do GuitarSet e do IDMT-SMT-Chords,
+        cujos rótulos ('D#:sus2(7)/1', 'C:maj/3') não existem em
+        `_QUALITY_MAP` e virariam 'X' -- ou seja, seriam ignorados na
+        ponderação e a métrica sairia sem sentido.
 
     Returns
     -------
     dict[str, float]  ex.: {'root': 0.81, 'majmin': 0.78, ...}  (0..1)
     """
-    ref_int, ref_lab = _to_arrays(ref)
+    ref_int, ref_lab = _to_arrays(ref, translate=not ref_is_harte)
     est_int, est_lab = _to_arrays(est)
     scores = mir_eval.chord.evaluate(ref_int, ref_lab, est_int, est_lab)
     return {lvl: float(scores[lvl]) for lvl in levels}

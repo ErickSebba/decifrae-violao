@@ -1,0 +1,7 @@
+dataset,track_id,audio_path,annotation_path,player_id,split,excluded,exclude_reason
+idmt-smt-chords,ableton_live_guitar_Campfire,data/extracted/idmt-smt-chords/IDMT-SMT-CHORDS/guitar/ableton_live_guitar_Campfire.wav,data/extracted/idmt-smt-chords/IDMT-SMT-CHORDS/guitar/guitar_annotation.lab,,eval,false,
+idmt-smt-chords,ableton_live_guitar_Guitar_Open,data/extracted/idmt-smt-chords/IDMT-SMT-CHORDS/guitar/ableton_live_guitar_Guitar_Open.wav,data/extracted/idmt-smt-chords/IDMT-SMT-CHORDS/guitar/guitar_annotation.lab,,eval,false,
+idmt-smt-chords,ableton_live_guitar_Nylon_Concerto_Guitar,data/extracted/idmt-smt-chords/IDMT-SMT-CHORDS/guitar/ableton_live_guitar_Nylon_Concerto_Guitar.wav,data/extracted/idmt-smt-chords/IDMT-SMT-CHORDS/guitar/guitar_annotation.lab,,eval,false,
+idmt-smt-chords,garageband_guitar_Acoustic_Guitar,data/extracted/idmt-smt-chords/IDMT-SMT-CHORDS/guitar/garageband_guitar_Acoustic_Guitar.wav,data/extracted/idmt-smt-chords/IDMT-SMT-CHORDS/guitar/guitar_annotation.lab,,eval,false,
+idmt-smt-chords,garageband_guitar_Classic_Clean,data/extracted/idmt-smt-chords/IDMT-SMT-CHORDS/guitar/garageband_guitar_Classic_Clean.wav,data/extracted/idmt-smt-chords/IDMT-SMT-CHORDS/guitar/guitar_annotation.lab,,eval,false,
+idmt-smt-chords,garageband_guitar_Hard_Rock,data/extracted/idmt-smt-chords/IDMT-SMT-CHORDS/guitar/garageband_guitar_Hard_Rock.wav,data/extracted/idmt-smt-chords/IDMT-SMT-CHORDS/guitar/guitar_annotation.lab,,eval,false,

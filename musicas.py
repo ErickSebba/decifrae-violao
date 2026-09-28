@@ -28,6 +28,7 @@ import numpy as np
 
 from classifier import CosineChordClassifier, NO_CHORD
 from chord_templates import build_templates, MEDIUM
+from config import PRE_CHROMA, POST_CHROMA
 from pipeline import analyze_track
 
 
@@ -36,25 +37,21 @@ MUSICAS_DIR = BASE_DIR / "Musicas"
 OUT_DIR = BASE_DIR / "out" / "musicas"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-SR = 22050
+# --- Parâmetros do pipeline: ajuste fino em config.py, não aqui ---
+PRE = PRE_CHROMA
+POST = POST_CHROMA
 
 # Classificador por cosseno com o vocabulário MEDIUM.
 # complexity_penalty=0.06: viés pró-tríade ADAPTATIVO. A penalidade só age
 # quando a nota da 6ª/7ª está FRACA no chroma -- então flicker maj7/7 de corda
 # solta é suprimido, mas sétimas REAIS (E7, A7 da Boate Azul) passam intactas.
 # ext_sharpness controla o limiar: maior = mais fácil aceitar a 7ª como real.
+# rms_gate fica literal: é inerte com Viterbi (só classify_audio o usa) e por
+# isso não entrou em PostChromaConfig.
 CLF = CosineChordClassifier(templates=build_templates(MEDIUM),
-                            rms_gate=0.02, complexity_penalty=0.06,
-                            ext_sharpness=4.0)
-
-# --- Parâmetros do pipeline (ajuste fino aqui) ---
-USE_VITERBI = True
-CHANGE_PENALTY = 2.0   # maior = timeline mais suave/grudenta
-TEMP = 0.1             # menor = emissão mais decidida
-N_LOGPROB = -2.5       # mais negativo = N só em silêncio real (p/ mix densa)
-REL_GATE = 0.2         # silêncio = RMS abaixo de 20% da mediana da faixa
-MIN_DUR = 0.8          # absorve segmentos < 0.8s (blips de transição)
-METHOD = "cqt"         # 'cqt' | 'cens' | 'stft'
+                            rms_gate=0.02,
+                            complexity_penalty=POST.complexity_penalty,
+                            ext_sharpness=POST.ext_sharpness)
 
 
 def _format_label(label: str) -> str:
@@ -62,17 +59,18 @@ def _format_label(label: str) -> str:
 
 
 def analyze_audio(audio_path: Path):
-	y, sr = librosa.load(audio_path, sr=SR, mono=True)
+	y, sr = librosa.load(audio_path, sr=PRE.sr, mono=True)
 	duration = float(librosa.get_duration(y=y, sr=sr))
 	segments = analyze_track(
 		y, sr, CLF,
-		method=METHOD,
-		use_viterbi=USE_VITERBI,
-		change_penalty=CHANGE_PENALTY,
-		temp=TEMP,
-		n_logprob=N_LOGPROB,
-		rel_gate=REL_GATE,
-		min_dur=MIN_DUR,
+		method=PRE.method,
+		use_viterbi=POST.use_viterbi,
+		change_penalty=POST.change_penalty,
+		temp=POST.temp,
+		n_logprob=POST.n_logprob,
+		rel_gate=POST.rel_gate,
+		abs_floor=POST.abs_floor,
+		min_dur=POST.min_dur,
 	)
 	return segments, sr, duration
 

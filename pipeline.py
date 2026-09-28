@@ -10,47 +10,141 @@ chroma é extraído UMA vez no áudio inteiro e depois sincronizado por batida -
 ao contrário do musicas.py antigo, que extraía chroma de cada pedacinho de
 ~22ms (gerando os avisos n_fft e chroma-lixo).
 
+O pipeline está partido em DUAS etapas, pela fronteira que os experimentos do
+artigo precisam (ver CLAUDE.md, "Hiperparâmetros: pré-chroma e pós-chroma"):
+
+  extract_features : etapa CARA (HPSS, beat track, CQT, mediana, sync). Depende
+                     só de PreChromaConfig. O resultado é cacheável em disco.
+  decode           : etapa BARATA (gate de silêncio, emissão, Viterbi, merge,
+                     absorção). Depende só de PostChromaConfig e do
+                     classificador. Uma busca varre estes parâmetros reusando o
+                     mesmo Features, sem recalcular o chroma.
+
 Funções:
-  - beat_sync_chroma : (chroma 12xN sincronizado por batida, tempos das batidas)
-  - analyze_track    : amarra segmentação + emissão + Viterbi -> segmentos
+  - extract_features : áudio -> Features (chroma sync, bordas, RMS por segmento)
+  - decode           : Features + classificador -> segmentos
+  - analyze_track    : composição das duas, com a assinatura de sempre
+  - beat_sync_chroma : forma antiga da etapa cara, mantida por compatibilidade
 """
+
+from dataclasses import dataclass
 
 import numpy as np
 import scipy.ndimage
 import librosa
 
-from classifier_V2 import NO_CHORD
+from chord_templates import NO_CHORD
+from config import PreChromaConfig, PostChromaConfig
 import viterbi as vit
 
+# Defaults das assinaturas antigas, lidos da configuração para não duplicar
+# literais. São avaliados uma vez, no import (as dataclasses são frozen).
+_PRE_DEFAULT = PreChromaConfig()
+_POST_DEFAULT = PostChromaConfig()
 
-def beat_sync_chroma(y, sr, method='cqt', smooth=21, margin=3.0):
+
+@dataclass(eq=False)
+class Features:
     """
-    Extrai chroma do áudio inteiro e sincroniza por batida.
+    Saída da etapa cara. É tudo que o `decode` precisa do áudio -- depois
+    daqui, nem o waveform nem o `sr` são consultados.
+
+    chroma     : (12, n_seg)    chroma agregado por batida
+    beat_times : (n_seg+1,)     bordas temporais dos segmentos, em segundos
+    seg_rms    : (n_seg,)       RMS do áudio ORIGINAL em cada segmento
+
+    `eq=False` porque comparar dataclasses de arrays com `==` levantaria
+    ambiguidade do numpy; compare campo a campo com np.array_equal.
+    """
+
+    chroma: np.ndarray
+    beat_times: np.ndarray
+    seg_rms: np.ndarray
+
+    @property
+    def n_seg(self):
+        return self.chroma.shape[1]
+
+    def save(self, path):
+        """Serializa em .npz. numpy acrescenta '.npz' se o path não tiver."""
+        np.savez(path, chroma=self.chroma, beat_times=self.beat_times,
+                 seg_rms=self.seg_rms)
+        return path
+
+    @classmethod
+    def load(cls, path):
+        """Lê de volta um .npz escrito por save(). Round-trip exato."""
+        with np.load(path) as data:
+            return cls(chroma=data['chroma'], beat_times=data['beat_times'],
+                       seg_rms=data['seg_rms'])
+
+
+def _beat_sync_chroma(y, sr, pre):
+    """
+    Miolo da etapa cara. Extrai chroma do áudio inteiro e sincroniza por
+    batida, usando os parâmetros de `pre` (PreChromaConfig).
+
+    `pre.sr` NÃO é consultado aqui: a taxa vem do argumento `sr`, que é a do
+    áudio já carregado. `pre.sr` é o que os entry points passam ao
+    `librosa.load`.
 
     Retorna
     -------
     chroma_sync : (12, n_beats)   chroma agregado por batida
     beat_times  : (n_beats+1,)    bordas temporais dos segmentos
-    y_harmonic  : componente harmônico (reaproveitado p/ RMS por segmento)
+    y_harmonic  : componente harmônico
     """
-    y_harmonic, y_perc = librosa.effects.hpss(y, margin=margin)
+    y_harmonic, y_perc = librosa.effects.hpss(y, margin=pre.hpss_margin)
 
     tempo, beats = librosa.beat.beat_track(y=y_perc, sr=sr)
 
-    if method == 'cens':
+    if pre.method == 'cens':
         chroma = librosa.feature.chroma_cens(y=y_harmonic, sr=sr)
-    elif method == 'stft':
+    elif pre.method == 'stft':
         chroma = librosa.feature.chroma_stft(y=y_harmonic, sr=sr)
     else:
         chroma = librosa.feature.chroma_cqt(y=y_harmonic, sr=sr,
-                                             bins_per_octave=36)
-    if smooth and smooth > 1:
-        chroma = scipy.ndimage.median_filter(chroma, size=(1, smooth))
+                                             bins_per_octave=pre.bins_per_octave)
+    if pre.smooth and pre.smooth > 1:
+        chroma = scipy.ndimage.median_filter(chroma, size=(1, pre.smooth))
 
     beats = librosa.util.fix_frames(beats, x_max=chroma.shape[1])
     chroma_sync = librosa.util.sync(chroma, beats, aggregate=np.median)
     beat_times = librosa.frames_to_time(beats, sr=sr)
     return chroma_sync, beat_times, y_harmonic
+
+
+def beat_sync_chroma(y, sr, method=_PRE_DEFAULT.method,
+                     smooth=_PRE_DEFAULT.smooth,
+                     margin=_PRE_DEFAULT.hpss_margin):
+    """
+    Forma antiga da etapa cara, mantida para quem já a chamava. Devolve a
+    mesma tupla de sempre. Código novo deve preferir `extract_features`.
+    """
+    pre = PreChromaConfig(method=method, smooth=smooth, hpss_margin=margin)
+    return _beat_sync_chroma(y, sr, pre)
+
+
+def extract_features(y, sr, pre=_PRE_DEFAULT):
+    """
+    Etapa CARA: áudio -> Features. HPSS, beat track, CQT, filtro de mediana,
+    sincronização por batida e o RMS de cada segmento.
+
+    Não toca em nenhum parâmetro pós-chroma e não conhece o classificador: o
+    resultado depende só de (y, sr, pre), e por isso pode ser cacheado em
+    disco com Features.save().
+    """
+    chroma_sync, beat_times, _ = _beat_sync_chroma(y, sr, pre)
+
+    # RMS por segmento, medido no áudio ORIGINAL (não no harmônico).
+    n_seg = chroma_sync.shape[1]
+    seg_rms = np.zeros(n_seg)
+    for i in range(n_seg):
+        t0 = beat_times[i]
+        t1 = beat_times[i + 1] if i + 1 < len(beat_times) else t0
+        seg_rms[i] = _segment_rms(y, sr, t0, t1)
+
+    return Features(chroma=chroma_sync, beat_times=beat_times, seg_rms=seg_rms)
 
 
 def _segment_rms(y, sr, t0, t1):
@@ -103,36 +197,38 @@ def _absorb_short(segments, min_dur):
     return segs
 
 
-def analyze_track(y, sr, classifier, method='cqt',
-                  use_viterbi=True, change_penalty=2.0, temp=0.1,
-                  n_logprob=-2.5, rel_gate=0.2, abs_floor=5e-4, min_dur=0.8):
+def decode(features, classifier, post=_POST_DEFAULT):
     """
-    Analisa uma faixa inteira e devolve a lista de segmentos de acorde.
+    Etapa BARATA: Features + classificador -> segmentos. Gate relativo de
+    silêncio, matriz de emissão, Viterbi, merge de vizinhos iguais e absorção
+    de segmentos curtos.
+
+    ATENÇÃO — `post.complexity_penalty` e `post.ext_sharpness` NÃO são lidos
+    aqui: eles configuram o CLASSIFICADOR, que chega pronto. Quem quiser variar
+    esses dois precisa construir outro CosineChordClassifier. Os outros sete
+    campos de PostChromaConfig são usados nesta função.
 
     classifier : CosineChordClassifier (usa .emission() e .names)
-    use_viterbi: True -> suaviza com Viterbi; False -> argmax por segmento
-    change_penalty : custo de log p/ trocar de acorde (suavidade do Viterbi)
-    rel_gate   : fração da RMS mediana da faixa abaixo da qual um segmento é
-                 considerado silêncio. É RELATIVO ao nível da própria gravação,
-                 não absoluto -- gravações baixas (ex.: Tempo_Perdido, RMS
-                 ~0.01) não são tratadas como silêncio.
-    abs_floor  : piso absoluto p/ silêncio digital real (pega faixas vazias).
+    post.use_viterbi : True -> suaviza com Viterbi; False -> argmax por segmento
+    post.rel_gate    : fração da RMS mediana da faixa abaixo da qual um segmento
+                       é silêncio. É RELATIVO ao nível da própria gravação --
+                       gravações baixas (ex.: Tempo_Perdido, RMS ~0.01) não são
+                       tratadas como silêncio.
+    post.abs_floor   : piso absoluto p/ silêncio digital real (faixas vazias).
 
     Retorna lista de {'start','end','label'} já mesclada.
     """
-    chroma_sync, beat_times, y_h = beat_sync_chroma(y, sr, method=method)
+    chroma_sync = features.chroma
+    beat_times = features.beat_times
+    seg_rms = features.seg_rms
     n_seg = chroma_sync.shape[1]
     if n_seg == 0:
         return []
 
-    # RMS por segmento -> gate RELATIVO ao nível da faixa
-    seg_rms = np.zeros(n_seg)
-    for i in range(n_seg):
-        t0 = beat_times[i]
-        t1 = beat_times[i + 1] if i + 1 < len(beat_times) else t0
-        seg_rms[i] = _segment_rms(y, sr, t0, t1)
+    # gate RELATIVO ao nível da faixa
+    abs_floor = post.abs_floor
     median_rms = float(np.median(seg_rms[seg_rms > abs_floor])) if np.any(seg_rms > abs_floor) else 0.0
-    gate = max(abs_floor, rel_gate * median_rms)
+    gate = max(abs_floor, post.rel_gate * median_rms)
 
     # emissões + máscara de silêncio
     emissions = np.zeros((n_seg, len(classifier.names)))
@@ -142,10 +238,10 @@ def analyze_track(y, sr, classifier, method='cqt',
         if seg_rms[i] < gate:
             force_n[i] = True
 
-    if use_viterbi:
+    if post.use_viterbi:
         labels = vit.decode(emissions, classifier.names,
-                            change_penalty=change_penalty, temp=temp,
-                            n_logprob=n_logprob, force_n=force_n)
+                            change_penalty=post.change_penalty, temp=post.temp,
+                            n_logprob=post.n_logprob, force_n=force_n)
     else:
         labels = []
         for i in range(n_seg):
@@ -160,12 +256,34 @@ def analyze_track(y, sr, classifier, method='cqt',
         t1 = beat_times[i + 1] if i + 1 < len(beat_times) else t0
         segments.append({'start': float(t0), 'end': float(t1),
                          'label': labels[i]})
-    return _absorb_short(_merge(segments), min_dur)
+    return _absorb_short(_merge(segments), post.min_dur)
+
+
+def analyze_track(y, sr, classifier, method='cqt',
+                  use_viterbi=True, change_penalty=2.0, temp=0.1,
+                  n_logprob=-2.5, rel_gate=0.2, abs_floor=5e-4, min_dur=0.8):
+    """
+    Analisa uma faixa inteira e devolve a lista de segmentos de acorde.
+
+    Composição de extract_features + decode, com a assinatura de sempre. Os
+    parâmetros pré-chroma que não estão na assinatura (`smooth`, `hpss_margin`,
+    `bins_per_octave`) vêm dos defaults de PreChromaConfig, que são os mesmos
+    literais de antes (21, 3.0, 36). `sr` é o do áudio recebido; `pre.sr` não é
+    consultado nesta rota.
+
+    Retorna lista de {'start','end','label'} já mesclada.
+    """
+    pre = PreChromaConfig(method=method)
+    post = PostChromaConfig(use_viterbi=use_viterbi,
+                            change_penalty=change_penalty, temp=temp,
+                            n_logprob=n_logprob, rel_gate=rel_gate,
+                            abs_floor=abs_floor, min_dur=min_dur)
+    return decode(extract_features(y, sr, pre), classifier, post)
 
 
 if __name__ == "__main__":
     import warnings; warnings.filterwarnings("ignore")
-    from classifier_V2 import CosineChordClassifier
+    from classifier import CosineChordClassifier
     from chord_templates import build_templates, MEDIUM
     from synth import synth_chord
     # monta uma "faixa" sintética: C(2s) + G(2s) + Am(2s)

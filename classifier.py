@@ -22,9 +22,12 @@ import numpy as np
 import scipy.ndimage
 import librosa
 
-from chord_templates import build_templates, NOTE_NAMES, CHORD_TYPES
+from chord_templates import build_templates, NOTE_NAMES, CHORD_TYPES, NO_CHORD
 
-NO_CHORD = 'N'
+# NO_CHORD é reexportado por compatibilidade: quem já fazia
+# `from classifier import NO_CHORD` continua funcionando.
+__all__ = ['CosineChordClassifier', 'extract_chroma', 'chroma_vector',
+           'NO_CHORD']
 
 
 # --------------------------------------------------------------------------

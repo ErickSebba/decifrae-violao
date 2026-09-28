@@ -21,6 +21,11 @@ import numpy as np
 # Ordem canônica das 12 classes de altura (pitch classes), índice 0 = C
 NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 
+# Rótulo de "sem acorde" (pausa/silêncio/ruído). Vive aqui, no módulo base,
+# porque é parte do vocabulário: classificador, pipeline e bench precisam dele
+# sem depender uns dos outros.
+NO_CHORD = 'N'
+
 # Intervalos em semitons a partir da tônica.
 # '' = maior (sufixo vazio, igual ao seu V4).
 CHORD_TYPES = {

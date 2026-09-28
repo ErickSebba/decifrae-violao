@@ -38,6 +38,7 @@ import librosa
 
 from chord_templates import build_templates, MEDIUM
 from classifier import CosineChordClassifier, chroma_vector, NO_CHORD
+from config import PRE_CHROMA, POST_CHROMA
 from legacy_v4 import classificar_segmento_v4, run_beat_tracking
 from pipeline import analyze_track
 from evaluate import score_segments
@@ -45,10 +46,15 @@ from evaluate import score_segments
 OUT = os.path.join(os.path.dirname(__file__), "out", "musicas_bench")
 os.makedirs(OUT, exist_ok=True)
 MUS = os.path.join(os.path.dirname(__file__), "Musicas")
-SR = 22050
+
+# Hiperparâmetros: fonte única em config.py.
+PRE = PRE_CHROMA
+POST = POST_CHROMA
+SR = PRE.sr
 
 _cos = CosineChordClassifier(templates=build_templates(MEDIUM),
-                             complexity_penalty=0.06, ext_sharpness=4.0)
+                             complexity_penalty=POST.complexity_penalty,
+                             ext_sharpness=POST.ext_sharpness)
 
 
 # ==========================================================================
@@ -118,8 +124,19 @@ def run_v4(y, sr):
 
 
 def run_atual(y, sr):
-    segs = analyze_track(y, sr, _cos, use_viterbi=True, change_penalty=2.0,
-                         rel_gate=0.2, min_dur=0.8)
+    # Todos os parâmetros vêm de config.py e são passados explicitamente.
+    # Antes, 'method', 'temp', 'n_logprob' e 'abs_floor' eram omitidos e caíam
+    # nos defaults de analyze_track; os valores são os mesmos, mas agora mudar
+    # config.py muda o benchmark (era o furo apontado em HIPERPARAMETROS.md §3).
+    segs = analyze_track(y, sr, _cos,
+                         method=PRE.method,
+                         use_viterbi=POST.use_viterbi,
+                         change_penalty=POST.change_penalty,
+                         temp=POST.temp,
+                         n_logprob=POST.n_logprob,
+                         rel_gate=POST.rel_gate,
+                         abs_floor=POST.abs_floor,
+                         min_dur=POST.min_dur)
     return [(s['start'], s['end'], s['label']) for s in segs]
 
 

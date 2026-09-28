@@ -1,0 +1,26 @@
+% gerado por figuras_artigo.py -- não editar à mão
+\begin{table*}[t]
+  \centering
+  \caption{Comparações pareadas no split \emph{test}, camada \texttt{chord[0]}. Fonte: \texttt{stats\_test\_ref0\_20260927\_020514.csv}.}
+  \label{tab:stats}
+  \footnotesize
+  \begin{tabular}{llrrrrl}
+    \toprule
+    Comparação & Métrica & $\Delta$ (p.p.) & IC 95 \% (p.p.) & $p$ bruto & $p$ Holm & Classificação \\
+    \midrule
+    \texttt{C} vs. \texttt{D} & \texttt{root} & +7,88 & [+5,26; +10,48] & 0,0001 & 0,0011 & confirmado \\
+    \texttt{C} vs. \texttt{D} & \texttt{root\_rotulado} & $-$5,49 & [$-$9,23; $-$1,85] & 0,0040 & 0,0280 & confirmado \\
+    \texttt{D} vs. \texttt{E} & \texttt{root} & $-$1,68 & [$-$2,79; $-$0,66] & 0,0008 & 0,0064 & confirmado \\
+    \texttt{D} vs. \texttt{E} & \texttt{seg} & $-$1,47 & [$-$4,46; +1,47] & 0,3284 & 1,0000 & empate \\
+    \texttt{D} vs. \texttt{E} & \texttt{overseg} & +9,54 & [+7,80; +11,33] & 0,0001 & 0,0011 & confirmado \\
+    \texttt{V4} vs. \texttt{F0rg} & \texttt{root} & +1,03 & [$-$1,21; +3,40] & 0,3654 & 1,0000 & empate \\
+    \texttt{V4} vs. \texttt{F0rg} & \texttt{majmin} & +3,81 & [+1,11; +6,58] & 0,0050 & 0,0300 & confirmado \\
+    \texttt{V4} vs. \texttt{F0rg} & \texttt{seg} & $-$1,48 & [$-$2,89; +0,10] & 0,0644 & 0,3220 & empate \\
+    \texttt{D0rg} vs. \texttt{F0rg} & \texttt{root} & $-$0,84 & [$-$3,96; +2,52] & 0,6082 & 1,0000 & empate \\
+    \texttt{D0rg} vs. \texttt{F0rg} & \texttt{majmin} & $-$1,42 & [$-$4,70; +1,85] & 0,3948 & 1,0000 & empate \\
+    \texttt{D0rg} vs. \texttt{F0rg} & \texttt{sevenths} & +12,56 & [+9,48; +15,80] & 0,0001 & 0,0011 & confirmado \\
+    \bottomrule
+  \end{tabular}
+  \vspace{2pt}
+  \parbox{\linewidth}{\footnotesize $\Delta$ = média de B menos média de A, em pontos percentuais, média ponderada pela duração; IC 95 \% do bootstrap pareado por faixa ($n = 10000$ reamostragens, semente 0). O $p$ do bootstrap tem piso $1/10000$ (0,0001): os valores nesse piso são o mínimo mensurável, não zero. $p$ Holm: Holm--Bonferroni sobre as 11 comparações. \emph{confirmado} = IC exclui zero e Holm rejeita; \emph{frágil} = IC exclui zero mas Holm não rejeita; \emph{empate} = IC cruza zero. Das 15 comparações previstas, 11 puderam ser feitas neste split: as demais envolvem \texttt{C0rg}, \texttt{V4b}, que não foram ao split \emph{test}.}
+\end{table*}

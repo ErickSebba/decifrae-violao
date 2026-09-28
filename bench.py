@@ -22,10 +22,10 @@ import matplotlib
 matplotlib.use("Agg")  # backend sem display (salva em arquivo)
 import matplotlib.pyplot as plt
 
-from chord_templates import NOTE_NAMES, TRIADS, TETRADS, BASIC, build_templates
+from chord_templates import (NOTE_NAMES, TRIADS, TETRADS, BASIC,
+                             build_templates, NO_CHORD)
 from synth import synth_chord, synth_pause
 from noise import apply_condition, DEFAULT_CONDITIONS
-from classifier_V2 import NO_CHORD
 
 
 # --------------------------------------------------------------------------
@@ -259,7 +259,7 @@ def plot_harmonic_sweep(sweeps, title, path):
 
 
 if __name__ == "__main__":
-    from classifier_V2 import CosineChordClassifier
+    from classifier import CosineChordClassifier
     clf = CosineChordClassifier()
     fn = lambda y, sr: clf.classify_audio(y, sr)
     recs = run_bench(fn, suffixes=BASIC, conditions=DEFAULT_CONDITIONS[:3],
