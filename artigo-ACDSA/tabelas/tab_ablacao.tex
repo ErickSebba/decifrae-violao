@@ -1,19 +1,23 @@
-% gerado por figuras_artigo.py -- não editar à mão
-\begin{table}[t]
+% gerado por tabelas_artigo.py -- não editar à mão
+\begin{table*}[t]
   \centering
-  \caption{Ablação no split \emph{test}: as seis configurações congeladas, camada de referência \texttt{chord[0]}. Todos os valores em \%, média ponderada pela duração da faixa ($n = 58$ faixas). \emph{N est.} é a fração do tempo em que o sistema estimou N (abstenção); \emph{Cobertura} é o complemento. Fonte: \texttt{ablation\_20260927\_014253\_ref0.csv}.}
+  \caption{Ablação no split \emph{test}: as oito variantes pré-registradas, nas duas camadas de referência. Valores em \%, média ponderada pela duração da faixa ($n = 58$ faixas). \emph{root} é o acerto sobre a faixa toda e \emph{root rot.} o acerto restrito ao tempo em que o sistema rotulou algo; \emph{Cobertura} é a fração do tempo rotulado, $1 -$ \texttt{frac\_n\_est}. As colunas [0] e [1] são as camadas \texttt{chord[0]} e \texttt{chord[1]}. \emph{root}, \emph{root rot.}, \emph{Cobertura} e \emph{overseg} não dependem da camada por construção: \texttt{chord[1]} altera a qualidade do acorde, não a tônica nem as fronteiras. Fontes: \texttt{ablation\_20260927\_014253\_ref0.csv}, \texttt{ablation\_20260927\_201422\_ref0.csv}, \texttt{ablation\_20260927\_014445\_ref1.csv}, \texttt{ablation\_20260927\_201649\_ref1.csv}.}
   \label{tab:ablacao}
   \footnotesize
-  \begin{tabular}{lrrrrrr}
+  \begin{tabular}{lrrrrrrrr}
     \toprule
-    Variante & root & majmin & sevenths & mirex & N est. & Cobertura \\
+    Variante & root & root rot. & Cobertura & \multicolumn{2}{c}{majmin} & \multicolumn{2}{c}{sevenths} & overseg \\
+    \cmidrule(lr){5-6} \cmidrule(lr){7-8}
+     & & & & [0] & [1] & [0] & [1] & \\
     \midrule
-    \texttt{V4} & 55,87 & 48,31 & 43,65 & 47,09 & 0,00 & 100,00 \\
-    \texttt{C} & 41,51 & 39,09 & 27,31 & 39,75 & 42,90 & 57,10 \\
-    \texttt{D} & 49,39 & 46,18 & 31,28 & 47,08 & 22,88 & 77,12 \\
-    \texttt{E} & 47,71 & 45,71 & 31,48 & 46,18 & 24,74 & 75,26 \\
-    \texttt{F0rg} & 56,89 & 52,12 & 47,06 & 50,43 & 0,03 & 99,97 \\
-    \texttt{D0rg} & 57,73 & 53,53 & 34,50 & 55,45 & 0,03 & 99,97 \\
+    \texttt{V4} & 55,87 & 55,87 & 100,00 & 48,31 & 49,52 & 43,65 & 35,60 & 75,51 \\
+    \texttt{V4b} & 54,19 & 54,19 & 100,00 & 47,37 & 48,99 & 43,29 & 36,27 & 58,15 \\
+    \texttt{C} & 41,51 & 65,26 & 57,10 & 39,09 & 41,13 & 27,31 & 33,93 & 59,41 \\
+    \texttt{D} & 49,39 & 59,76 & 77,12 & 46,18 & 49,51 & 31,28 & 40,09 & 74,62 \\
+    \texttt{E} & 47,71 & 59,13 & 75,26 & 45,71 & 49,10 & 31,48 & 40,19 & 84,15 \\
+    \texttt{C0rg} & 55,00 & 55,02 & 99,97 & 49,60 & 52,98 & 31,86 & 41,03 & 55,23 \\
+    \texttt{D0rg} & 57,73 & 57,75 & 99,97 & 53,53 & 56,06 & 34,50 & 43,56 & 71,29 \\
+    \texttt{F0rg} & 56,89 & 56,91 & 99,97 & 52,12 & 52,38 & 47,06 & 38,23 & 73,57 \\
     \bottomrule
   \end{tabular}
-\end{table}
+\end{table*}

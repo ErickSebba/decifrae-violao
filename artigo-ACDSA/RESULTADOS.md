@@ -39,27 +39,25 @@ nomeada.
 
 ## 0. Limitações do pré-registro que afetam a leitura desta seção
 
-Quatro ressalvas que condicionam tudo o que segue.
+Três ressalvas que condicionam tudo o que segue.
 
-**Duas das seis comparações pré-registradas não foram avaliadas no teste.** O
+**As 15 comparações pré-registradas foram avaliadas, em duas execuções.** A
+primeira leitura do conjunto de teste cobriu 11 das 15: o
 `docs/CONGELAMENTO.md` congelou seis configurações (§1) mas pré-registrou
-pares que exigem oito variantes (§5): `C0rg` e `V4b` não constam da lista
-congelada. Os pares `C0rg vs D0rg` (o Viterbi com cobertura igualada) e
-`V4b vs V4` (a inércia temporal do baseline) existem apenas na validação. Não
-foram executados no teste porque isso significaria uma segunda leitura do
-conjunto de teste com variante fora do congelamento.
-
-**Os p-valores de Holm não são comparáveis entre os dois conjuntos.** A
-família de multiplicidade tem 15 comparações na validação e 11 no teste, pela
-razão acima. A correção do teste é, portanto, sistematicamente menos
-conservadora. Comparamos classificações e sinais entre os conjuntos, nunca os
-p ajustados diretamente.
+pares que exigem oito (§5), e `C0rg` e `V4b` ficaram fora da lista congelada
+por erro de transcrição entre as duas seções. A omissão e a sua correção estão
+documentadas em `docs/ADENDO_CONGELAMENTO.md` §1, commitado **antes** da
+execução que autoriza; as duas variantes foram então medidas com as
+configurações inalteradas desde `b68033d`, verificadas linha a linha contra o
+código daquele commit. A família de Holm do teste tem, portanto, as **15**
+comparações pré-registradas em cada camada, e os p ajustados do teste e da
+validação são calculados sobre famílias do mesmo tamanho.
 
 Duas contagens diferentes aparecem neste texto e as duas estão certas: a
-**família de Holm** tem 11 comparações por camada no teste, e é ela que define
-a correção; o número de **células de valor distinto** é 14, porque três das 11
+**família de Holm** tem 15 comparações por camada, e é ela que define a
+correção; o número de **células de valor distinto** é 19, porque quatro das 15
 comparações — as que usam `majmin` ou `sevenths` — dão valores diferentes em
-chord[0] e chord[1], e as outras oito são idênticas nas duas camadas.
+chord[0] e chord[1], e as outras onze são idênticas nas duas camadas.
 
 **A camada principal declarada e a camada do protocolo estatístico divergem.**
 O `docs/CONGELAMENTO.md` §6 declara `chord[1]` como referência principal,
@@ -104,15 +102,51 @@ de classificar melhor**: vem de cobrir tempo que o argmax recusava. A variante
 C rotula 57,10 % da faixa; D rotula 77,12 %. Chamar o Viterbi de "suavização
 que aumenta a acurácia" descreve o efeito observado pela causa errada.
 
-Na validação há uma comparação com a cobertura igualada — `C0rg vs D0rg`, as
-duas rotulando 100 % do tempo —, e ali o Viterbi vale **+2,02 pontos** em
-`root` (IC [+0,67, +3,40], Holm 0,024, confirmado) e +3,21 em `majmin` em
-chord[0]. Esse par **não isola o Viterbi sozinho**: `C0rg` tem
-`confidence_gate = 0`, e `D0rg` o mantém em 0,72, de modo que as duas
-configurações diferem em três campos e não em um. É uma limitação do
-pré-registro, não desta leitura. E **a comparação não existe no teste**, pela
-lacuna da §0 — de modo que qualquer decomposição dos 7,88 pontos em "cobertura"
-e "classificação" fica restrita à validação e sujeita a essa ressalva.
+O par pré-registrado `C0rg vs D0rg` mede isso com a cobertura igualada, as duas
+rotulando 99,97 % do tempo. No teste, o Viterbi vale ali **+2,72 pontos** em
+`root` (IC [+1,01, +4,59], Holm 0,020, **confirmado**; validação +2,02 na mesma
+direção, confirmado; 39 faixas melhores contra 17) e **+3,93** em `majmin` em
+chord[0] (IC [+1,95, +6,02], Holm 0,0015, confirmado; validação +3,21; +3,08 em
+chord[1] no teste, confirmado). Ou seja: dos 7,88 pontos que o Viterbi rende na métrica usual,
+cerca de 2,7 são classificação e o resto é cobertura.
+
+Esse par **não isola o Viterbi sozinho**: `C0rg` tem `confidence_gate = 0`, e
+`D0rg` o mantém em 0,72, de modo que as duas configurações diferem em três
+campos e não em um. É uma limitação do pré-registro, não desta leitura.
+
+### 1.1 A mesma comparação sobre o mesmo tempo
+
+Uma análise complementar isola o efeito sem depender da configuração: pontuar C
+e D sobre a **mesma** porção de tempo. Duas máscaras, no nível `root` e na
+camada chord[0]:
+
+- **M_C** — as células em que C não estimou `N`, isto é, o domínio de C;
+- **M_CD** — as células em que **nenhum** dos dois estimou `N`, a interseção em
+  que as duas se comprometeram.
+
+| máscara | conjunto | C | D | Δ = D − C | IC 95 % | tempo coberto |
+|---|---|---:|---:|---:|---:|---:|
+| M_C | validação | 77,30 % | 73,39 % | **−3,91** | [−6,06, −1,88] | 59,3 % |
+| M_C | teste | 72,70 % | 66,32 % | **−6,39** | [−9,83, −3,49] | 54,6 % |
+| M_CD | validação | 79,48 % | 80,27 % | +0,79 | [−0,91, +2,42] | 54,1 % |
+| M_CD | teste | 77,57 % | 77,78 % | +0,22 | [−1,74, +2,10] | 45,9 % |
+
+Na interseção em que as duas se comprometem, **a diferença desaparece**: o IC
+cruza zero nos dois conjuntos, e a estimativa pontual é de dois décimos de ponto
+no teste. Em M_C o Viterbi é pior, e a razão é estrutural: essa máscara inclui
+as células em que C se arriscou e D preferiu `N`, onde D pontua zero por
+construção.
+
+Isto **reforça** a leitura acima e a torna independente de configuração: onde as
+duas variantes rotulam, elas acertam o mesmo. O ganho do Viterbi na métrica
+usual é cobertura.
+
+Duas ressalvas. A análise sobre o conjunto de teste é **pós-especificada (post
+hoc)**: não consta dos pares do §5 do congelamento e foi concebida depois da
+leitura do teste — está marcada como tal no CSV e no `meta.json`, e não
+substitui nem reinterpreta nenhuma comparação pré-registrada. E as máscaras
+cobrem cerca de metade do tempo comparável, o que é intrínseco à pergunta: o
+domínio em que as duas se comprometem é, por definição, menor que a faixa.
 
 Sobre o eixo horizontal da figura: as três curvas varridas param em **99,75 %**
 de cobertura, não em 100 %. A causa não é o piso absoluto de RMS — é o gate
@@ -167,7 +201,7 @@ agregada: em `root` sobre a faixa toda, C é a **pior** das seis configurações
 ### 3.1 A absorção de segmentos curtos troca acurácia por fronteiras
 
 A etapa `min_dur = 0,8 s` (D → E) **custa** 1,68 pontos de `root` (IC
-[−2,79, −0,66], Holm 0,0064, **confirmado**; validação −1,59, confirmado; 19
+[−2,79, −0,66], Holm 0,008, **confirmado**; validação −1,59, confirmado; 19
 faixas melhores contra 31) e **rende** 9,54 pontos de `overseg` (IC
 [+7,80, +11,33], Holm 0,0011, **confirmado**; validação +9,39, confirmado; 54
 faixas melhores contra 0 piores). As duas direções se mantiveram do conjunto de
@@ -186,35 +220,42 @@ A leitura defensável é que `min_dur` melhora a granularidade das fronteiras
 (`overseg`) ao custo de acurácia (`root`), e que o saldo no `seg` fica
 indeterminado.
 
-### 3.2 A inércia temporal do baseline não produziu efeito detectável em `root`
+### 3.2 A inércia temporal do baseline: efeito grande em segmentação, frágil em `root`
 
 O par pré-registrado é `V4b vs V4`, e a diferença reportada é `V4 − V4b`: o
 efeito de **manter** os dois termos temporais (o bônus de +0,5 no acorde
-repetido e a penalidade de −0,1 no nome mais longo). Na validação, manter esses
-termos vale **+0,78 pontos** em `root` — IC [−0,82, +2,38], Holm 0,343,
-**empate**, 63 faixas melhores contra 55. Removê-los, portanto, custa 0,78
-pontos, quantidade que não se distingue de ruído em 120 faixas.
+repetido e a penalidade de −0,1 no nome mais longo).
 
-Em `overseg`, manter os mesmos termos vale **+17,54 pontos** (IC
-[+15,66, +19,46], Holm 0,0015, confirmado, 116 faixas melhores contra 3).
+Em `overseg`, manter os termos vale **+17,36 pontos** (IC [+14,29, +20,57],
+Holm 0,0015, **confirmado**; validação +17,54, confirmado; 56 faixas melhores
+contra 2). É o maior efeito de qualquer comparação pré-registrada, e se sustenta
+nos dois conjuntos.
 
-**Esta comparação não foi avaliada no teste**, porque `V4b` não consta das
-configurações congeladas. A afirmação vale para a validação e não foi
-confirmada fora dela.
+Em `root`, a classificação **mudou entre os conjuntos**: na validação era
+`empate` (+0,78, IC [−0,82, +2,38], Holm 0,343, 63 faixas melhores contra 55) e
+no teste é **`frágil`** (+1,68, IC [+0,18, +3,25], Holm 0,176, 32 contra 25). O
+IC do teste exclui zero por margem estreita — o limite inferior é +0,18 — mas a
+correção múltipla não rejeita. Pela regra do §5.1, isso é efeito frágil, não
+efeito confirmado: os dados do teste **não** estabelecem que a inércia melhora a
+acurácia em `root`, e a mudança de classe em relação à validação é ela própria
+motivo de cautela.
+
+O termo temporal do baseline, portanto, serve à timeline, não ao acerto de
+tônica — e é essa a única afirmação que as duas leituras sustentam juntas.
 
 ### 3.3 Duas observações em que a contagem de segmentos e as métricas de fronteira discordam
 
 O V4 produz 62,7 segmentos por excerto contra 12,0 da referência — mais de
-cinco vezes — e ainda assim tem o **maior** `seg` das seis configurações
+cinco vezes — e ainda assim tem o **maior** `seg` das oito configurações
 (74,14 % no teste). "Maior" e não "melhor": o único par pré-registrado em `seg`
 que envolve o V4 é `V4 vs F0rg`, e ele é **empate** no teste (§4.1); as outras
 quatro comparações do V4 em `seg` não foram pré-registradas nem testadas. As
 duas contagens de segmentos desta subseção são médias simples por excerto, não
 ponderadas por duração (§6).
 
-Dentro do conjunto de validação, V4 e V4b produzem exatamente o mesmo número
-de segmentos com `overseg` de 80,21 % e 62,67 %. A contagem de segmentos e a
-concordância de fronteiras medem coisas diferentes.
+V4 e V4b produzem exatamente o mesmo número de segmentos e têm `overseg` bem
+diferente: 75,51 % contra 58,15 % no teste, 80,21 % contra 62,67 % na validação.
+A contagem de segmentos e a concordância de fronteiras medem coisas diferentes.
 
 ## 4. Vocabulário: 24 contra 60 acordes
 
@@ -318,16 +359,15 @@ formulação mais forte que essa não se sustenta nos dados de teste.
 
 ## 5. Divergências entre validação e teste
 
-Nenhuma comparação inverteu de sinal **e** permaneceu confirmada. Cinco
-comparações perderam força em chord[0] e nenhuma ganhou.
+Nenhuma comparação inverteu de sinal **e** permaneceu confirmada. Sete células
+mudaram de classificação, das quais **seis perderam força e uma ganhou** — a
+única a ganhar é a inércia do V4 em `root`, que foi de `empate` a `frágil`, e
+"frágil" não é uma confirmação (§3.2).
 
-As inversões de sinal também são **cinco**, mas **não são as mesmas cinco** que
-perderam força: os dois conjuntos coincidem em três comparações. Das cinco
-inversões, **quatro** mudaram de classificação e estão na tabela abaixo. A
-quinta é o `majmin` de
-chord[1] no par `D0rg vs F0rg`: +1,56 na validação e −3,68 no teste, `empate`
-nos dois lados — inverte o sinal sem mudar o que se pode concluir, e por isso
-não entra na tabela, cujo critério é a perda de força.
+As inversões de sinal são **cinco**, e **não são as mesmas** que mudaram de
+classe: quatro inversões mudaram de classe e uma não. A que não mudou é o
+`majmin` de chord[1] no par `D0rg vs F0rg`: +1,56 na validação e −3,68 no teste,
+`empate` nos dois lados — inverte o sinal sem mudar o que se pode concluir.
 
 | par | métrica | camada | validação | teste | inverteu? |
 |---|---|---|---|---|---|
@@ -338,17 +378,19 @@ não entra na tabela, cujo critério é a perda de força.
 | V4 vs F0rg | root | ambas | +1,20 frágil | +1,03 empate | não |
 | V4 vs F0rg | seg | ambas | −1,58 confirmado | −1,48 empate | não |
 | V4 vs F0rg | majmin | chord[1] | +5,32 confirmado | +2,86 empate | não |
+| V4b vs V4 | root | ambas | +0,78 empate | +1,68 **frágil** | não |
 
 O que **sobreviveu** ao teste nas duas camadas, porque não depende da qualidade
-do acorde: o efeito do Viterbi em `root` (+7,88, confirmado) e no tempo
-rotulado (−5,49, confirmado); e o custo do `min_dur` em `root` (−1,68) com o
-ganho em `overseg` (+9,54).
+do acorde: o efeito do Viterbi em `root` (+7,88, confirmado), no tempo rotulado
+(−5,49, confirmado) e com a cobertura igualada (+2,72, confirmado); o custo do
+`min_dur` em `root` (−1,68) com o ganho em `overseg` (+9,54); e o ganho de
+`overseg` da inércia do V4 (+17,36).
 
 O que sobreviveu **apenas em chord[0]**: a vantagem de `F0rg` sobre `D0rg` em
 `sevenths` (+12,56) e sobre o V4 em `majmin` (+3,81). Em chord[1] as duas são
 empate.
 
-Todas as seis configurações pontuam mais baixo no teste que na validação — o V4
+Todas as oito configurações pontuam mais baixo no teste que na validação — o V4
 vai de 67,95 % para 55,87 % em `root`, e as demais acompanham. Não sabemos a
 causa: os excertos dos músicos 04 e 05 podem ser mais difíceis de reconhecer,
 mas diferença de anotação, de instrumento ou de mixagem produziria o mesmo
@@ -368,12 +410,12 @@ frações de tempo — ponderá-las daria 66,36 e 12,46 em vez de 62,7 e 12,0.
 
 | Número citado | Arquivo | Filtro |
 |---|---|---|
-| Ablação do teste, chord[0] (§1, §2, §3.1, §3.3, §4) | `data/results/ablation_20260927_014253_ref0.csv` | `split=test`; ver a convenção acima |
-| Ablação do teste, chord[1] (§4, §5) | `data/results/ablation_20260927_014445_ref1.csv` | idem |
+| Ablação do teste, chord[0] (§1, §2, §3.1, §3.3, §4) | `data/results/ablation_20260927_014253_ref0.csv` **+** `ablation_20260927_201422_ref0.csv` | `split=test`; o primeiro tem as 6 variantes congeladas, o segundo `C0rg` e `V4b` (adendo §1); união por variante, 8 no total; ver a convenção acima |
+| Ablação do teste, chord[1] (§4, §5) | `data/results/ablation_20260927_014445_ref1.csv` **+** `ablation_20260927_201649_ref1.csv` | idem |
 | Ablação da validação, chord[0] (parênteses de §1–§4) | `data/results/ablation_20260927_005629_ref0.csv` | `split=val`; idem |
 | Ablação da validação, chord[1] (§4, §5) | `data/results/ablation_20260927_010621_ref1.csv` | idem |
-| Estatística do teste, chord[0] (Δ, IC, Holm, classe) | `data/results/stats_test_ref0_20260927_020514.csv` | linha por `(par, metrica)`; colunas `diferenca`, `ic95_min`, `ic95_max`, `p_bootstrap_holm`, `classificacao`, `b_melhor`/`b_pior`/`empate` |
-| Estatística do teste, chord[1] | `data/results/stats_test_ref1_20260927_020516.csv` | idem |
+| Estatística do teste, chord[0] (Δ, IC, Holm, classe) | `data/results/stats_test_ref0_20260927_202140.csv` | linha por `(par, metrica)`, **15 comparações**; colunas `diferenca`, `ic95_min`, `ic95_max`, `p_bootstrap_holm`, `classificacao`, `b_melhor`/`b_pior`/`empate`. Calculado sobre os dois CSVs de ablação unidos (`entradas` no meta) |
+| Estatística do teste, chord[1] | `data/results/stats_test_ref1_20260927_202219.csv` | idem |
 | Estatística da validação, chord[0] | `data/results/stats_val_ref0_20260927_020511.csv` | idem |
 | Estatística da validação, chord[1] | `data/results/stats_val_ref1_20260927_020513.csv` | idem |
 | Cobertura em chord[1] no teste — 59,2 % em `sevenths` e 62,9 % em `majmin` (cabeçalho, §4) | `data/results/coverage.csv` | `camada=chord[1]`, **`split=test`**, coluna `comparavel_frac`, por `nivel`. O mesmo motivo da linha do piso vale aqui: a linha `split=todos` daria 64,3 % e 66,7 %, fazendo a comparação do teste parecer mais sólida do que é |
@@ -388,12 +430,16 @@ frações de tempo — ponderá-las daria 66,36 e 12,46 em vez de 62,7 e 12,0.
 | Cobertura = 1 − `frac_n_est` | os CSVs de ablação acima | coluna `frac_n_est` |
 | `rel_gate = 0,2` e `abs_floor = 5e-4` (§0, §1) | `data/results/ablation_20260927_005629_ref0_meta.json` | `config_base.post` |
 | Faixas com `N` residual: 0/120 nas variantes `rg` da validação, 1/58 no teste (§0, §1) | os CSVs de ablação acima | contagem de linhas com `frac_n_est > 0`, por `variante` |
+| Máscara comum M_C e M_CD (§1.1) | `data/results/mascara_comum_20260927_202401.csv` | linha por `(split, mascara)`; colunas `acerto_a`, `acerto_b`, `diferenca`, `ic95_min`, `ic95_max`, `frac_tempo_na_mascara`. A coluna `status` marca `post_hoc` nas linhas de teste |
 | Configurações congeladas | `docs/CONGELAMENTO.md` | §1 a §3 |
+| Correção do registro do congelamento | `docs/ADENDO_CONGELAMENTO.md` | §1 (as duas variantes omitidas), §2 (a árvore suja), §3 (o `N` residual) |
 
-As figuras e as tabelas `.tex` de `artigo-ACDSA/` são geradas por
-`figuras_artigo.py` a partir desses mesmos CSVs; nenhum número foi transcrito
-à mão. As tabelas completas estão em `artigo-ACDSA/tabelas/`:
-`tab_ablacao.tex` (seis configurações no teste), `tab_camadas.tex` (as duas
+As figuras de `artigo-ACDSA/figuras/` são geradas por `figuras_artigo.py` e as
+tabelas de `artigo-ACDSA/tabelas/` por `tabelas_artigo.py`, ambos a partir
+desses mesmos CSVs; nenhum número foi transcrito à mão. As tabelas completas
+são: `tab_config.tex` (todos os parâmetros, com os valores testados em cada um e
+"fixo" onde nenhum variou), `tab_ablacao.tex` (as **oito** configurações no
+teste, nas duas camadas), `tab_camadas.tex` (as duas
 camadas lado a lado), `tab_segmentacao.tex` (`overseg`/`underseg`/`seg`),
-`tab_stats.tex` (as 11 comparações do teste) e `tab_stats_val.tex` (as 15 da
+`tab_stats.tex` (as 15 comparações do teste) e `tab_stats_val.tex` (as 15 da
 validação).

@@ -586,6 +586,43 @@ pode ser atribuída a uma das variantes se abster mais que a outra, e o que sobr
 novo entra depois de o teste ser lido**; um par acrescentado depois é análise
 exploratória e é reportado como tal.
 
+As 15 comparações foram avaliadas em **duas execuções** sobre o conjunto de
+teste. A §1 do congelamento listou seis configurações, mas os pares 2 e 4 exigem
+`C0rg` e `V4b`, que ficaram fora dessa lista por erro de transcrição entre as
+duas seções do mesmo documento. A primeira execução cobriu, por isso, 11 das 15;
+a omissão e a sua correção estão registradas em `docs/ADENDO_CONGELAMENTO.md`,
+commitado **antes** da segunda execução, e as duas variantes foram medidas com as
+configurações inalteradas desde o commit que as define, verificadas linha a linha
+contra o código daquele commit. Nenhum parâmetro foi escolhido, ajustado ou
+revisto depois da leitura do teste: a segunda execução completa uma matriz
+pré-especificada e não acrescenta comparação nova.
+
+### 6.7 Uma análise pós-especificada: a máscara comum
+
+Além dos seis pares, uma análise complementar compara `C` e `D` sobre a **mesma**
+porção de tempo, para separar o que a métrica usual soma — quem rotula melhor de
+quem rotula mais tempo. Duas máscaras, no nível `root`:
+
+$$
+M_C = \{\text{células em que } C \text{ não estimou } N\}, \qquad
+M_{CD} = \{\text{células em que nem } C \text{ nem } D \text{ estimaram } N\}
+$$
+
+Em cada máscara, a acurácia é a mesma média ponderada do
+`mir_eval.weighted_accuracy`, restrita às células da máscara e às comparáveis, e
+$\Delta = D - C$ recebe o mesmo bootstrap pareado por faixa (10 000
+reamostragens, semente 0). O peso de cada faixa no bootstrap é o tempo que ela
+contribui **para a máscara**, não a sua duração total: uma faixa em que `C`
+rotulou 5 % do tempo não pode pesar como uma em que rotulou 90 %. As três
+estimativas são decodificadas a partir do cache de `Features`, sem refazer
+extração de chroma.
+
+Esta análise **não** consta dos pares pré-registrados. Na validação é
+exploratória; **no conjunto de teste é pós-especificada (post hoc)**, porque foi
+concebida depois da leitura do teste. Ela está marcada como tal na coluna
+`status` do CSV e no `meta.json`, e não substitui nem reinterpreta nenhuma
+comparação pré-registrada.
+
 ---
 
 ## 7. Reprodutibilidade
@@ -619,13 +656,22 @@ script lendo esses CSVs, e a origem é indicada.
 
 **Congelamento anterior à leitura do teste.** `docs/CONGELAMENTO.md` é gerado
 por script, não editado à mão, e registra o commit que define as configurações,
-as seis configurações que vão ao teste com todos os seus campos, os parâmetros
-que **não** foram ablacionados, os pares pré-registrados e o critério de
-decisão. Foi gerado antes de qualquer leitura do split de teste. O protocolo do
-teste é uma execução única, com as duas camadas de referência reportadas e as
-duas faixas problemáticas excluídas pelo manifest; nada é ajustado depois. Se o
-resultado do teste sugerir outra configuração, isso é trabalho para outro
+as configurações que vão ao teste com todos os seus campos, os parâmetros que
+**não** foram ablacionados, os pares pré-registrados e o critério de decisão. Foi
+gerado antes de qualquer leitura do split de teste, e a anterioridade é auditável
+pela ordem dos commits. As duas faixas problemáticas seguem excluídas pelo
+manifest, e as duas camadas de referência são reportadas. Nada é ajustado depois:
+se o resultado do teste sugerir outra configuração, isso é trabalho para outro
 conjunto de dados, não uma revisão deste número.
+
+O congelamento **não é editado depois da leitura do teste** — editá-lo destruiria
+a anterioridade que lhe dá valor. Correções ao seu registro vão para
+`docs/ADENDO_CONGELAMENTO.md`, datado e commitado antes da execução que autoriza.
+O adendo corrige três coisas: a omissão de `C0rg` e `V4b` da lista da §1 (§6.6
+acima), o fato de a árvore estar suja na geração do documento — era o próprio
+código que o gerou, commitado 82 s depois e mais de quatro minutos antes da
+primeira leitura do teste — e a atribuição errada do `N` residual ao `abs_floor`,
+que na verdade vem do `rel_gate`.
 
 **Cache validado por metadados.** A etapa cara é persistida em
 `data/cache/<nome_do_audio>__<hash8>.npz`, onde `hash8` são os oito primeiros
