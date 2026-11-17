@@ -110,3 +110,27 @@ def test_estimado_harte_nao_vira_x():
     assert sem["root"] < 1.0          # sem o contexto, o Harte vira 'X'
     # e o contexto restaura a tradução original
     assert evaluate._to_mireval("Am") == "A:min"
+
+
+def test_fora_da_referencia_descarta_so_segmentos_externos():
+    from baselines_externos import fora_da_referencia
+    ref = [(9.6, 20.0, "C:maj"), (20.0, 30.0, "G:maj")]
+    est = [(0.0, 9.6, "N"), (9.6, 25.0, "C:maj"), (25.0, 30.0, "G:maj"),
+           (30.0, 31.0, "N")]
+    assert fora_da_referencia(est, ref) == est[1:3]
+    # segmento que atravessa o início fica (o mir_eval corta)
+    est2 = [(0.0, 10.0, "N"), (10.0, 30.0, "C:maj")]
+    assert fora_da_referencia(est2, ref) == est2
+
+
+def test_fronteira_no_inicio_da_referencia_nao_quebra_underseg():
+    import runner
+    from baselines_externos import fora_da_referencia, _estimado_em_harte
+    ref = [(9.6, 20.0, "C:maj"), (20.0, 30.0, "G:maj")]
+    est = [(0.0, 9.6, "N"), (9.6, 20.0, "C:maj"), (20.0, 30.0, "G:maj")]
+    with _estimado_em_harte():
+        linha = runner._linha_csv(
+            runner.Variante("madmom", motor="madmom", vocab="madmom"),
+            {"track_id": "t", "split": "external"}, ref,
+            fora_da_referencia(est, ref), runner._duracao(ref), 0)
+    assert linha["root"] == 1.0

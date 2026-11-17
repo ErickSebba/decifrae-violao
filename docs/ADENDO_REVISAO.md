@@ -198,3 +198,17 @@ olhar resultado de nenhuma variante nas bases externas):
 - `runner.rodar` passa a carregar a referência por `dataset_io.load_reference`
   (despacho pelo campo `dataset`); no GuitarSet a chamada é idêntica à
   anterior (verificado em val, chord[0] e chord[1]; oráculo sem diff).
+
+**Desvio registrado durante a execução (2026-11-17).** Na primeira avaliação
+do madmom no IDMT-SMT-Guitar (`baseline_madmom_20261117_122212_ref0.csv`,
+505 linhas), a faixa `acoustic_pickup_slow_folk_2_75BPM` falhou: a referência
+começa em 9,600 s e o madmom tem uma fronteira exatamente em 9,600 s; o
+`adjust_intervals` do mir_eval deixa um segmento de duração zero e o
+`underseg` levanta `ValueError`. Correção em
+`baselines_externos.fora_da_referencia`: descartar os segmentos estimados
+inteiramente fora de [início, fim] da referência (o mir_eval já os corta).
+Verificado neutro: reavaliados os 12 CSVs de baseline já commitados, zero
+diferenças em root, majmin, sevenths, mirex, root_rotulado e segmentação; a
+única mudança é a faixa recuperada. O CSV de 505 linhas fica (não se
+sobrescreve) e é substituído pelo seguinte, de 506 linhas. Não afeta as
+variantes do pipeline (nenhuma falha nas 8 × 506).

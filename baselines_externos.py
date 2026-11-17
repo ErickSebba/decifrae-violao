@@ -344,6 +344,20 @@ def _referencia(row, ref_camada):
     return ds.load_guitarset(caminho, index=ref_camada)
 
 
+def fora_da_referencia(est, ref):
+    """
+    Descarta os segmentos estimados que ficam inteiramente fora de
+    [início, fim] da referência. O mir_eval já os corta; mas um segmento que
+    termina EXATAMENTE no início da referência (ou começa exatamente no fim)
+    vira um intervalo de duração zero no `adjust_intervals` e o `underseg`
+    levanta ValueError. Para os demais a métrica é idêntica.
+    """
+    if not est or not ref:
+        return est
+    ini, fim = ref[0][0], ref[-1][1]
+    return [s for s in est if s[1] > ini and s[0] < fim]
+
+
 def avaliar(nome, dir_lab, manifest, splits, ref_camada, verbose=True):
     """
     Pontua os .lab de `dir_lab/<dataset>/<track_id>.lab` contra a referência.
@@ -364,7 +378,7 @@ def avaliar(nome, dir_lab, manifest, splits, ref_camada, verbose=True):
                 lab = Path(dir_lab) / row["dataset"] / f"{tid}.lab"
                 if not lab.exists():
                     raise FileNotFoundError(f"sem .lab: {lab}")
-                est = ler_lab(lab)
+                est = fora_da_referencia(ler_lab(lab), ref)
                 resultados.append(runner._linha_csv(
                     variante, row, ref, est, runner._duracao(ref), ref_camada))
             except Exception as exc:
