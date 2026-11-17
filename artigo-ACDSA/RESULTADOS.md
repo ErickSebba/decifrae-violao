@@ -678,7 +678,7 @@ No IDMT-SMT-Chords, D e E ficam com cobertura de 8,4 % (`root` 5,8 %): o
 Viterbi com estado N fica parado em N (34–55 segmentos estimados por faixa,
 contra 273 de referência). A base troca de acorde a cada ~2 s: 273 segmentos
 por faixa (84 rótulos distintos); sem o estado N (D0rg), a cobertura
-volta a 100 %. Interpretação (hipótese compatível com os dados, não testada):
+volta a 100 %. Interpretação (sustentada pelo diagnóstico do §8.6):
 com trocas tão frequentes, a penalidade de transição acumulada torna N, que
 não paga troca, o caminho mais barato. Nada foi ajustado.
 
@@ -720,3 +720,64 @@ o mesmo sinal e classe. Os ganhos de **acurácia** do Viterbi (C→D, C0rg→D0r
 e do vocabulário de 60 em sétimas (D0rg→F0rg) mantêm o sinal, mas ficam
 pequenos (empate, ou frágil em C0rg→D0rg `majmin`); no IDMT-SMT-Chords, invertem. Em `root`,
 nenhuma variante alcança os baselines de terceiros no GuitarSet e no IDMT-SMT-Guitar; no IDMT-SMT-Chords, C0rg fica no nível deles em `root` e acima em `majmin` (97,2 contra 94,5 e 95,7), e em `sevenths` no GuitarSet teste F0rg (47,1) e V4 (43,6) superam o Chordino (41,0).
+
+### 8.5 O rótulo `13` do IDMT-SMT-Guitar (adendo §9.1)
+
+A descrição oficial do dataset não define os sufixos. A notação distingue
+`13` de `713` e `7913`, e o chroma dos trechos `13` não tem 7ª menor (energia
+0,034 contra 0,144 em `7` e 0,188 em `713`). `13` não é dominante: o
+mapeamento `maj(13)` fica e a base **não foi repontuada**; nenhuma classe da
+`tab:transferencia` muda. Peso dos rótulos discutíveis no tempo anotado:
+`13` 5,00 % (63 faixas), `GB5` 0,05 %, `D/7Gb` 0,12 %.
+
+### 8.6 Diagnóstico do estado N (adendo §9.2)
+
+Origem: `data/results/diagnostico_n_resumo_20261117_135637.csv`;
+`figuras/fig_diagnostico_n.pdf`. max_k ℓ_i(k) por célula de batida; β = −2,5.
+
+| base | caso | células | mediana | IQR | < β |
+|---|---|---|---|---|---|
+| GuitarSet teste | D | 3 528 | −1,553 | [−1,854; −1,252] | 0,8 % |
+| GuitarSet teste | D0rg-60 | 3 639 | −1,566 | [−1,867; −1,257] | 1,4 % |
+| GuitarSet teste | D0rg-24 | 3 639 | −1,174 | [−1,624; −0,756] | 0,1 % |
+| IDMT-SMT-Guitar | D | 23 710 | −1,588 | [−1,975; −1,263] | 4,5 % |
+| IDMT-SMT-Guitar | D0rg-60 | 26 141 | −1,641 | [−2,043; −1,294] | 6,0 % |
+| IDMT-SMT-Guitar | D0rg-24 | 26 141 | −1,232 | [−1,660; −0,784] | 0,2 % |
+| IDMT-SMT-Chords | D | 1 633 | −1,299 | [−1,519; −1,066] | 0,0 % |
+| IDMT-SMT-Chords | D0rg-60 | 1 633 | −1,299 | [−1,519; −1,066] | 0,0 % |
+| IDMT-SMT-Chords | D0rg-24 | 1 633 | −0,747 | [−0,942; −0,538] | 0,0 % |
+
+Na D, as células forçadas a N pelo gate de RMS ficam fora (111 de 3 639 no
+GuitarSet, 2 431 de 26 141 no IDMT-SMT-Guitar, 0 no IDMT-SMT-Chords).
+Leitura: em nenhuma base a emissão sozinha explica o N da D. Só 0,8 % das
+células do GuitarSet ficam abaixo de β, mas a cobertura da D no teste é
+77,1 %. No IDMT-SMT-Chords nenhuma célula fica abaixo de β, e mesmo assim a
+cobertura é 8,4 %. O N vence pelas transições: trocar de acorde custa 2,0,
+ficar em N custa 2,5 por célula e não paga troca, e o IDMT-SMT-Chords muda de
+acorde a cada célula (1 633 células para 1 638 segmentos de referência). Com
+24 templates o softmax concentra mais (mediana −1,17 contra −1,57 no
+GuitarSet).
+
+### 8.7 Beat tracking contra o andamento nominal (adendo §9.3)
+
+Origem: `data/results/beat_tracking_idmt_20261117_135654.csv` e
+`beat_tracking_contrastes_20261117_135654.csv`. Razão estimado/nominal nas
+506 faixas: ~1 em 326, ~2 em 47, ~0,5 em 58 (erro de oitava: 105) e outro em
+75 (sobretudo ~0,75 e ~1,25–1,33). O dobro concentra-se nos andamentos
+lentos (34 de 47 entre 50 e 75 BPM) e a metade nos rápidos (36 de 58 em 120 e 180 BPM).
+
+Seis contrastes principais por grupo (Δ em p.p., IC 95 % do bootstrap pareado,
+descritivo, sem Holm):
+
+| contraste | razão ~1 (326) | erro de oitava (105) |
+|---|---|---|
+| C→D `root` | +1,80 [−1,31; +4,99] | −0,00 [−2,81; +2,81] |
+| C0rg→D0rg `majmin` | +0,88 [−0,39; +2,11] | +0,93 [−1,03; +2,96] |
+| D→E `overseg` | +7,08 [+6,18; +8,07] | +6,97 [+5,61; +8,38] |
+| V4b→V4 `overseg` | +12,46 [+11,21; +13,74] | +12,08 [+9,94; +14,29] |
+| V4→F0rg `majmin` | +0,79 [−0,76; +2,38] | −1,96 [−4,04; +0,14] |
+| D0rg→F0rg `sevenths` | +1,46 [−1,68; +4,65] | +0,18 [−3,23; +3,54] |
+
+Os efeitos de segmentação não dependem do erro de oitava. Os de acurácia são
+pequenos nos dois grupos, com IC cruzando zero. V4→F0rg `majmin` troca de
+sinal no grupo de oitava, também com IC cruzando zero.
