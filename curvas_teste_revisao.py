@@ -48,7 +48,10 @@ ARTIGO = ROOT / "artigo-ACDSA"
 
 REF_CAMADA = 0
 GATES_C = [0.0] + [round(0.50 + 0.01 * i, 2) for i in range(41)]
-LOGPROBS_D = [round(-1.0 - 0.25 * i, 2) for i in range(29)] + [-1e9]
+LOGPROBS_D = sorted(set(
+    [round(-1.0 - 0.25 * i, 2) for i in range(29)]
+    # refinamento entre -2,25 e -2,75 (docs/ADENDO_REVISAO.md §7)
+    + [round(-2.25 - 0.05 * i, 2) for i in range(1, 10)]), reverse=True) + [-1e9]
 ALVOS = [0.60, 0.70, 0.77, 0.90]
 METRICAS = ["root_rotulado", "root"]
 

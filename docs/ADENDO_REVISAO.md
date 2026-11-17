@@ -115,3 +115,14 @@ Verificado depois, a partir do Git:
 Conclusão: o código que produziu as duas ablações é exatamente o dos commits
 gravados no meta. Os CSVs não foram regenerados, porque isso seria uma segunda
 leitura do teste.
+
+## 7. Refinamento da curva D no teste (protocolo, 2026-11-17)
+
+Registrado e commitado antes de rodar. Na execução do §5, a curva D tinha só
+três pontos entre 58 % e 89 % de cobertura (`n_logprob` −2,25 → 58,32 %,
+−2,5 → 77,12 %, −2,75 → 89,26 %). Acrescentam-se os pontos
+`n_logprob` ∈ {−2,30; −2,35; …; −2,70} (passo 0,05; 8 pontos novos, porque −2,50 já existia) entre
+−2,25 e −2,75. A grade passa a ter 38 pontos em D; C, alvos (60, 70, 77 e 90 %),
+interpolação, bootstrap (10 000, seed 0) e saídas são os do §5. O CSV antigo
+não é sobrescrito; `tab_cobertura_igualada.tex` e `fig_cobertura_teste` são
+regenerados a partir do CSV novo. Nenhum valor é escolhido.
