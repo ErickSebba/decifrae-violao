@@ -1,0 +1,29 @@
+{
+  "gerado_em": "2026-11-17T12:22:08",
+  "post_review": true,
+  "baseline": "madmom",
+  "variante": "madmom",
+  "manifest": "data/manifests/idmt_smt_chords.csv",
+  "splits": [
+    "eval"
+  ],
+  "ref_camada": "chord[0]",
+  "ref_is_harte": true,
+  "est_is_harte": true,
+  "dir_lab": "data/cache/baselines/madmom",
+  "n_linhas": 6,
+  "falhas": [],
+  "segundos": 0.3,
+  "versoes": {
+    "python": "3.14.6",
+    "implementacao": "CPython",
+    "numpy": "2.4.6",
+    "mir_eval": "0.8.2"
+  },
+  "projeto": {
+    "commit": "0d375b18cb046846fdadf6c497e888807c2c1e00",
+    "arvore_suja": false
+  },
+  "madmom_version": null,
+  "nota": "rótulos produzidos fora deste script"
+}
