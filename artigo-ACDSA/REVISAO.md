@@ -27,3 +27,26 @@ As três foram corrigidas no texto. Não houve segunda conferência.
 - Precisão e revocação de sétimas e o Δ por executante são descritivos, sem IC.
 - A tabela de cobertura igualada não tem `.tex`; está só em `RESULTADOS.md`.
 - `fig_transicao` tem 3,37 pol de largura (corte "tight"), dentro da coluna de 3,5.
+
+## Revisão das seções "Bases externas e baselines" (2026-11-17)
+
+Uma passada por sub-agente novo, conferindo cada número contra
+`externo_resumo_`, `transferencia_` e `transferencia_guitarra_20261117_122651.csv`,
+as ablações, os `stats_` e os baselines. Tabelas `tab_externo` e
+`tab_transferencia` bateram integralmente. Cinco correções no texto:
+
+1. RESULTADOS §8.1: madmom sobre a melhor variante no IDMT-SMT-Guitar é
+   +13,6 p.p. (76,73 − 63,18), não +13,5 (diferença de arredondados).
+2. RESULTADOS §8.1: o IDMT-SMT-Chords tem 273 segmentos por faixa, mas 84
+   rótulos distintos (não "273 acordes distintos").
+3. RESULTADOS §8.4: "nenhuma variante alcança os baselines" restrito a `root`
+   no GuitarSet e no IDMT-SMT-Guitar; no IDMT-SMT-Chords C0rg supera ambos em
+   `majmin` e, no GuitarSet teste, F0rg e V4 superam o Chordino em `sevenths`.
+4. METODOLOGIA §9.1: 261,3 min são os 507 WAV; as 506 avaliáveis somam
+   260,9 min.
+5. RESULTADOS §8.4: C0rg→D0rg `majmin` no IDMT-SMT-Guitar é frágil (IC
+   [+0,30; +2,22]), não "indistinguível de zero".
+
+Não conferido por falta de fonte em CSV: "Vamp Plugin Pack 2.0" e os BPM da
+conferência de beat tracking (registrados no adendo §8, vindos da instalação
+e do relatório do adaptador).

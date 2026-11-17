@@ -642,3 +642,81 @@ o ótimo: o melhor valor foi 1,5 para 60 acordes (+0,98 p.p.) e 1,0 para 24
 Na validação, a vantagem de 24 sobre 60 em `root` fica entre +2,81 (cp 6) e +4,08
 (cp 0,5) p.p. em todos os oito valores de `change_penalty` (mesma origem): a ordem entre
 os vocabulários não depende da escolha de cp nessa grade.
+
+## 8. Bases externas e baselines (pós-revisão)
+
+Protocolo: `docs/ADENDO_REVISAO.md` §8; método: `METODOLOGIA.md` §9. Nenhuma
+configuração ajustada fora do GuitarSet. Origens: resumo por sistema
+`data/results/externo_resumo_20261117_122651.csv` (`tab:externo`),
+contrastes `data/results/transferencia_20261117_122651.csv`
+(`tab:transferencia`, `figuras/fig_transferencia.pdf`), por guitarra
+`data/results/transferencia_guitarra_20261117_122651.csv`. Ablações:
+`ablation_20261117_110819_ref0.csv` (IDMT-SMT-Guitar) e
+`ablation_20261117_111622_ref0.csv` (IDMT-SMT-Chords); estatística:
+`stats_external_ref0_20261117_111716.csv` e
+`stats_eval_ref0_20261117_111718.csv`.
+
+### 8.1 Desempenho absoluto (`tab:externo`)
+
+Médias ponderadas pela duração, em %:
+
+| base | melhor variante (root) | Chordino root | madmom root |
+|---|---|---|---|
+| GuitarSet teste | D0rg 57,7 | 66,5 | 73,1 |
+| IDMT-SMT-Guitar | D0rg 63,2 | 72,8 | 76,7 |
+| IDMT-SMT-Chords | C0rg 80,4 | 80,7 | 80,4 |
+
+Os dois baselines de terceiros superam todas as variantes no GuitarSet e no
+IDMT-SMT-Guitar (madmom: +15,4 e +13,6 p.p. de `root` sobre a melhor
+variante); no IDMT-SMT-Chords, C0rg fica no mesmo nível deles em `root` (sem teste formal). Na validação do
+GuitarSet (`chord[0]`), Chordino tem root 81,20 / majmin 73,87 / sevenths
+58,27 e madmom 85,30 / 79,56 / 71,37
+(`baseline_chordino_20261117_111649_ref0.csv`,
+`baseline_madmom_20261117_122156_ref0.csv`).
+
+No IDMT-SMT-Chords, D e E ficam com cobertura de 8,4 % (`root` 5,8 %): o
+Viterbi com estado N fica parado em N (34–55 segmentos estimados por faixa,
+contra 273 de referência). A base troca de acorde a cada ~2 s: 273 segmentos
+por faixa (84 rótulos distintos); sem o estado N (D0rg), a cobertura
+volta a 100 %. Interpretação (hipótese compatível com os dados, não testada):
+com trocas tão frequentes, a penalidade de transição acumulada torna N, que
+não paga troca, o caminho mais barato. Nada foi ajustado.
+
+### 8.2 Transferência dos 15 contrastes (`tab:transferencia`)
+
+No **IDMT-SMT-Guitar**, os 15 Δ têm o mesmo sinal do teste do GuitarSet
+(15/15). Dos 9 contrastes confirmados no GuitarSet, 4 se confirmam também
+lá: C→D `root_rotulado` (−5,5 → −2,3), D→E `root` (−1,7 → −2,3), D→E
+`overseg` (+9,5 → +6,8) e V4b→V4 `overseg` (+17,4 → +12,4). Os outros 5 mantêm
+o sinal, mas encolhem para empate ou frágil: C→D `root` (+7,9 → +1,4),
+C0rg→D0rg `root` (+2,7 → +0,3) e `majmin` (+3,9 → +1,3), V4→F0rg `majmin`
+(+3,8 → +0,2) e D0rg→F0rg `sevenths` (+12,6 → +1,1). Quatro empates do
+GuitarSet viram confirmados com o mesmo sinal: D→E `seg` (−6,7), V4→F0rg `seg`
+(−2,1) e D0rg→F0rg `root`/`majmin` (−2,6 / −3,7).
+
+No **IDMT-SMT-Chords** (6 faixas), 5 dos 12 Δ não nulos mantêm o sinal; os 3
+contrastes D→E têm Δ = 0 exato (D e E produzem a mesma saída). Os efeitos do
+Viterbi com N invertem (C→D `root` −67,9), pelo colapso para N descrito acima,
+e os do Viterbi sem N também (C0rg→D0rg `root` −6,0, `majmin` −8,7), assim
+como D0rg→F0rg `sevenths` (−30,9), V4→F0rg `root` (−5,5) e `majmin` (−5,3) e V4b→V4 `root` (−1,1, frágil). Mantêm o sinal:
+C→D `root_rotulado`, V4b→V4 `overseg` (+0,01 p.p., confirmado mas
+desprezível), V4→F0rg `seg` e D0rg→F0rg `root`/`majmin`.
+
+### 8.3 Por guitarra (IDMT-SMT-Guitar)
+
+Com 122–128 faixas por guitarra, os contrastes de segmentação são estáveis
+nas quatro: D→E `overseg` entre +5,9 e +7,3 e V4b→V4 `overseg` entre +10,7 e
++13,6, todos com IC acima de zero; D→E `root` entre −1,8 e −2,8, todos com IC
+abaixo de zero. C→D `root` varia de sinal entre guitarras (Career SG −1,2,
+Ibanez +4,0, acústica com microfone +2,2, com captador +0,4), todos com IC
+cruzando zero. D0rg→F0rg `sevenths` fica entre +0,1 e +2,5, todos com IC
+cruzando zero.
+
+### 8.4 Leitura
+
+Os efeitos de **segmentação** (a inércia do V4 e o filtro de duração da E
+aumentam `overseg`; a E perde `root`) transferem-se para o IDMT-SMT-Guitar com
+o mesmo sinal e classe. Os ganhos de **acurácia** do Viterbi (C→D, C0rg→D0rg)
+e do vocabulário de 60 em sétimas (D0rg→F0rg) mantêm o sinal, mas ficam
+pequenos (empate, ou frágil em C0rg→D0rg `majmin`); no IDMT-SMT-Chords, invertem. Em `root`,
+nenhuma variante alcança os baselines de terceiros no GuitarSet e no IDMT-SMT-Guitar; no IDMT-SMT-Chords, C0rg fica no nível deles em `root` e acima em `majmin` (97,2 contra 94,5 e 95,7), e em `sevenths` no GuitarSet teste F0rg (47,1) e V4 (43,6) superam o Chordino (41,0).

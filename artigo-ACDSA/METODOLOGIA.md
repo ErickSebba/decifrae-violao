@@ -808,3 +808,79 @@ tempo sobre as faixas, com IC 95 % por bootstrap reamostrando faixas
 (numerador e denominador da faixa juntos; 10 000, seed 0). Sensibilidade à transição: curva `root` ×
 `change_penalty` ∈ {0,5…6} na validação, e no teste D0rg/F0rg (cp 2,0) contra
 as versões `_cal`. Script: `analise_vocabulario.py`.
+
+## 9. Bases externas e baselines (pós-revisão)
+
+Protocolo congelado antes da execução em `docs/ADENDO_REVISAO.md` §8 (commit
+`9966d81`). **Nenhuma configuração foi ajustada fora do GuitarSet**: rodam as
+oito variantes já congeladas (V4, V4b, C, D, E, C0rg, D0rg, F0rg), com os
+mesmos hiperparâmetros do teste.
+
+### 9.1 Bases
+
+| base | faixas | áudio | referência | split |
+|---|---|---|---|---|
+| IDMT-SMT-Guitar, subconjunto 4 | 506 avaliáveis (507 WAV; 1 excluída por par áudio/anotação inconsistente) | 44,1 kHz mono, 261,3 min nos 507 WAV (260,9 min nas 506 avaliáveis); 11 761,3 s anotados | acordes por tempo de batida (`tempo,compasso.batida:rótulo`); início explícito, fim implícito no próximo rótulo | `external` |
+| IDMT-SMT-Chords (guitarra) | 6 | 546 s cada | segmentos com início e fim | `eval` |
+
+No IDMT-SMT-Guitar, guitarra (Career SG, Ibanez 2820, acústica com microfone,
+acústica com captador), velocidade, estilo e andamento vêm do nome do arquivo
+(`<guitarra>_<fast|slow>_<estilo>_<n>_<BPM>BPM`) e estão em colunas do
+manifest `data/manifests/idmt_smt_guitar.csv`. A referência vai do primeiro
+tempo anotado ao último mais um intervalo mediano; o primeiro tempo cai entre
+3,3 e 16 s (compasso de silêncio e sinais de controle iniciais não são
+anotados). Os 157 rótulos distintos usam bemóis e sufixos próprios, traduzidos
+para Harte em `dataset_io.IDMT_GUITAR_QUALITY` (`13` → `maj(13)`, `79` →
+`7(9)`, `min75b` → `hdim7` etc.); `GB5` e `D/7Gb` viram `X` e são ignorados
+pelo mir_eval.
+
+Fração do tempo de referência comparável por nível
+(`data/results/coverage_externo_20261117_102831.csv`):
+
+| base | root | majmin | sevenths | mirex | N |
+|---|---|---|---|---|---|
+| IDMT-SMT-Guitar | 0,998 | 0,870 | 0,856 | 0,918 | 11,9 % |
+| IDMT-SMT-Chords | 1,000 | 0,714 | 0,714 | 0,857 | — |
+
+Sensibilidade registrada: com `13` → `maj6`, a cobertura de `sevenths` no
+IDMT-SMT-Guitar cairia de 0,856 para 0,817.
+
+### 9.2 Baselines de terceiros
+
+- **Chordino** (NNLS Chroma, Vamp Plugin Pack 2.0, plugin versão 5), via
+  Sonic Annotator 1.7, transform `vamp:nnls-chroma:chordino:simplechord`,
+  parâmetros default (step 2048, block 16384, boostn 0,1, rollon 0, s 0,7,
+  tuning global, NNLS e whitening ligados). Arquivo do transform:
+  `baselines/chordino_simplechord.n3`.
+- **madmom** 0.17.dev0 (commit `27f032e` do GitHub; o 0.16.1 do PyPI não
+  compila), CNN + CRF de acordes maior/menor, em ambiente separado (Python
+  3.10.20, numpy 1.26.4, scipy 1.15.3); versões em
+  `data/cache/baselines/madmom/versoes.json`.
+
+Os dois produzem rótulos já em Harte, avaliados com o mesmo mir_eval, as
+mesmas referências e as mesmas colunas do runner
+(`baselines_externos.py`); o meta registra `est_is_harte: true`. Segmentos
+estimados inteiramente fora do intervalo da referência são descartados antes
+da avaliação (o mir_eval já os corta; ver o desvio registrado no adendo §8).
+Nenhum parâmetro dos baselines foi ajustado. Os dois rodam no GuitarSet
+(validação e teste, `chord[0]` e `chord[1]`) e nas duas bases externas.
+
+### 9.3 Estatística
+
+Os 15 contrastes pré-registrados (`stats.PARES`) são recalculados em cada
+base com o mesmo bootstrap pareado por faixa (10 000 reamostragens, seed 0,
+pesos = duração) e Holm sobre 15. Uma comparação "mantém o sinal" quando o Δ
+da base externa tem o mesmo sinal do Δ no teste do GuitarSet; Δ = 0 exato não
+conta. No IDMT-SMT-Guitar, o Δ também é calculado por guitarra (bootstrap
+reamostrando faixas dentro da guitarra, sem Holm; é descritivo).
+
+### 9.4 Limitações específicas
+
+- O beat tracking do pipeline tende a 90–120 BPM: em três faixas de
+  conferência, 120 BPM saiu 117,5, 180 BPM saiu 89,1 (metade) e 60 BPM saiu
+  117,5 (dobro). Não é corrigido, porque seria ajuste fora do GuitarSet.
+- O IDMT-SMT-Chords tem 6 faixas: os IC são estreitos porque as faixas são
+  longas e homogêneas, não porque haja muitas observações independentes.
+- O madmom foi treinado em música popular com outro vocabulário (maior/menor);
+  o Chordino tem vocabulário próprio (inclui `6`, `m6`, `m7b5`, `dim`, `aug`).
+  Os dois são referências externas, não variantes do estudo de ablação.
