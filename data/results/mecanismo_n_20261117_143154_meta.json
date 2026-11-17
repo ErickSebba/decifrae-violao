@@ -1,0 +1,17 @@
+{
+  "gerado_em": "20261117_143154",
+  "gerado_por": "mecanismo_n.py",
+  "post_review": true,
+  "projeto": {
+    "commit": "902750e27676c7524aa77e5c730155d9f9850fd9",
+    "arvore_suja": false
+  },
+  "variante": "D",
+  "ref_camada": "chord[0]",
+  "definicoes": {
+    "trocas_por_celula": "fronteiras da referência estritamente dentro da célula de batida",
+    "celulas_por_segmento": "células cujo ponto médio cai no segmento de referência (sem N)",
+    "custo_n": "max_k ℓ_i(k) − β, ℓ = log softmax(e/temp)"
+  },
+  "nota": "células forçadas a N pelo gate ficam fora de trocas e custo"
+}
