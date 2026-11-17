@@ -776,6 +776,24 @@ acorde a cada célula (1 633 células para 1 638 segmentos de referência). Com
 24 templates o softmax concentra mais (mediana −1,17 contra −1,57 no
 GuitarSet).
 
+Mecanismo, em números (origem: `data/results/mecanismo_n_20261117_143154.csv`;
+células da D sem as forçadas pelo gate; custo de N = max_k ℓ_i(k) − β):
+
+| base | trocas da ref. por célula (mediana) | células por segmento de ref. (mediana) | custo de N por célula (mediana) |
+|---|---|---|---|
+| GuitarSet teste | 0 (17,4 % das células com troca) | 4 | 0,947 |
+| IDMT-SMT-Guitar | 0 (37,9 %) | 2 | 0,912 |
+| IDMT-SMT-Chords | 1 (98,9 %) | 1 | 1,200 |
+
+O custo de ficar em N é menor que change_penalty = 2,0 em praticamente todas
+as células das três bases (100 %, 100 % e 99,9 %). Quem decide é a frequência
+de troca. Com troca a cada célula (IDMT-SMT-Chords), seguir os acordes custa
+2,0 por célula e ficar em N custa 1,20, então N vence. Com 4 células por
+segmento (GuitarSet), a troca custa cerca de 2,0/4 = 0,5 por célula, abaixo de
+0,947, e o acorde vence. O IDMT-SMT-Guitar, com 2 células por segmento
+(≈ 1,0 contra 0,912), fica no limite, coerente com a cobertura intermediária
+da D lá (63,7 %).
+
 ### 8.7 Beat tracking contra o andamento nominal (adendo §9.3)
 
 Origem: `data/results/beat_tracking_idmt_20261117_135654.csv` e
