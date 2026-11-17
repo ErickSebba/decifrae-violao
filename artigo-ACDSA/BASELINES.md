@@ -284,3 +284,37 @@ mediana). A diferença entre V4b e A está, portanto, inteiramente na decisão
   (fundido) (§2).
 - **Gate de 0,1.** Escala do limiar depende da normalização interna do
   `chroma_cqt`; o comportamento descrito em §5 é inferência.
+
+## 9. Baselines de terceiros: Chordino e madmom (pós-revisão)
+
+Rodam como estão distribuídos, **sem nenhum parâmetro ajustado**, no
+GuitarSet (validação e teste) e nas duas bases externas
+(`baselines_externos.py`, `baselines/madmom_acordes.py`).
+
+| | Chordino | madmom |
+|---|---|---|
+| versão | NNLS Chroma / Chordino, plugin versão 5 (Vamp Plugin Pack 2.0), via Sonic Annotator 1.7 | madmom 0.17.dev0, commit `27f032e` do GitHub (o 0.16.1 do PyPI não compila no Python 3.10) |
+| componente | transform `vamp:nnls-chroma:chordino:simplechord` (`baselines/chordino_simplechord.n3`) | `CNNChordFeatureProcessor` + `CRFChordRecognitionProcessor`, modelos `models/chords/2016/chords_cnnfeat.pkl` e `chords_cnncrf.pkl` |
+| parâmetros | defaults: step 2048, block 16384, `useNNLS` 1, `rollon` 0, `tuningmode` 0 (global), `whitening` 1, `s` 0,7, `boostn` 0,1 | defaults do processador (100 fps na entrada da CNN, 10 fps na saída) |
+| vocabulário de saída | maior, menor, `dim`, `aug`, `6`, `m6`, `7`, `maj7`, `m7`, `m7b5`, com baixo; `N` | 24 (maior, menor) + `N` |
+| ambiente | binário Windows | venv separado: Python 3.10.20, numpy 1.26.4, scipy 1.15.3 (`data/cache/baselines/madmom/versoes.json`) |
+| treino | sem treino (templates fixos sobre o NNLS chroma) | ver abaixo |
+
+**Corpora de treino do madmom.** A documentação oficial do madmom
+(docstrings de `CNNChordFeatureProcessor` e `CRFChordRecognitionProcessor`)
+remete a Korzeniowski e Widmer, *A Fully Convolutional Deep Auditory Model
+for Musical Chord Recognition*, MLSP 2016 (arXiv:1612.05082). O artigo, §4,
+usa um conjunto composto: **Isophonics** (180 faixas dos Beatles, 19 do
+Queen, 18 do Zweieck; 10 h 21 min), **RWC Popular** (100 faixas; 6 h 46 min)
+e **Robbie Williams** (65 faixas; 4 h 30 min), em validação cruzada de 8
+partes. **Não inclui GuitarSet** (publicado em 2018, depois do modelo) **nem
+IDMT-SMT-Guitar ou IDMT-SMT-Chords.** Ressalva: nem a documentação nem o
+artigo dizem se o modelo distribuído foi treinado no conjunto inteiro ou numa
+das 8 partes; em qualquer caso, os corpora são esses. Os modelos do madmom
+são CC BY-NC-SA 4.0 (`madmom/models/README.rst`).
+
+**Avaliação.** Os rótulos dos dois já saem em Harte e passam pelo mesmo
+mir_eval, com as mesmas referências e colunas do runner (`est_is_harte:
+true` no meta). Segmentos estimados inteiramente fora do intervalo da
+referência são descartados antes (o mir_eval já os corta; ver
+`docs/ADENDO_REVISAO.md` §8, desvio registrado).
