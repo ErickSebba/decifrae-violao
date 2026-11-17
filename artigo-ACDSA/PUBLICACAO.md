@@ -71,3 +71,21 @@ removida (o arquivo não existe).
 - GuitarSet: CC BY 4.0, citação obrigatória (`METODOLOGIA.md` §1.4).
 - IDMT-SMT-Chords: conferir a licença da distribuição original antes de
   publicar qualquer manifest que aponte para ele (`docs/DATASETS.md`).
+
+## Cópia limpa exportada (2026-11-17)
+
+Gerada em `..\Decifra-Violao-publico` por `git archive` do commit `e525f0d`
+(só arquivos rastreados), mais `README_REPRODUCAO.md` (cópia de
+`docs/REPRODUCAO.md`). **Nenhum repositório remoto foi criado; nada foi
+publicado.**
+
+- Fora da cópia: `.git`, `Musicas/`, `data/raw/`, `data/extracted/`,
+  `data/cache/` (os três últimos nem são rastreados), e, por precaução, os
+  itens de "decisão do autor": `Api/`, `out/musicas/*_timeline.png` e
+  `out/musicas_bench/comparativo.png`.
+- Verificado: 265 arquivos, 12 MB, **nenhum** `.wav`, `.mp3`, `.flac` (nem
+  outro formato de áudio); tipos presentes: csv, json, py, md, tex, png, pdf,
+  txt, n3.
+- Na cópia, `pytest`: 223 passam e 27 são pulados (precisam dos dados).
+- O bloqueio do histórico continua valendo para o repositório: a cópia não
+  tem `.git`, então não carrega os `.mp3` dos commits `e426941` e `515ff45`.
