@@ -445,7 +445,13 @@ def main(argv=None):
                     help="um ou mais CSVs de ablação da MESMA camada e do "
                          "mesmo split; default: o ablation_*_ref0.csv mais "
                          "recente")
+    ap.add_argument("--post-review", action="store_true",
+                    help="marca o meta.json com post_review=true")
     args = ap.parse_args(argv)
+    # lido antes de escrever qualquer saída, para o estado da árvore ser o
+    # da execução e não o do próprio CSV novo
+    import runner
+    projeto = runner._commit()
 
     # `--csv` aceita caminho relativo OU absoluto: resolver contra ROOT antes
     # de usar, senão `relative_to` estoura com a forma relativa que a própria
@@ -516,8 +522,10 @@ def main(argv=None):
             "numpy": np.__version__,
             "scipy": scipy.__version__,
         },
-        "projeto": runner._commit(),
+        "projeto": projeto,
     }
+    if args.post_review:
+        meta["post_review"] = True
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     csv_out, meta_out = escrever(linhas, meta, timestamp,
                                  split=_split_de(csv_path),

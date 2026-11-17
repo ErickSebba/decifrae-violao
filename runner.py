@@ -545,8 +545,9 @@ def rodar(manifest, splits, nomes_variantes, ref_camada=REF_CAMADA,
     for row in linhas_manifest:
         tid = row["track_id"]
         try:
-            refs[tid] = ds.load_guitarset(ROOT / row["annotation_path"],
-                                          index=ref_camada)
+            # despacha pelo `dataset` do manifest; no GuitarSet é exatamente
+            # load_guitarset(ROOT/annotation_path, index=ref_camada)
+            refs[tid] = ds.load_reference(row, index=ref_camada)
             duracoes[tid] = _duracao(refs[tid])
         except Exception as exc:
             falhas.append((f"ref/{tid}", f"{type(exc).__name__}: {exc}"))

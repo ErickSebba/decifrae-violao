@@ -126,3 +126,75 @@ três pontos entre 58 % e 89 % de cobertura (`n_logprob` −2,25 → 58,32 %,
 interpolação, bootstrap (10 000, seed 0) e saídas são os do §5. O CSV antigo
 não é sobrescrito; `tab_cobertura_igualada.tex` e `fig_cobertura_teste` são
 regenerados a partir do CSV novo. Nenhum valor é escolhido.
+
+## 8. Bases externas e baselines (protocolo, 2026-11-17)
+
+Registrado e commitado **antes** de qualquer execução nas bases externas.
+Análise pós-especificada (`post_review=true` em todo CSV).
+
+**Regra: nenhuma configuração é ajustada fora do GuitarSet.** Rodam só as
+variantes já congeladas, com os valores de `runner.VARIANTES` no commit deste
+protocolo: `V4`, `V4b`, `C`, `D`, `E`, `C0rg`, `D0rg`, `F0rg` (as oito que os
+15 contrastes de `stats.PARES` exigem). Nenhum hiperparâmetro, limiar,
+vocabulário ou grade é escolhido ou revisto a partir dessas bases.
+
+**Bases.**
+- IDMT-SMT-Guitar V2, subconjunto 4 (`data/manifests/idmt_smt_guitar.csv`,
+  `split=external`): todas as faixas com áudio e anotação de acordes
+  pareados; o par cujo nome não casa (`Career SG/fast/rock_blues`,
+  áudio `rock_1_120BPM` × anotação `rock_1_100BPM`) fica excluído no manifest.
+  Rótulos traduzidos para Harte pelo adaptador `dataset_io.load_idmt_guitar`;
+  as convenções (fim do último acorde, rótulos não traduzíveis → `X`) estão
+  no docstring dele.
+- IDMT-SMT-Chords, só `guitar/` (`data/manifests/idmt_smt_chords.csv`,
+  `split=eval`, 6 faixas).
+- Nas bases externas há uma referência só; os CSVs levam o sufixo `_ref0`
+  apenas por convenção de nome do `runner.py`.
+
+**Baselines de terceiros**, sem nenhum ajuste:
+- Chordino (NNLS Chroma, Vamp) via Sonic Annotator 1.7, transform
+  `vamp:nnls-chroma:chordino:simplechord` com os parâmetros default
+  congelados em `baselines/chordino_simplechord.n3`; rótulos traduzidos para
+  Harte por `baselines_externos.parse_chordino`.
+- madmom CNN + CRF de acordes maior/menor (Korzeniowski & Widmer 2016), modelo
+  pré-treinado do pacote (madmom 0.17.dev0, commit `27f032e`), em ambiente
+  separado (Python 3.10); script `baselines/madmom_acordes.py`.
+- Rodam em: GuitarSet `val` e `test` (camadas chord[0] e chord[1]) e nas duas
+  bases externas.
+
+**Métricas e estatística.** As mesmas colunas de `runner.CSV_FIELDS`. Por base,
+os 15 contrastes de `stats.PARES` com bootstrap pareado por faixa (10 000,
+seed 0) e Holm sobre a família de 15 (`stats.py --post-review`). No
+IDMT-SMT-Guitar, também Δ por guitarra (as quatro gravações) com IC por
+bootstrap dentro da guitarra. Transferência: para cada contraste, se o sinal
+de Δ no GuitarSet teste (chord[0]) se mantém em cada base externa. O
+IDMT-SMT-Chords tem só 6 faixas; os IC dele são lidos como descritivos.
+
+**Detalhes fixados antes de rodar** (adaptadores escritos e testados, sem
+olhar resultado de nenhuma variante nas bases externas):
+- IDMT-SMT-Guitar: 507 faixas no manifest, 1 excluída (a do nome que não casa),
+  506 avaliáveis, 11 761,3 s anotados. Referência do primeiro tempo de batida
+  ao último + 1 intervalo mediano (o dataset não anota o compasso de silêncio
+  e os dois de sinal de controle iniciais). Footer (3 linhas inteiras: início
+  e fim da sequência repetida e fórmula de compasso) ignorado.
+- Sufixos do IDMT → Harte: `13` → `maj(13)` (notação aditiva; distingue `13`
+  de `713`), `79` → `7(9)`, `min75b` → `hdim7`, `75b` → `7(*5,b5)`, `sus9` →
+  `sus2`, demais no docstring de `dataset_io.IDMT_GUITAR_QUALITY`. `GB5` e
+  `D/7Gb` (prováveis erros de digitação) viram `X` e o mir_eval os ignora; não
+  são corrigidos. Sensibilidade registrada no meta da cobertura: com `13` →
+  `maj6`, a cobertura de `sevenths` cairia de 0,856 para 0,817.
+- Cobertura da referência por nível (origem:
+  `data/results/coverage_externo_20261117_102831.csv`): IDMT-SMT-Guitar root
+  0,998, majmin 0,870, sevenths 0,856, mirex 0,918 (N = 11,9 % do tempo);
+  IDMT-SMT-Chords guitar root 1,000, majmin 0,714, sevenths 0,714, mirex 0,857.
+- O beat tracking do pipeline tende a 90–120 BPM: em 3 faixas de conferência
+  dobrou a de 60 BPM e dividiu por dois a de 180 BPM. **Não é corrigido**
+  (seria ajuste fora do GuitarSet); fica como limitação.
+- Avaliação dos baselines: os rótulos já em Harte passam direto pelo
+  `evaluate._to_arrays` dentro de `baselines_externos._estimado_em_harte()`
+  (o meta registra `est_is_harte: true`); `evaluate.py` e `runner.py` não
+  mudam. Chordino: plugin versão 5, step 2048, block 16384, parâmetros default
+  (boostn 0,1, rollon 0, s 0,7, tuningmode global, useNNLS 1, whitening 1).
+- `runner.rodar` passa a carregar a referência por `dataset_io.load_reference`
+  (despacho pelo campo `dataset`); no GuitarSet a chamada é idêntica à
+  anterior (verificado em val, chord[0] e chord[1]; oráculo sem diff).

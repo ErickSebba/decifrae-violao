@@ -1,0 +1,20 @@
+{
+  "post_review": true,
+  "gerado_em": "20261117_102831",
+  "csv": "coverage_externo_20261117_102831.csv",
+  "descricao": "Fração do tempo anotado ponderada pelo mir_eval em cada nível, bases externas (todos os arquivos não excluídos).",
+  "fonte": "coverage_report.medir_camada sobre data/manifests/idmt_smt_chords.csv e data/manifests/idmt_smt_guitar.csv",
+  "convencoes_idmt_guitar": "dataset_io.load_idmt_guitar: do 1º tempo de batida até o último + 1 intervalo mediano; rodapé de 3 linhas ignorado; GB5 e D/7Gb -> X",
+  "sensibilidade_13_como_maj6_comparavel_frac": {
+    "root": 0.998313,
+    "majmin": 0.869586,
+    "sevenths": 0.816746,
+    "mirex": 0.918371
+  },
+  "commit": "c5b64ea1cf2ab6f3631f11596c6bd2d231ac24ff",
+  "dataset_io_modificado_nao_commitado": true,
+  "python": "3.14.6",
+  "mir_eval": "0.8.2",
+  "librosa": "0.11.0",
+  "script": "# Cobertura por nível das duas bases externas (revisão camera-ready).\nimport json, sys, subprocess, datetime, platform, warnings\nwarnings.filterwarnings('ignore')\nimport mir_eval, librosa\nimport coverage_report as cr, dataset_io as ds\nts = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')\ncamadas = [(\"idmt-smt-chords\", \"lab\", \"data/manifests/idmt_smt_chords.csv\", ds.load_idmt_lab),\n           (\"idmt-smt-guitar\", \"csv\", \"data/manifests/idmt_smt_guitar.csv\", ds.load_idmt_guitar)]\nlinhas = []\nfor c in camadas:\n    l, _ = cr.medir_camada(*c); linhas += l\ndest = cr.RESULTS / f\"coverage_externo_{ts}.csv\"\nassert not dest.exists()\ncr.escrever_csv(linhas, dest)\n# sensibilidade (não entra no CSV): '13' sozinho como maj6 em vez de maj(13)\norig = ds.IDMT_GUITAR_QUALITY[\"13\"]; ds.IDMT_GUITAR_QUALITY[\"13\"] = \"maj6\"\nalt, _ = cr.medir_camada(*camadas[1]); ds.IDMT_GUITAR_QUALITY[\"13\"] = orig\nsens = {l[\"nivel\"]: l[\"comparavel_frac\"] for l in alt}\ncommit = subprocess.run([\"git\", \"rev-parse\", \"HEAD\"], capture_output=True, text=True).stdout.strip()\ndirty = bool(subprocess.run([\"git\", \"status\", \"--porcelain\", \"dataset_io.py\"], capture_output=True, text=True).stdout.strip())\nmeta = {\"post_review\": True, \"gerado_em\": ts, \"csv\": dest.name,\n        \"descricao\": \"Fração do tempo anotado ponderada pelo mir_eval em cada nível, bases externas (todos os arquivos não excluídos).\",\n        \"fonte\": \"coverage_report.medir_camada sobre data/manifests/idmt_smt_chords.csv e data/manifests/idmt_smt_guitar.csv\",\n        \"convencoes_idmt_guitar\": \"dataset_io.load_idmt_guitar: do 1º tempo de batida até o último + 1 intervalo mediano; rodapé de 3 linhas ignorado; GB5 e D/7Gb -> X\",\n        \"sensibilidade_13_como_maj6_comparavel_frac\": sens,\n        \"commit\": commit, \"dataset_io_modificado_nao_commitado\": dirty,\n        \"python\": platform.python_version(), \"mir_eval\": mir_eval.__version__, \"librosa\": librosa.__version__,\n        \"script\": open(__file__, encoding='utf-8').read()}\n(cr.RESULTS / f\"coverage_externo_{ts}_meta.json\").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding='utf-8')\nfor l in linhas:\n    print(l[\"dataset\"], l[\"nivel\"], l[\"n_faixas\"], l[\"duracao_total_s\"], l[\"comparavel_frac\"], l[\"n_frac\"])\nprint(\"sens\", sens); print(dest.name)\nprint(\"top guitar:\", linhas[-1][\"top_qualidades\"][:300])\n"
+}
