@@ -1,0 +1,29 @@
+{
+  "gerado_em": "2026-11-17T12:21:56",
+  "post_review": true,
+  "baseline": "madmom",
+  "variante": "madmom",
+  "manifest": "data/manifests/guitarset_comping.csv",
+  "splits": [
+    "val"
+  ],
+  "ref_camada": "chord[0]",
+  "ref_is_harte": true,
+  "est_is_harte": true,
+  "dir_lab": "data/cache/baselines/madmom",
+  "n_linhas": 120,
+  "falhas": [],
+  "segundos": 2.5,
+  "versoes": {
+    "python": "3.14.6",
+    "implementacao": "CPython",
+    "numpy": "2.4.6",
+    "mir_eval": "0.8.2"
+  },
+  "projeto": {
+    "commit": "9dc9d6dd8c14052f637535d446b0690065729cfe",
+    "arvore_suja": false
+  },
+  "madmom_version": null,
+  "nota": "rótulos produzidos fora deste script"
+}
