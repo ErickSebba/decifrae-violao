@@ -19,7 +19,8 @@ era a média das diferenças POR FAIXA ponderada pela duração total da faixa
 agregados (77,80 / 38,69). Mesmas células e mesma decodificação
 (`analise_decomposicao.rodar`, chord[0], nível root).
 
-    python vies_selecao.py
+    python vies_selecao.py              # recalcula e reescreve a nota
+    python vies_selecao.py --so-nota    # só a nota da tab_decomposicao
 """
 
 import csv
@@ -99,7 +100,40 @@ def main():
     p.with_name(p.stem + "_meta.json").write_text(
         json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
     print("escrito", p.relative_to(ROOT).as_posix())
+    nota_tex(p)
+
+
+def nota_tex(csv_path):
+    """Reescreve a nota de viés de seleção em tab_decomposicao.tex a partir
+    do CSV (a linha que começa com 'Viés de seleção')."""
+    def f(x, sinal=False):
+        s = f"{100 * float(x):{'+' if sinal else ''}.2f}"
+        return s.replace(".", ",")
+    with Path(csv_path).open(encoding="utf-8", newline="") as fp:
+        rs = {r["split"]: r for r in csv.DictReader(fp)}
+    partes = [f"\\emph{{{s}}}: dentro {f(r['acerto_dentro'])} \\%, fora "
+              f"{f(r['acerto_fora'])} \\%, $\\Delta$ = {f(r['delta'], True)} "
+              f"p.p., IC [{f(r['ic95_min'], True)}; {f(r['ic95_max'], True)}], "
+              f"$n$ = {r['n_faixas_duas_regioes']}"
+              for s, r in rs.items()]
+    nome = Path(csv_path).name.replace("_", "\\_")
+    nova = ("  \\parbox{\\linewidth}{\\footnotesize Viés de seleção --- acurácia "
+            "root de \\texttt{D0rg} agregada por duração dentro e fora da "
+            "máscara comum (células rotuladas por \\texttt{C} e por "
+            "\\texttt{D}); IC 95 \\% do bootstrap pareado por faixa: "
+            + "; ".join(partes) + f". Fonte: \\texttt{{{nome}}}.}}")
+    tex = ad.TABELAS / "tab_decomposicao.tex"
+    linhas = tex.read_text(encoding="utf-8").split("\n")
+    alvo = [i for i, l in enumerate(linhas) if "Viés de seleção ---" in l]
+    if len(alvo) != 1:
+        raise SystemExit("nota de viés não encontrada em tab_decomposicao.tex")
+    linhas[alvo[0]] = nova
+    tex.write_text("\n".join(linhas), encoding="utf-8")
+    print("nota reescrita em", tex.relative_to(ROOT).as_posix())
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    if "--so-nota" in sys.argv:
+        nota_tex(sorted(RESULTS.glob("vies_selecao_agregado_2*.csv"))[-1])
+    else:
+        sys.exit(main())
