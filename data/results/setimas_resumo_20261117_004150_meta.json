@@ -1,0 +1,16 @@
+{
+  "gerado_em": "2026-11-17T00:42:07",
+  "post_review": true,
+  "script": "analise_vocabulario.py",
+  "entradas": [
+    "data/results/setimas_20261117_004150.csv"
+  ],
+  "seed": 0,
+  "n_bootstrap": 10000,
+  "n_linhas": 8,
+  "projeto": {
+    "commit": "8166c8e6b27d8bd468ade45dff16fb39e7a20ee0",
+    "arvore_suja": false
+  },
+  "definicao": "prec/rev agregadas por soma de tempo; IC 95 % por bootstrap reamostrando faixas (num e den juntos)"
+}
