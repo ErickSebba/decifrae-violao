@@ -16,3 +16,8 @@ data/cache/
 data/results/*
 !data/results/*.csv
 !data/results/*_meta.json
+
+# Material do autor e arquivos de dataset fora de data/raw/
+artigo-ACDSA/slides-ACDSA/
+artigo-ACDSA/slides-ACDSA.zip
+data/*.zip

@@ -94,3 +94,24 @@ Registrado e commitado **antes** de rodar. Análise pós-especificada
   faixa), `data/results/cobertura_igualada_teste_<ts>.csv` (resumo),
   `artigo-ACDSA/tabelas/tab_cobertura_igualada.tex`,
   `artigo-ACDSA/figuras/fig_cobertura_teste.pdf/.png` (3,5 pol, fonte 8 pt).
+
+## 6. Procedência das ablações de teste `20261116_231650` e `_231706` (2026-11-17)
+
+As duas execuções únicas do teste pós-revisão gravaram `arvore_suja: true`.
+Verificado depois, a partir do Git:
+
+- `_231650_ref0` registra o commit `a380774`; `_231706_ref1`, o `b5065ef`. Entre
+  os dois commits a única diferença é o próprio CSV/meta do chord[0]
+  (`git diff --stat a380774 b5065ef`).
+- Nenhum arquivo `.py` rastreado diferia do commit gravado: entre `a380774` e
+  `bc001a8` os únicos `.py` que mudam são os quatro `analise_*.py`, **criados**
+  depois das execuções e não importados por `runner.py`.
+- O que sujava a árvore: (i) arquivos **não rastreados** do usuário
+  (`artigo-ACDSA/slides-ACDSA/`, `artigo-ACDSA/slides-ACDSA.zip` e zips em
+  `data/`), e (ii) uma alteração **rastreada e não commitada** do usuário em
+  `artigo-ACDSA/RESULTADOS.md` (legendas de figuras), commitada só em
+  `bc001a8`. Nenhum dos dois é lido pelo pipeline.
+
+Conclusão: o código que produziu as duas ablações é exatamente o dos commits
+gravados no meta. Os CSVs não foram regenerados, porque isso seria uma segunda
+leitura do teste.
