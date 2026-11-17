@@ -1,0 +1,48 @@
+{
+  "gerado_em": "20261117_135637",
+  "post_review": true,
+  "projeto": {
+    "commit": "0e1a0ddac06178fe3d576fc75e6f91f7e1374623",
+    "arvore_suja": false
+  },
+  "protocolo": "docs/ADENDO_REVISAO.md §9.2",
+  "beta": -2.5,
+  "casos": [
+    [
+      "D",
+      "D",
+      true
+    ],
+    [
+      "D0rg-60",
+      "D0rg",
+      false
+    ],
+    [
+      "D0rg-24",
+      "F0rg",
+      false
+    ]
+  ],
+  "bases": [
+    [
+      "gs_test",
+      "GuitarSet teste",
+      "guitarset_comping.csv",
+      "test"
+    ],
+    [
+      "idmt_g",
+      "IDMT-SMT-Guitar",
+      "idmt_smt_guitar.csv",
+      "external"
+    ],
+    [
+      "idmt_c",
+      "IDMT-SMT-Chords",
+      "idmt_smt_chords.csv",
+      "eval"
+    ]
+  ],
+  "nota": "contagem por célula de batida, não ponderada por duração"
+}
