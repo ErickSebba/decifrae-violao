@@ -1,0 +1,35 @@
+% gerado por analise_vocabulario.py -- não editar à mão
+\begin{table}[t]
+  \centering
+  \caption{Representabilidade e sétimas no GuitarSet. \emph{Repr.}: fração do tempo de referência cuja qualidade (bitmap do \texttt{mir\_eval}, baixo ignorado) é exatamente maj/min (24) ou maj/min/7/maj7/min7 (60). P e R: precisão e revocação de sétima (mesma tônica e mesma qualidade) de \texttt{D0rg} (60) e \texttt{F0rg} (24); \texttt{F0rg} não emite sétima, logo sua precisão é indefinida. Valores em \%, ponderados por tempo. Fontes: \texttt{representabilidade\_20261116\_232349.csv}, \texttt{setimas\_20261116\_232349.csv}.}
+  \label{tab:vocabulario}
+  \footnotesize
+  \begin{tabular}{llrrrrrr}
+    \toprule
+    Camada & Split & $n$ & Repr.\ 24 & Repr.\ 60 & P 7ª (60) & R 7ª (60) & R 7ª (24) \\
+    \midrule
+    \texttt{chord[0]} & val & 120 & 86,57 & 95,52 & 2,40 & 11,50 & 0,00 \\
+    \texttt{chord[0]} & test & 58 & 86,27 & 95,42 & 3,29 & 18,28 & 0,00 \\
+    \texttt{chord[1]} & val & 120 & 50,45 & 66,85 & 9,74 & 25,52 & 0,00 \\
+    \texttt{chord[1]} & test & 58 & 37,02 & 59,15 & 14,18 & 32,54 & 0,00 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% gerado por analise_vocabulario.py -- não editar à mão
+\begin{table}[t]
+  \centering
+  \caption{Sensibilidade à penalidade de transição no split \emph{test}: \texttt{root} (\%) com o \texttt{change\_penalty} congelado (2,0) e com o calibrado na validação (pós-revisão). $\Delta$ em pontos percentuais, média ponderada pela duração; IC bootstrap pareado por faixa (10\,000 reamostragens, semente 0). Fonte: \texttt{transicao\_20261116\_232349.csv}.}
+  \label{tab:transicao}
+  \footnotesize
+  \begin{tabular}{lllrrr}
+    \toprule
+    Camada & Par & cp & Base & Cal. & $\Delta$ root [IC 95\%] \\
+    \midrule
+    \texttt{chord[0]} & \texttt{D0rg\_cal} vs.\ \texttt{D0rg} & 1,5 vs.\ 2,0 & 57,73 & 58,04 & +0,31 [$-$0,25; +0,88] \\
+    \texttt{chord[0]} & \texttt{F0rg\_cal} vs.\ \texttt{F0rg} & 1,0 vs.\ 2,0 & 56,89 & 57,44 & +0,55 [$-$0,48; +1,58] \\
+    \texttt{chord[1]} & \texttt{D0rg\_cal} vs.\ \texttt{D0rg} & 1,5 vs.\ 2,0 & 57,73 & 58,04 & +0,31 [$-$0,25; +0,88] \\
+    \texttt{chord[1]} & \texttt{F0rg\_cal} vs.\ \texttt{F0rg} & 1,0 vs.\ 2,0 & 56,89 & 57,44 & +0,55 [$-$0,48; +1,58] \\
+    \bottomrule
+  \end{tabular}
+\end{table}

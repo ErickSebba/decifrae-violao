@@ -1,0 +1,36 @@
+{
+  "gerado_em": "2026-11-16T23:23:46",
+  "gerado_por": "analise_decomposicao.py",
+  "post_review": true,
+  "status": "pós-especificada (revisão camera-ready, R2.3/R2.4)",
+  "entradas": {
+    "manifest": "data/manifests/guitarset_comping.csv",
+    "ablacao_para_pesos_e_conferencia": {
+      "val": [
+        "ablation_20260927_005629_ref0.csv"
+      ],
+      "test": [
+        "ablation_20260927_014253_ref0.csv"
+      ]
+    },
+    "variantes_decodificadas": [
+      "C",
+      "D",
+      "D0rg"
+    ],
+    "features": "cache (cache.get_features); nenhuma extração refeita"
+  },
+  "ref_camada": "chord[0]",
+  "nivel": "root",
+  "seed": 0,
+  "n_bootstrap": 10000,
+  "alfa": 0.05,
+  "segundos": 14.9,
+  "commit": {
+    "commit": "8ca8b2e30b888162739ae4585cd4f4895d928dd5",
+    "arvore_suja": true
+  },
+  "mascara_comum": "células comparáveis em que nem C nem D estimaram N",
+  "acerto_dentro/fora": "agregado por duração sobre todas as faixas",
+  "diferenca": "média ponderada (duracao_s) de acerto_dentro − acerto_fora por faixa, nas faixas com tempo nas duas partes (n_faixas_par)"
+}

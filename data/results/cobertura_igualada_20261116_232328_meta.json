@@ -1,0 +1,47 @@
+{
+  "gerado_em": "2026-11-16T23:23:29",
+  "gerado_por": "analise_fatorial.py",
+  "post_review": true,
+  "status": "pós-especificada (revisão camera-ready, R2.3/R2.4)",
+  "entradas": {
+    "val/chord[0]": [
+      "ablation_20260927_005629_ref0.csv",
+      "ablation_20261116_231602_ref0.csv"
+    ],
+    "test/chord[0]": [
+      "ablation_20260927_014253_ref0.csv",
+      "ablation_20260927_201422_ref0.csv",
+      "ablation_20261116_231650_ref0.csv"
+    ],
+    "val/chord[1]": [
+      "ablation_20260927_010621_ref1.csv",
+      "ablation_20261116_231627_ref1.csv"
+    ],
+    "test/chord[1]": [
+      "ablation_20260927_014445_ref1.csv",
+      "ablation_20260927_201649_ref1.csv",
+      "ablation_20261116_231706_ref1.csv"
+    ]
+  },
+  "seed": 0,
+  "n_bootstrap": 10000,
+  "alfa": 0.05,
+  "pesos": "duracao_s da referência; bootstrap pareado por faixa",
+  "cobertura": "1 - frac_n_est",
+  "root_rotulado": "faixas com valor vazio em qualquer variante envolvida são descartadas (n_faixas)",
+  "commit": {
+    "commit": "8ca8b2e30b888162739ae4585cd4f4895d928dd5",
+    "arvore_suja": true
+  },
+  "pares": [
+    [
+      "Cmatch",
+      "D"
+    ],
+    [
+      "C",
+      "Dmatch"
+    ]
+  ],
+  "diferenca": "variante_b − variante_a"
+}

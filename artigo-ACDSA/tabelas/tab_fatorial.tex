@@ -1,0 +1,40 @@
+% gerado por analise_fatorial.py -- não editar à mão
+\begin{table*}[t]
+  \centering
+  \caption{Fatorial $2\times2\times2$ (decodificador $\times$ abstenção própria $\times$ gate relativo), camada \texttt{chord[0]}, valores em \%. Análise pós-especificada (revisão). Fonte: \texttt{fatorial\_20261116\_232328.csv}.}
+  \label{tab:fatorial}
+  \footnotesize
+  \begin{tabular}{llllrrrrrr}
+    \toprule
+    & & & & \multicolumn{3}{c}{\emph{val}} & \multicolumn{3}{c}{\emph{test}} \\
+    \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+    Célula & Dec. & Abst. & Gate & root & Cob. & root rot. & root & Cob. & root rot. \\
+    \midrule
+    \texttt{C} & C & sim & sim & 46,73 & 60,46 & 74,69 & 41,51 & 57,10 & 65,26 \\
+    \texttt{D} & D & sim & sim & 60,63 & 87,87 & 67,42 & 49,39 & 77,12 & 59,76 \\
+    \texttt{C0} & C & não & sim & 63,72 & 99,75 & 63,84 & 54,60 & 97,33 & 55,54 \\
+    \texttt{D0} & D & não & sim & 65,71 & 99,75 & 65,83 & 57,44 & 97,33 & 58,51 \\
+    \texttt{Crg} & C & sim & não & 46,77 & 60,56 & 74,63 & 41,67 & 58,02 & 64,62 \\
+    \texttt{Drg} & D & sim & não & 60,93 & 88,47 & 67,35 & 50,42 & 80,49 & 58,84 \\
+    \texttt{C0rg} & C & não & não & 63,78 & 100,00 & 63,78 & 55,00 & 99,97 & 55,02 \\
+    \texttt{D0rg} & D & não & não & 65,80 & 100,00 & 65,80 & 57,73 & 99,97 & 57,75 \\
+    \midrule
+    \multicolumn{4}{l}{Decodificador (D$-$C)} & +8,02 & +13,83 & $-$2,63 & +5,55 & +10,62 & $-$1,40 \\
+    \multicolumn{4}{l}{} & {\scriptsize [+6,54; +9,52]} & {\scriptsize [+11,80; +15,92]} & {\scriptsize [$-$4,61; $-$0,71]} & {\scriptsize [+3,82; +7,27]} & {\scriptsize [+7,74; +13,56]} & {\scriptsize [$-$3,78; +0,99]} \\
+    \multicolumn{4}{l}{Abstenção (sim$-$não)} & $-$10,99 & $-$25,54 & +6,21 & $-$10,45 & $-$30,46 & +5,42 \\
+    \multicolumn{4}{l}{} & {\scriptsize [$-$12,33; $-$9,71]} & {\scriptsize [$-$28,40; $-$22,81]} & {\scriptsize [+5,01; +7,53]} & {\scriptsize [$-$12,29; $-$8,70]} & {\scriptsize [$-$35,66; $-$25,32]} & {\scriptsize [+3,89; +7,02]} \\
+    \multicolumn{4}{l}{Gate rel. (sim$-$não)} & $-$0,12 & $-$0,30 & +0,05 & $-$0,47 & $-$2,39 & +0,71 \\
+    \multicolumn{4}{l}{} & {\scriptsize [$-$0,24; $-$0,03]} & {\scriptsize [$-$0,53; $-$0,12]} & {\scriptsize [$-$0,01; +0,13]} & {\scriptsize [$-$1,27; +0,04]} & {\scriptsize [$-$4,53; $-$0,71]} & {\scriptsize [+0,23; +1,32]} \\
+    \multicolumn{4}{l}{Dec.$\times$Abst.} & +12,02 & +27,66 & $-$9,27 & +5,53 & +21,25 & $-$8,48 \\
+    \multicolumn{4}{l}{} & {\scriptsize [+9,85; +14,26]} & {\scriptsize [+23,60; +31,84]} & {\scriptsize [$-$11,76; $-$7,03]} & {\scriptsize [+2,89; +8,13]} & {\scriptsize [+15,48; +27,12]} & {\scriptsize [$-$11,58; $-$5,42]} \\
+    \multicolumn{4}{l}{Dec.$\times$Gate} & $-$0,15 & $-$0,25 & $-$0,01 & $-$0,38 & $-$1,23 & +0,26 \\
+    \multicolumn{4}{l}{} & {\scriptsize [$-$0,34; $-$0,02]} & {\scriptsize [$-$0,54; $-$0,05]} & {\scriptsize [$-$0,10; +0,09]} & {\scriptsize [$-$1,05; +0,12]} & {\scriptsize [$-$2,48; $-$0,25]} & {\scriptsize [$-$0,07; +0,67]} \\
+    \multicolumn{4}{l}{Abst.$\times$Gate} & $-$0,09 & $-$0,11 & +0,02 & $-$0,25 & +0,49 & +0,13 \\
+    \multicolumn{4}{l}{} & {\scriptsize [$-$0,28; +0,03]} & {\scriptsize [$-$0,28; +0,02]} & {\scriptsize [$-$0,09; +0,11]} & {\scriptsize [$-$0,62; +0,06]} & {\scriptsize [$-$0,01; +1,09]} & {\scriptsize [$-$0,21; +0,52]} \\
+    \multicolumn{4}{l}{Dec.$\times$Abst.$\times$Gate} & $-$0,24 & $-$0,50 & +0,05 & $-$0,99 & $-$2,45 & +0,05 \\
+    \multicolumn{4}{l}{} & {\scriptsize [$-$0,60; $-$0,01]} & {\scriptsize [$-$1,08; $-$0,10]} & {\scriptsize [$-$0,15; +0,26]} & {\scriptsize [$-$1,87; $-$0,28]} & {\scriptsize [$-$4,97; $-$0,49]} & {\scriptsize [$-$0,58; +0,87]} \\
+    \bottomrule
+  \end{tabular}
+  \vspace{2pt}
+  \parbox{\linewidth}{\footnotesize Células: média ponderada pela duração. Efeito principal = média das 4 diferenças pareadas do fator; interação de 2ª ordem = variação do efeito do 1º fator quando o 2º é ligado (média sobre o 3º); 3ª ordem = variação da interação Dec.$\times$Abst. quando o gate é ligado. Abaixo de cada efeito, IC 95 \% do bootstrap pareado por faixa (10000 reamostragens, semente 0). $n$ = 120 (\emph{val}) e 58 (\emph{test}) faixas; em \emph{root rot.}, só as faixas com tempo rotulado nas 8 células: $n$ = 120 e 58.}
+\end{table*}

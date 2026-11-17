@@ -1,0 +1,3 @@
+split,ref_camada,variante,n_faixas,acerto_dentro,acerto_fora,frac_tempo_dentro,n_faixas_par,dentro_par,fora_par,diferenca,ic95_min,ic95_max,p_bootstrap,ic_cruza_zero
+val,chord[0],D0rg,120,0.801468126,0.480680528,0.552785331,120,0.757048669,0.537213519,0.21983515,0.18839412,0.25185231,0.0001,nao
+test,chord[0],D0rg,58,0.778002843,0.386865185,0.486843596,58,0.660313448,0.477368304,0.182945145,0.1283885,0.237452475,0.0001,nao

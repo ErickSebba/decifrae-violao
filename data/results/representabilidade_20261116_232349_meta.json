@@ -1,0 +1,27 @@
+{
+  "gerado_em": "2026-11-16T23:23:56",
+  "post_review": true,
+  "script": "analise_vocabulario.py",
+  "entradas": [
+    "data/manifests/guitarset_comping.csv"
+  ],
+  "seed": 0,
+  "n_bootstrap": 10000,
+  "n_linhas": 356,
+  "projeto": {
+    "commit": "8ca8b2e30b888162739ae4585cd4f4895d928dd5",
+    "arvore_suja": true
+  },
+  "definicao": "classe = bitmap exato de mir_eval.chord.encode (sem reduzir extensões); baixo ignorado; N/X fora do numerador",
+  "qualidades_24": [
+    "maj",
+    "min"
+  ],
+  "qualidades_60": [
+    "maj",
+    "min",
+    "7",
+    "maj7",
+    "min7"
+  ]
+}

@@ -80,7 +80,14 @@ conjunto de teste o `abs_floor` tem efeito, mas em **1 excerto de 58**.
 
 ## 1. Cobertura e acerto: o que o Viterbi realmente faz
 
-![Acerto no tempo rotulado contra cobertura](figuras/fig_cobertura_acerto.png)
+![Acerto no tempo rotulado contra cobertura, na validação](figuras/fig_cobertura.png)
+
+*Curvas de acerto no tempo rotulado contra cobertura, no nível `root` e na
+camada chord[0], medidas no conjunto de **validação**. Cada curva varre um
+limiar de abstenção — C o `confidence_gate`, D e F o `n_logprob` — e os pontos
+marcam as variantes medidas. As curvas param em 99,75 % de cobertura por causa
+do gate relativo de silêncio (`rel_gate = 0,2`), não do piso absoluto de RMS; as
+variantes que zeram esse gate e os dois baselines alcançam 100,00 %.*
 
 O sistema pode recusar-se a rotular um trecho, devolvendo `N`. Como a
 referência do GuitarSet não contém nenhum `N`, todo `N` emitido é erro na
@@ -113,6 +120,15 @@ cerca de 2,7 são classificação e o resto é cobertura.
 Esse par **não isola o Viterbi sozinho**: `C0rg` tem `confidence_gate = 0`, e
 `D0rg` o mantém em 0,72, de modo que as duas configurações diferem em três
 campos e não em um. É uma limitação do pré-registro, não desta leitura.
+
+![Um excerto da validação, com a referência e as saídas de C, D e E](figuras/fig_exemplo.png)
+
+*Um excerto do conjunto de **validação**, escolhido por regra e não a dedo: a
+faixa cuja diferença de `root` entre D e C é a mediana das 120 (mediana
+inferior, índice 59 da ordenação crescente). É `03_SS2-88-F_comp`, com
+Δ = +12,02 pontos — `root` de 64,33 % em C e 76,34 % em D. De cima para baixo: o
+chromagrama sincronizado por batida, a referência chord[0], e as saídas de C, D e
+E; `N` em cinza. C produz 40 segmentos, D 17 e E 12, contra 14 da referência.*
 
 ### 1.1 A mesma comparação sobre o mesmo tempo
 
@@ -359,6 +375,14 @@ formulação mais forte que essa não se sustenta nos dados de teste.
 
 ## 5. Divergências entre validação e teste
 
+![Comparações pareadas, validação e teste](figuras/fig_comparacoes.png)
+
+*As 15 comparações pré-registradas na camada chord[0], com Δ e IC 95 % da
+validação e do teste em marcadores distintos, a classe do teste na margem e os Δ
+por faixa do teste como pontos semitransparentes. As duas últimas linhas são a
+análise de máscara comum, **pós-especificada**, e não têm Δ por faixa publicado.
+O eixo é cortado em ±35 pontos; 21 dos 870 Δ por faixa ficam fora do corte.*
+
 Nenhuma comparação inverteu de sinal **e** permaneceu confirmada. Sete células
 mudaram de classificação, das quais **seis perderam força e uma ganhou** — a
 única a ganhar é a inércia do V4 em `root`, que foi de `empate` a `frágil`, e
@@ -443,3 +467,120 @@ teste, nas duas camadas), `tab_camadas.tex` (as duas
 camadas lado a lado), `tab_segmentacao.tex` (`overseg`/`underseg`/`seg`),
 `tab_stats.tex` (as 15 comparações do teste) e `tab_stats_val.tex` (as 15 da
 validação).
+
+## 7. Análises pós-revisão
+
+Todas **pós-especificadas** (ver `METODOLOGIA.md` §7 e
+`docs/ADENDO_REVISAO.md`). Δ em pontos percentuais (p.p.), camada chord[0]
+salvo indicação, IC 95 % por bootstrap pareado por faixa. Val = 120 faixas
+(executantes 00–03), teste = 58 (04–05).
+
+### R2.1 — Consistência entre executantes
+
+Origem: `data/results/por_executante_20261116_232016.csv`; tabela
+`tabelas/tab_executantes.tex`. Primeira métrica de cada par pré-registrado:
+
+| par | métrica | 00 | 01 | 02 | 03 | 04ᵗ | 05ᵗ | mesmo sinal | min–max |
+|---|---|---|---|---|---|---|---|---|---|
+| C→D | root | +16,3 | +11,7 | +17,6 | +10,0 | +11,2 | +4,7 | 6/6 | +4,7 a +17,6 |
+| C0rg→D0rg | root | +2,8 | +1,0 | +2,0 | +2,3 | +4,0 | +1,5 | 6/6 | +1,0 a +4,0 |
+| D→E | root | −1,6 | −2,7 | −1,4 | −0,7 | −1,2 | −2,1 | 6/6 | −2,7 a −0,7 |
+| V4b→V4 | root | +2,6 | −1,2 | −1,9 | +3,5 | +1,3 | +2,1 | 4/6 | −1,9 a +3,5 |
+| V4→F0rg | root | −0,5 | +3,0 | +2,1 | +0,3 | +0,6 | +1,4 | 5/6 | −0,5 a +3,0 |
+| D0rg→F0rg | root | −4,3 | +11,1 | +8,8 | −2,3 | −2,4 | +0,7 | 3/6 | −4,3 a +11,1 |
+
+ᵗ executantes do teste. Os efeitos do Viterbi e do `min_dur` têm o mesmo
+sinal nos seis executantes; o ganho do vocabulário de 24 vem
+sobretudo de dois executantes (01 e 02; o 05 tem +0,7) e não generaliza.
+
+### R2.3 — Fatorial 2×2×2 e cobertura igualada
+
+Origem: `data/results/fatorial_20261116_232328.csv`; tabela
+`tabelas/tab_fatorial.tex`. Efeitos (p.p.) em `root` faixa toda:
+
+| termo | val | teste |
+|---|---|---|
+| decodificador (D − C) | +8,02 [6,54; 9,52] | +5,55 [3,82; 7,27] |
+| abstenção própria | −10,99 [−12,33; −9,71] | −10,45 [−12,29; −8,70] |
+| gate relativo | −0,12 [−0,24; −0,03] | −0,47 [−1,27; 0,04] |
+| decodificador × abstenção | +12,02 [9,85; 14,26] | +5,53 [2,89; 8,13] |
+
+O efeito do Viterbi depende quase todo da abstenção: sem nenhuma fonte de N
+própria, D0 − C0 é +1,99 (val) e +2,84 (teste); com ela, D − C é +13,90 e
++7,88. O gate relativo muda `root` em menos de 1 p.p. em todas as células,
+exceto D no teste (49,39 → 50,42 em Drg, +1,03; a cobertura sobe 3,37).
+
+Cobertura igualada (origem: `data/results/cobertura_igualada_20261116_232328.csv`):
+
+| par | split | Δ root | Δ cobertura | Δ root rotulado |
+|---|---|---|---|---|
+| Cmatch→D | val | +1,07 [−0,68; 2,82] | −0,58 [−3,78; 2,47] | +1,44 [−0,25; 3,11] |
+| Cmatch→D | teste | −1,81 [−4,05; 0,32] | −8,89 [−14,04; −4,06] | +2,51 [−0,20; 5,43] |
+| C→Dmatch | val | +1,57 [−1,21; 4,33] | +5,96 [0,59; 11,26] | −4,70 [−8,00; −1,57] |
+| C→Dmatch | teste | −0,94 [−3,97; 2,08] | +1,22 [−4,61; 7,33] | −3,06 [−8,08; 2,25] |
+
+Com a cobertura igualada, nenhum Δ `root` exclui zero. Ressalva: o casamento
+feito na validação não se manteve no teste para Cmatch (8,9 p.p. a mais de
+cobertura que D), e o de Dmatch já era grosso na validação (+5,96).
+
+### R2.4 — De onde vem o ganho do Viterbi
+
+Origem: `data/results/decomposicao_20261116_232331.csv`; tabela
+`tabelas/tab_decomposicao.tex`. Δ`root`(C→D) no teste = +7,88 p.p.; soma das
+parcelas confere com o CSV de ablação (resíduo 4,3e-11).
+
+| região (teste) | tempo (s) | % tempo | faixas | root C | root D | parcela (p.p.) |
+|---|---|---|---|---|---|---|
+| rotulada por ambos | 870,8 | 48,7 | 58 | 77,57 | 77,78 | +0,11 [−0,80; 1,04] |
+| só por D | 508,7 | 28,4 | 58 | 0 | 40,51 | +11,52 [9,43; 13,70] |
+| só por C | 150,6 | 8,4 | 42 | 44,58 | 0 | −3,75 [−4,93; −2,69] |
+| por nenhum | 258,6 | 14,5 | 39 | 0 | 0 | 0 |
+
+Na validação (Δ = +13,90): +0,43 / +16,26 / −2,80 / 0. Onde os dois rotulam,
+C e D empatam; o ganho de D vem de rotular tempo que C devolve como N.
+
+Viés de seleção (origem: `data/results/vies_selecao_20261116_232331.csv`):
+`root` de D0rg é 80,15 % dentro da máscara comum e 48,07 % fora (val;
+diferença pareada +21,98 [18,84; 25,19]); 77,80 % e 38,69 % no teste (+18,29
+[12,84; 23,75]). A máscara comum seleciona o tempo fácil: a comparação da §1.1
+mede C e D no subconjunto mais fácil, não no sinal todo.
+
+### R2.5 — Quanto da referência cada vocabulário representa
+
+Origem: `data/results/representabilidade_20261116_232349.csv`; tabela
+`tabelas/tab_vocabulario.tex` (`tab:vocabulario`). % do tempo de referência:
+
+| camada | split | 24 (maj/min) | 60 (+7/maj7/min7) |
+|---|---|---|---|
+| chord[0] | val | 86,57 | 95,52 |
+| chord[0] | teste | 86,27 | 95,42 |
+| chord[1] | val | 50,45 | 66,85 |
+| chord[1] | teste | 37,02 | 59,15 |
+
+Em chord[0] a única sétima presente é `7` (≈ 9 % do tempo); maj7 e min7 só
+aparecem em chord[1].
+
+### R2.6 — Sétimas e penalidade de transição
+
+Origem: `data/results/setimas_20261116_232349.csv`. Precisão / revocação de
+sétimas de D0rg (%, ponderadas por tempo): chord[0] val 2,40 / 11,50, teste
+3,29 / 18,28; chord[1] val 9,74 / 25,52, teste 14,18 / 32,54. D0rg emite
+muito mais tempo de sétima do que a referência contém, e a maior parte está
+errada. F0rg não emite sétima (precisão indefinida, revocação 0).
+
+Transição (origem: `data/results/transicao_20261116_232349.csv` e
+`data/results/calibracao_revisao_20261116_231220.csv`; figura
+`figuras/fig_transicao.pdf`; `tab:transicao`). Na validação, cp = 2,0 não era
+o ótimo: o melhor valor foi 1,5 para 60 acordes (+0,98 p.p.) e 1,0 para 24
+(+1,37). No teste, o ganho encolhe e não se distingue de zero:
+
+| camada | par | Δ root | Δ majmin | Δ sevenths |
+|---|---|---|---|---|
+| chord[0] | D0rg → D0rg_cal | +0,31 [−0,25; 0,88] | +0,31 [−0,29; 0,89] | +0,29 [−0,40; 1,02] |
+| chord[0] | F0rg → F0rg_cal | +0,55 [−0,48; 1,58] | −0,09 [−0,87; 0,67] | +0,14 [−0,56; 0,80] |
+| chord[1] | D0rg → D0rg_cal | +0,31 [−0,25; 0,88] | +0,58 [−0,09; 1,26] | +0,45 [−0,75; 1,40] |
+| chord[1] | F0rg → F0rg_cal | +0,55 [−0,48; 1,58] | +0,15 [−0,62; 0,91] | +0,09 [−0,34; 0,52] |
+
+Na validação, a vantagem de 24 sobre 60 em `root` fica entre +2,81 (cp 6) e +4,08
+(cp 0,5) p.p. em todos os oito valores de `change_penalty` (mesma origem): a ordem entre
+os vocabulários não depende da escolha de cp nessa grade.

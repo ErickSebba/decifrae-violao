@@ -738,3 +738,57 @@ lidos como desempenho num cenário limpo, controlado e harmonicamente restrito �
 um limite superior otimista para o comportamento em áudio de usuário — e que a
 validade externa das comparações entre variantes depende de a ordem entre elas
 se preservar fora dessas condições, o que este experimento não testa.
+
+## 7. Análises pós-revisão
+
+Análises pedidas pelos revisores do ACDSA 2027 para o camera-ready. Todas são
+**pós-especificadas**: nenhuma estava em `docs/CONGELAMENTO.md`, e todo CSV
+desta seção leva `post_review: true` no meta.json. As configurações novas e o
+critério de escolha de cada valor estão em `docs/ADENDO_REVISAO.md`, commitado
+(`996aabe`) antes de qualquer execução delas no teste. O teste foi executado
+uma vez por camada (`b5065ef` chord[0], `8ca8b2e` chord[1]). Bootstrap
+pareado por faixa, 10 000 reamostragens, seed 0, peso = duração
+(`stats.bootstrap`).
+
+**Variantes novas** (`runner.py`, exigem `--post-review`):
+`Crg`/`Drg` = C/D com `rel_gate = 0`; `Cmatch` = C com `confidence_gate =
+0,65`; `Dmatch` = D com `n_logprob = −2,25`; `D0rg_cal` = D0rg com
+`change_penalty = 1,5`; `F0rg_cal` = F0rg com `change_penalty = 1,0`. Os quatro
+valores saíram de `calibracao_revisao.py`, só na validação.
+
+**R2.1 — executantes.** Para os 15 contrastes de `stats.PARES`, Δ = b − a
+médio ponderado por duração dentro de cada executante (00–03 =
+desenvolvimento/val, 04–05 = teste; 28–30 faixas cada). Reporta-se o número
+de executantes cujo Δ tem o sinal do Δ agregado dos seis e a amplitude
+min–max. Descritivo, sem IC. Script: `analise_executantes.py`.
+
+**R2.3 — fatorial 2×2×2.** Fatores: decodificador (argmax C / Viterbi D),
+abstenção própria (`confidence_gate` ou `n_logprob` ligado / desligado) e gate
+relativo de RMS (`rel_gate` 0,2 / 0). Células: C, C0, Crg, C0rg, D, D0, Drg,
+D0rg. Efeito principal = média das quatro diferenças pareadas do fator;
+interação X×Y = diferença de diferenças (quanto muda o efeito de X quando Y é
+ligado); idem para a de 3ª ordem. Métricas: `root` na faixa toda, cobertura
+(1 − `frac_n_est`) e `root_rotulado`. Script: `analise_fatorial.py`.
+
+**R2.3 — cobertura igualada.** `Cmatch` vs D e C vs `Dmatch`; o casamento de
+cobertura foi feito na validação e **não é garantido no teste**.
+
+**R2.4 — decomposição e viés de seleção.** Na grade comum do mir_eval, cada
+célula de cada faixa é classificada em rotulada por C e D, só por D, só por C
+ou por nenhum. A parcela de cada região é Σ(dur·(acerto_D − acerto_C)) / Σ dur,
+de modo que as quatro somam exatamente o Δ `root` agregado (conferido contra
+os CSVs de ablação, resíduo < 1e-10). Viés de seleção: `root` de D0rg, que
+rotula tudo, dentro e fora da máscara comum de C e D. Script:
+`analise_decomposicao.py` (re-decodifica C, D e D0rg do cache).
+
+**R2.5 — representabilidade.** Fração do tempo de referência cuja qualidade
+(bitmap de `mir_eval.chord.encode`, sem reduzir extensões) é exatamente
+maj/min (vocabulário 24) ou maj/min/7/maj7/min7 (vocabulário 60). O baixo é
+ignorado (inversão conta como posição fundamental); N/X ficam no denominador.
+
+**R2.6 — sétimas e transição.** Precisão de sétimas = tempo estimado como
+7/maj7/min7 com mesma tônica e qualidade da referência / tempo estimado como
+sétima; revocação análoga sobre o tempo de referência com sétima; soma de
+tempo sobre as faixas, sem IC. Sensibilidade à transição: curva `root` ×
+`change_penalty` ∈ {0,5…6} na validação, e no teste D0rg/F0rg (cp 2,0) contra
+as versões `_cal`. Script: `analise_vocabulario.py`.
