@@ -44,8 +44,8 @@ Nenhuma das duas foi feita.
 | artigo | `artigo-ACDSA/METODOLOGIA.md`, `RESULTADOS.md`, `REVISAO.md`, `ESPECIFICACAO.md`, `BASELINES.md`, `PUBLICACAO.md`, `artigo-ACDSA/figuras/*`, `artigo-ACDSA/tabelas/*`, `artigo-ACDSA/splits/*.txt` | |
 | oráculo e logs | `out/musicas_bench/metrics.json`, `out/logs/*.txt` | o oráculo é só métricas |
 
-Nota: o `CLAUDE.md` cita `classifier_V2.py` no mapa de módulos, mas o arquivo
-não existe no repositório; o mapa está desatualizado nesse ponto.
+Nota: a menção a `classifier_V2.py` no mapa de módulos do `CLAUDE.md` foi
+removida (o arquivo não existe).
 
 ## Decisão do autor (não listado como "entra" nem como "não entra")
 
@@ -63,7 +63,7 @@ não existe no repositório; o mapa está desatualizado nesse ponto.
 | `data/raw/` | downloads originais do GuitarSet e do IDMT (3,3 GB); redistribuição fora do escopo, o leitor baixa da fonte (`docs/DATASETS.md`) |
 | `data/extracted/` | áudio e JAMS extraídos (2,9 GB); mesmo motivo |
 | `data/cache/` | features `.npz` derivadas do áudio; regeneráveis com `cache.py` |
-| `data/*.zip` (`IDMT-SMT-GUITAR_V2 (1).zip`, `P1_chords.zip`, `P2_chords.zip`) | arquivos de dataset não rastreados (≈ 3,3 GB) |
+| `data/raw/guitar-techs/` (Guitar-TECHS, CC BY 4.0) | não usado nesta versão; o leitor baixa da fonte (`docs/DATASETS.md` §6) |
 | `.venv/`, `__pycache__/`, `.pytest_cache/`, `.claude/` | ambiente local |
 
 ## Licenças a citar numa exportação

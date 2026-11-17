@@ -212,3 +212,63 @@ diferenças em root, majmin, sevenths, mirex, root_rotulado e segmentação; a
 única mudança é a faixa recuperada. O CSV de 505 linhas fica (não se
 sobrescreve) e é substituído pelo seguinte, de 506 linhas. Não afeta as
 variantes do pipeline (nenhuma falha nas 8 × 506).
+
+## 9. Diagnósticos de camera-ready (2026-11-17)
+
+Nada é ajustado; só diagnóstico e formatação. Fixado antes de rodar.
+
+### 9.1 O rótulo `13` do IDMT-SMT-Guitar
+
+Pergunta: `13` é acorde dominante (então `7(9,13)`) ou não?
+
+- **Fonte oficial:** `SMT_GUITAR_dataset_description.pdf` (§2.2.2, p. 10–11,
+  na distribuição do dataset) só define o formato
+  `chord_name/bass_note` e **não define os sufixos**. Não há outro documento
+  na distribuição.
+- **Evidência interna da notação:** o dataset usa `713` e `7913` como
+  rótulos distintos de `13`, e em 3 das 13 formas com baixo o baixo é a 6ª
+  (`E13/Db`, `A13/Gb`, `B13/Ab`).
+- **Evidência acústica** (chroma do cache, média por trecho anotado,
+  rotacionada para a tônica, normalizada): energia na 7ª menor nos trechos
+  `13` = 0,034 (807 trechos), contra 0,026 no maior simples, 0,144 em `7` e
+  0,188 em `713`; na 6ª/13ª, 0,245.
+- **Decisão:** `13` **não** é dominante. O mapeamento `13` → `maj(13)` fica
+  como está e **a base não é repontuada**. Peso: 5,00 % do tempo anotado
+  (588,1 s em 63 faixas); `GB5` 0,05 % (3 faixas), `D/7Gb` 0,12 % (8 faixas).
+
+### 9.2 Diagnóstico do estado N
+
+Script `diagnostico_n.py`. Por base (GuitarSet teste, IDMT-SMT-Guitar,
+IDMT-SMT-Chords guitar) e célula de batida i:
+ℓ_i(k) = log softmax(e_i / temp)_k, exatamente como em `viterbi.decode`
+(temp 0,1), com e_i = `classifier.emission` do classificador da variante.
+Estatística: max_k ℓ_i(k) — mediana, IQR e fração de células abaixo de
+β = −2,5 (o `n_logprob` da D). Contagem por célula (não ponderada por
+duração). Variantes: D (60 templates; células forçadas a N pelo gate de RMS
+ficam fora e são contadas à parte), D0rg com 60 (MEDIUM) e com 24 (BASIC,
+que é o classificador da F0rg). D e D0rg-60 usam o mesmo classificador; só
+o gate difere. Figura `fig_diagnostico_n` (3,5 pol): histogramas de D por
+base, sobrepostos, com linha em β.
+
+### 9.3 Beat tracking contra o andamento nominal (IDMT-SMT-Guitar)
+
+Andamento estimado = 60 / mediana dos intervalos entre batidas do cache.
+Razão r = estimado / nominal (do nome do arquivo). Classes: ~1 se
+|r − 1| ≤ 0,08; ~2 se |r/2 − 1| ≤ 0,08; ~0,5 se |2r − 1| ≤ 0,08; senão
+"outro". "Erro de oitava" = ~2 ∪ ~0,5.
+
+**Os 6 contrastes principais** (um por par de `stats.PARES`, a métrica que
+o par isola): C→D `root`; C0rg→D0rg `majmin`; D→E `overseg`; V4b→V4
+`overseg`; V4→F0rg `majmin`; D0rg→F0rg `sevenths`. Para cada grupo (razão ~1
+e erro de oitava): Δ médio ponderado por duração e IC 95 % do bootstrap
+pareado por faixa (10 000, seed 0), **descritivo, sem Holm**; não muda
+nenhuma classe.
+
+### 9.4 Tabelas de uma coluna
+
+`tab_principal.tex`: GuitarSet teste `chord[0]`, 8 variantes + Chordino +
+madmom (root, root rotulado, cobertura e overseg são idênticos nas duas
+camadas — verificado nas 464 linhas de ablação do teste; majmin e sevenths
+são de `chord[0]`). `tab_transferencia_curta.tex`: os 6 contrastes
+principais × 3 corpora, Δ e classe (✓ confirmado, = empate, ~ frágil), das
+mesmas fontes da `tab_transferencia`.

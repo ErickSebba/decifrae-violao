@@ -130,3 +130,14 @@ Não excluir faixas silenciosamente: cada exclusão deve permanecer no CSV com
 - [x] A licença do IDMT-SMT-Chords foi lida e registrada: `CC BY-NC-ND 4.0`.
 - [x] Os manifests foram gerados com caminhos relativos; as duas faixas
   problemáticas estão marcadas como excluídas.
+
+## 6. Guitar-TECHS (presente localmente, não usado)
+
+- Página: Zenodo 14963133. Licença: CC BY 4.0.
+- Arquivos: `data/raw/guitar-techs/P1_chords.zip`, `P2_chords.zip` e
+  `P3_music.zip` (extraídos P1 e P2 em `data/extracted/guitar-techs/`).
+- **Não usado nesta versão do artigo**: nenhum manifest, nenhuma rodada.
+  Os arquivos ficaram na máquina porque estavam em `data/` e foram
+  identificados pelo conteúdo (gravação direta, microfone, MIDI e vídeo
+  ego/exo; conjuntos de acordes maj, min, 7, maj7, m7, m7b5, dim, aug,
+  drop3).
