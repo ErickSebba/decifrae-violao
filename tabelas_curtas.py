@@ -25,7 +25,14 @@ SISTEMAS = ["V4", "V4b", "C", "D", "E", "C0rg", "D0rg", "F0rg",
 COLS = [("root", "root"), ("root_rotulado", "rot."), ("cobertura", "cob."),
         ("majmin", "mm"), ("sevenths", "7ths"), ("overseg", "overs.")]
 BASES = [("gs_test", "GuitarSet"), ("idmt_g", "IDMT-G"), ("idmt_c", "IDMT-C")]
-SIMBOLO = {"confirmado": "\\checkmark", "empate": "$=$", "fragil": "$\\sim$"}
+def letra(classe, delta, delta_gs):
+    """S/R/U/F, sem pacote LaTeX extra. S e R comparam o sinal com o do
+    GuitarSet teste (na própria coluna do GuitarSet, confirmado = S)."""
+    if classe == "empate":
+        return "U"
+    if classe == "fragil":
+        return "F"
+    return "S" if (delta > 0) == (delta_gs > 0) else "R"
 
 
 def _ultimo(prefixo):
@@ -85,14 +92,16 @@ def tab_transferencia_curta():
             v = 100 * float(r["delta"])
             txt = "$0$" if v == 0 else (f"${v:+.2f}$" if abs(v) < 0.05
                                         else f"${v:+.1f}$")
-            cel += [txt, SIMBOLO[r["classificacao"]]]
+            ref = float(t[(f"{a} vs {b}", m, "gs_test")]["delta"])
+            cel += [txt, letra(r["classificacao"], float(r["delta"]), ref)]
         corpo.append(f"{tex_escape(a)}$\\to${tex_escape(b)} "
                      f"\\texttt{{{tex_escape(m)}}} & " + " & ".join(cel) + " \\\\")
     cap = ("Os seis contrastes principais no GuitarSet \\emph{test} e nas "
            "bases externas (IDMT-SMT-Guitar, 506 faixas; IDMT-SMT-Chords, 6). "
-           "$\\Delta = b - a$ em p.p.; \\checkmark{} confirmado, $=$ empate, "
-           "$\\sim$ frágil (IC 95\\% do bootstrap pareado por faixa, Holm "
-           "sobre 15). Nenhuma configuração ajustada fora do GuitarSet.")
+           "$\\Delta = b - a$ em p.p. S: confirmado com o sinal do GuitarSet; "
+           "R: confirmado com o sinal invertido; U: IC 95\\% cruza zero; "
+           "F: frágil (IC exclui zero, Holm sobre 15 não confirma). "
+           "Nenhuma configuração ajustada fora do GuitarSet.")
     _salvar("tab_transferencia_curta", _tabela(
         "table", "l" + "rc" * len(BASES), corpo, cap, "tab:transferencia_curta",
         notas=[f"Fonte: \\texttt{{{tex_escape(fonte.name)}}}"]))
