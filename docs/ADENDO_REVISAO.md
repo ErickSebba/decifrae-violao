@@ -226,7 +226,7 @@ Pergunta: `13` é acorde dominante (então `7(9,13)`) ou não?
   `chord_name/bass_note` e **não define os sufixos**. Não há outro documento
   na distribuição.
 - **Evidência interna da notação:** o dataset usa `713` e `7913` como
-  rótulos distintos de `13`, e em 3 das 13 formas com baixo o baixo é a 6ª
+  rótulos distintos de `13`, e em 3 das 8 formas com baixo o baixo é a 6ª
   (`E13/Db`, `A13/Gb`, `B13/Ab`).
 - **Evidência acústica** (chroma do cache, média por trecho anotado,
   rotacionada para a tônica, normalizada): energia na 7ª menor nos trechos

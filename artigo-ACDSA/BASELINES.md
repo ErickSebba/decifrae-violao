@@ -293,7 +293,7 @@ GuitarSet (validação e teste) e nas duas bases externas
 
 | | Chordino | madmom |
 |---|---|---|
-| versão | NNLS Chroma / Chordino, plugin versão 5 (Vamp Plugin Pack 2.0), via Sonic Annotator 1.7 | madmom 0.17.dev0, commit `27f032e` do GitHub (o 0.16.1 do PyPI não compila no Python 3.10) |
+| versão | NNLS Chroma / Chordino, plugin versão 5, do instalador Vamp Plugin Pack 2.0 (em `C:Program FilesVamp Plugins`; o SHA-256 da DLL está no meta de cada CSV), via Sonic Annotator 1.7 | madmom 0.17.dev0, commit `27f032e` do GitHub (o 0.16.1 do PyPI não compila no Python 3.10) |
 | componente | transform `vamp:nnls-chroma:chordino:simplechord` (`baselines/chordino_simplechord.n3`) | `CNNChordFeatureProcessor` + `CRFChordRecognitionProcessor`, modelos `models/chords/2016/chords_cnnfeat.pkl` e `chords_cnncrf.pkl` |
 | parâmetros | defaults: step 2048, block 16384, `useNNLS` 1, `rollon` 0, `tuningmode` 0 (global), `whitening` 1, `s` 0,7, `boostn` 0,1 | defaults dos processadores: áudio a 44,1 kHz, quadros de 8192 amostras a 10 fps, rótulos a 10 fps |
 | vocabulário de saída | maior, menor, `dim`, `aug`, `6`, `m6`, `7`, `maj7`, `m7`, `m7b5`, com baixo; `N` | 24 (maior, menor) + `N` |

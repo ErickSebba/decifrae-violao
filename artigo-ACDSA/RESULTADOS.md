@@ -763,7 +763,7 @@ GuitarSet).
 Origem: `data/results/beat_tracking_idmt_20261117_135654.csv` e
 `beat_tracking_contrastes_20261117_135654.csv`. Razão estimado/nominal nas
 506 faixas: ~1 em 326, ~2 em 47, ~0,5 em 58 (erro de oitava: 105) e outro em
-75 (sobretudo ~0,75 e ~1,25–1,33). O dobro concentra-se nos andamentos
+75: 30 entre 1,25 e 1,40 (perto de 4/3), 18 entre 0,70 e 0,85, 15 entre 0,55 e 0,70 (perto de 2/3), 7 perto de 1,5 e 5 acima de 2. O dobro concentra-se nos andamentos
 lentos (34 de 47 entre 50 e 75 BPM) e a metade nos rápidos (36 de 58 em 120 e 180 BPM).
 
 Seis contrastes principais por grupo (Δ em p.p., IC 95 % do bootstrap pareado,

@@ -50,3 +50,18 @@ as ablações, os `stats_` e os baselines. Tabelas `tab_externo` e
 Não conferido por falta de fonte em CSV: "Vamp Plugin Pack 2.0" e os BPM da
 conferência de beat tracking (registrados no adendo §8, vindos da instalação
 e do relatório do adaptador).
+
+## Revisão dos números de camera-ready (2026-11-17)
+
+Uma passada por sub-agente novo sobre RESULTADOS §8.5–8.7, adendo §9.1,
+`tab_principal`, `tab_transferencia_curta` e BASELINES §9. Tabelas e números
+do diagnóstico do N, do beat tracking e do rótulo `13` bateram. Correções:
+
+1. Adendo §9.1: o `13` aparece em 13 formas, das quais 8 têm baixo; a 6ª é o
+   baixo em 3 das **8** (não "3 das 13 formas com baixo").
+2. RESULTADOS §8.7: a classe "outro" foi descrita por completo (30 entre
+   1,25 e 1,40; 18 entre 0,70 e 0,85; 15 entre 0,55 e 0,70; 7 perto de 1,5;
+   5 acima de 2), em vez de "sobretudo ~0,75 e ~1,25–1,33".
+3. BASELINES §9: "Vamp Plugin Pack 2.0" não é verificável pelos arquivos de
+   resultado; o texto passa a citar o caminho da instalação e o SHA-256 da
+   DLL registrado nos metas.
