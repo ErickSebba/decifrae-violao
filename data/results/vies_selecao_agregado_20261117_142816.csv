@@ -1,0 +1,3 @@
+split,ref_camada,variante,nivel,n_faixas,n_faixas_duas_regioes,tempo_dentro_s,tempo_fora_s,acerto_dentro,acerto_fora,delta,ic95_min,ic95_max,p_bootstrap
+val,chord[0],D0rg,root,120,120,2021.064,1635.082,0.801468126,0.480680528,0.320787598,0.276378615,0.364339313,0.0001
+test,chord[0],D0rg,root,58,58,870.837,917.904,0.778002843,0.386865185,0.391137658,0.320390881,0.452498242,0.0001

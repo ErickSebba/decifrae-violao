@@ -1,0 +1,16 @@
+{
+  "gerado_em": "20261117_142816",
+  "gerado_por": "vies_selecao.py",
+  "post_review": true,
+  "projeto": {
+    "commit": "639b5cc2ae897e9e40fde7858b95e430146a1f24",
+    "arvore_suja": false
+  },
+  "manifest": "data/manifests/guitarset_comping.csv",
+  "ref_camada": "chord[0]",
+  "seed": 0,
+  "n_bootstrap": 10000,
+  "alfa": 0.05,
+  "definicao": "Δ = Σacerto_in/Σtempo_in − Σacerto_out/Σtempo_out (D0rg, root); IC: bootstrap pareado por faixa recalculando as duas razões de somas; só faixas com tempo nas duas regiões",
+  "substitui": "coluna diferenca de vies_selecao_20261117_004137.csv"
+}
