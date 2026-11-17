@@ -588,11 +588,24 @@ validação. Para "fração do tempo de teste rotulada por ambos", o número
 correto é **48,7 %**: é uma fração de tempo, e todas as outras métricas do
 artigo agregam por duração.
 
-Viés de seleção (origem: `data/results/vies_selecao_20261117_004137.csv`):
-`root` de D0rg é 80,15 % dentro da máscara comum e 48,07 % fora (val;
-diferença pareada +21,98 [18,84; 25,19]); 77,80 % e 38,69 % no teste (+18,29
-[12,84; 23,75]). A máscara comum seleciona o tempo fácil: a comparação da §1.1
-mede C e D no subconjunto mais fácil, não no sinal todo.
+Viés de seleção (origem: `data/results/vies_selecao_agregado_20261117_142816.csv`;
+script `vies_selecao.py`). **Definição:** acurácia `root` de D0rg agregada
+por duração (Σ tempo acertado / Σ tempo comparável, `chord[0]`) dentro da
+máscara comum C–D e fora dela; Δ = dentro − fora; IC 95 % por bootstrap
+pareado por faixa (10 000 reamostragens, seed 0), recalculando as duas
+razões em cada reamostra; entram só as faixas com tempo nas duas regiões.
+
+| split | faixas com as duas regiões | dentro | fora | Δ |
+|---|---|---|---|---|
+| val | 120 de 120 | 80,15 % | 48,07 % | +32,08 [+27,64; +36,43] |
+| teste | 58 de 58 | 77,80 % | 38,69 % | +39,11 [+32,04; +45,25] |
+
+A máscara comum seleciona o tempo fácil: a comparação da §1.1 mede C e D no
+subconjunto mais fácil, não no sinal todo. Nota: a versão anterior
+(`vies_selecao_20261117_004137.csv`) informava a média das diferenças **por
+faixa**, ponderada pela duração total da faixa (+21,98 val, +18,29 teste).
+Essa estatística tem outros níveis (66,03 % e 47,74 % no teste) e por isso não
+batia com 77,80 % e 38,69 %, que são razões de somas. Fica substituída.
 
 ### R2.5 — Quanto da referência cada vocabulário representa
 
