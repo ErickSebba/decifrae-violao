@@ -760,7 +760,9 @@ valores saíram de `calibracao_revisao.py`, só na validação.
 médio ponderado por duração dentro de cada executante (00–03 =
 desenvolvimento/val, 04–05 = teste; 28–30 faixas cada). Reporta-se o número
 de executantes cujo Δ tem o sinal do Δ agregado dos seis e a amplitude
-min–max. Descritivo, sem IC. Script: `analise_executantes.py`.
+min–max. IC 95 % por executante: bootstrap pareado reamostrando as faixas
+**dentro** do executante (10 000, seed 0, peso = duração). Script:
+`analise_executantes.py`.
 
 **R2.3 — fatorial 2×2×2.** Fatores: decodificador (argmax C / Viterbi D),
 abstenção própria (`confidence_gate` ou `n_logprob` ligado / desligado) e gate
@@ -771,7 +773,15 @@ ligado); idem para a de 3ª ordem. Métricas: `root` na faixa toda, cobertura
 (1 − `frac_n_est`) e `root_rotulado`. Script: `analise_fatorial.py`.
 
 **R2.3 — cobertura igualada.** `Cmatch` vs D e C vs `Dmatch`; o casamento de
-cobertura foi feito na validação e **não é garantido no teste**.
+cobertura foi feito na validação e **não é garantido no teste**. Por isso há
+também uma comparação feita no próprio teste, sem escolher valor nenhum
+(protocolo em `docs/ADENDO_REVISAO.md` §5, commitado antes da execução): as
+curvas de C (`confidence_gate` ∈ {0} ∪ {0,50…0,90}, passo 0,01) e de D
+(`n_logprob` ∈ {−1…−8}, passo 0,25, ∪ {−1e9}) são medidas no teste; cada
+curva é interpolada linearmente (métrica agregada × cobertura agregada) nos
+alvos 60, 70, 77 e 90 %, e Δ = D − C. IC por bootstrap pareado por faixa, com
+as duas curvas reagregadas e reinterpoladas a cada reamostragem. Script:
+`curvas_teste_revisao.py`.
 
 **R2.4 — decomposição e viés de seleção.** Na grade comum do mir_eval, cada
 célula de cada faixa é classificada em rotulada por C e D, só por D, só por C
@@ -779,7 +789,12 @@ ou por nenhum. A parcela de cada região é Σ(dur·(acerto_D − acerto_C)) / �
 de modo que as quatro somam exatamente o Δ `root` agregado (conferido contra
 os CSVs de ablação, resíduo < 1e-10). Viés de seleção: `root` de D0rg, que
 rotula tudo, dentro e fora da máscara comum de C e D. Script:
-`analise_decomposicao.py` (re-decodifica C, D e D0rg do cache).
+`analise_decomposicao.py` (re-decodifica C, D e D0rg do cache). A fração do
+tempo em cada região é **agregada por duração** (Σ tempo da região / Σ tempo
+comparável, sobre todas as faixas). `mascara_comum.py` (setembro) reportava
+outra estatística para a mesma região, a **média simples por faixa** da
+fração (`np.mean` das frações, cada faixa com peso 1); mesmas células, mesmo
+denominador por faixa, agregação diferente.
 
 **R2.5 — representabilidade.** Fração do tempo de referência cuja qualidade
 (bitmap de `mir_eval.chord.encode`, sem reduzir extensões) é exatamente
@@ -789,6 +804,7 @@ ignorado (inversão conta como posição fundamental); N/X ficam no denominador.
 **R2.6 — sétimas e transição.** Precisão de sétimas = tempo estimado como
 7/maj7/min7 com mesma tônica e qualidade da referência / tempo estimado como
 sétima; revocação análoga sobre o tempo de referência com sétima; soma de
-tempo sobre as faixas, sem IC. Sensibilidade à transição: curva `root` ×
+tempo sobre as faixas, com IC 95 % por bootstrap reamostrando faixas
+(numerador e denominador da faixa juntos; 10 000, seed 0). Sensibilidade à transição: curva `root` ×
 `change_penalty` ∈ {0,5…6} na validação, e no teste D0rg/F0rg (cp 2,0) contra
 as versões `_cal`. Script: `analise_vocabulario.py`.

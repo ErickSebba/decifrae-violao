@@ -477,7 +477,7 @@ salvo indicação, IC 95 % por bootstrap pareado por faixa. Val = 120 faixas
 
 ### R2.1 — Consistência entre executantes
 
-Origem: `data/results/por_executante_20261116_232016.csv`; tabela
+Origem: `data/results/por_executante_20261117_004132.csv`; tabela
 `tabelas/tab_executantes.tex`. Primeira métrica de cada par pré-registrado:
 
 | par | métrica | 00 | 01 | 02 | 03 | 04ᵗ | 05ᵗ | mesmo sinal | min–max |
@@ -493,9 +493,25 @@ Origem: `data/results/por_executante_20261116_232016.csv`; tabela
 sinal nos seis executantes; o ganho do vocabulário de 24 vem
 sobretudo de dois executantes (01 e 02; o 05 tem +0,7) e não generaliza.
 
+IC 95 % por executante (bootstrap dentro do executante; mesma origem; tabela
+`tab:executantes_ic`). \* = IC exclui zero.
+
+| par | 00 | 01 | 02 | 03 | 04ᵗ | 05ᵗ |
+|---|---|---|---|---|---|---|
+| C→D | +16,3 [12,3; 20,2]\* | +11,7 [7,9; 15,8]\* | +17,6 [13,4; 21,7]\* | +10,0 [5,3; 15,2]\* | +11,2 [8,0; 14,5]\* | +4,7 [0,9; 8,5]\* |
+| C0rg→D0rg | +2,8 [0,2; 5,8]\* | +1,0 [−1,9; 4,3] | +2,0 [−1,1; 5,0] | +2,3 [0,4; 4,1]\* | +4,0 [2,2; 5,7]\* | +1,5 [−1,3; 4,9] |
+| D→E | −1,6 [−3,4; 0,1] | −2,7 [−4,6; −0,8]\* | −1,4 [−2,8; −0,0]\* | −0,7 [−2,3; 0,7] | −1,2 [−2,6; −0,0]\* | −2,1 [−3,8; −0,5]\* |
+| V4b→V4 | +2,6 [−0,5; 5,9] | −1,2 [−4,5; 2,3] | −1,9 [−4,4; 0,6] | +3,5 [0,4; 6,6]\* | +1,3 [−1,0; 3,6] | +2,1 [0,2; 4,1]\* |
+| V4→F0rg | −0,5 [−2,8; 1,4] | +3,0 [0,6; 5,6]\* | +2,1 [−0,2; 4,5] | +0,3 [−1,9; 2,5] | +0,6 [−2,0; 3,2] | +1,4 [−2,0; 5,5] |
+| D0rg→F0rg | −4,3 [−8,1; −0,4]\* | +11,1 [6,7; 16,6]\* | +8,8 [5,4; 12,7]\* | −2,3 [−6,2; 2,0] | −2,4 [−8,2; 3,7] | +0,7 [−1,9; 3,3] |
+
+Só C→D exclui zero nos seis executantes. D0rg→F0rg exclui zero com sinais
+opostos (00 negativo; 01 e 02 positivos): o efeito do vocabulário depende do
+executante.
+
 ### R2.3 — Fatorial 2×2×2 e cobertura igualada
 
-Origem: `data/results/fatorial_20261116_232328.csv`; tabela
+Origem: `data/results/fatorial_20261117_004134.csv`; tabela
 `tabelas/tab_fatorial.tex`. Efeitos (p.p.) em `root` faixa toda:
 
 | termo | val | teste |
@@ -510,7 +526,7 @@ própria, D0 − C0 é +1,99 (val) e +2,84 (teste); com ela, D − C é +13,90 e
 +7,88. O gate relativo muda `root` em menos de 1 p.p. em todas as células,
 exceto D no teste (49,39 → 50,42 em Drg, +1,03; a cobertura sobe 3,37).
 
-Cobertura igualada (origem: `data/results/cobertura_igualada_20261116_232328.csv`):
+Cobertura igualada (origem: `data/results/cobertura_igualada_20261117_004134.csv`):
 
 | par | split | Δ root | Δ cobertura | Δ root rotulado |
 |---|---|---|---|---|
@@ -523,9 +539,32 @@ Com a cobertura igualada, nenhum Δ `root` exclui zero. Ressalva: o casamento
 feito na validação não se manteve no teste para Cmatch (8,9 p.p. a mais de
 cobertura que D), e o de Dmatch já era grosso na validação (+5,96).
 
+Mesma cobertura medida no próprio teste, por interpolação das curvas
+(origem: `data/results/cobertura_igualada_teste_20261117_004111.csv`, pontos em
+`data/results/curvas_teste_20261117_004111.csv`; tabela
+`tabelas/tab_cobertura_igualada.tex`; figura `figuras/fig_cobertura_teste.pdf`).
+`root` em %, Δ = D − C em p.p.; 10 000 reamostragens válidas em todos os alvos:
+
+| cobertura | métrica | C | D | Δ [IC 95 %] |
+|---|---|---|---|---|
+| 60 % | rotulado | 63,90 | 61,98 | −1,92 [−6,70; 2,73] |
+| 60 % | faixa toda | 42,63 | 41,36 | −1,27 [−3,74; 0,80] |
+| 70 % | rotulado | 60,73 | 60,69 | −0,04 [−3,65; 3,43] |
+| 70 % | faixa toda | 46,35 | 46,05 | −0,30 [−2,41; 1,78] |
+| 77 % | rotulado | 58,87 | 59,78 | +0,91 [−1,83; 3,93] |
+| 77 % | faixa toda | 48,60 | 49,33 | +0,74 [−1,28; 2,81] |
+| 90 % | rotulado | 56,65 | 59,55 | +2,90 [0,62; 5,21] |
+| 90 % | faixa toda | 52,55 | 55,23 | +2,67 [0,85; 4,50] |
+
+Até 77 % de cobertura, C e D não se distinguem; a 90 % D é melhor em cerca de
+3 p.p. Ressalva: entre 58 % e 89 % de cobertura a curva D só tem três pontos
+(`n_logprob` = −2,25, −2,5 e −2,75, com 58,32 %, 77,12 % e 89,26 % de
+cobertura), de modo que os valores de D em 60, 70 e 77 % vêm de um único
+segmento de reta, de 58,32 % a 77,12 % de cobertura.
+
 ### R2.4 — De onde vem o ganho do Viterbi
 
-Origem: `data/results/decomposicao_20261116_232331.csv`; tabela
+Origem: `data/results/decomposicao_20261117_004137.csv`; tabela
 `tabelas/tab_decomposicao.tex`. Δ`root`(C→D) no teste = +7,88 p.p.; soma das
 parcelas confere com o CSV de ablação (resíduo 4,3e-11).
 
@@ -539,7 +578,17 @@ parcelas confere com o CSV de ablação (resíduo 4,3e-11).
 Na validação (Δ = +13,90): +0,43 / +16,26 / −2,80 / 0. Onde os dois rotulam,
 C e D empatam; o ganho de D vem de rotular tempo que C devolve como N.
 
-Viés de seleção (origem: `data/results/vies_selecao_20261116_232331.csv`):
+Os 48,7 % acima e os 45,9 % citados na §1.1 (45,87 % em
+`mascara_comum_20260927_202401.csv`, coluna `frac_tempo_na_mascara`) contam as mesmas células da máscara comum, com o mesmo
+denominador por faixa; diferem só na agregação. Os 48,68 % são agregados por
+duração (Σ tempo na máscara / Σ tempo comparável). Os 45,87 % são a média
+simples por faixa da fração, com peso 1 por faixa. Recalculadas sobre a mesma
+grade, as duas dão 48,68 % e 45,87 % no teste e 55,28 % e 54,08 % na
+validação. Para "fração do tempo de teste rotulada por ambos", o número
+correto é **48,7 %**: é uma fração de tempo, e todas as outras métricas do
+artigo agregam por duração.
+
+Viés de seleção (origem: `data/results/vies_selecao_20261117_004137.csv`):
 `root` de D0rg é 80,15 % dentro da máscara comum e 48,07 % fora (val;
 diferença pareada +21,98 [18,84; 25,19]); 77,80 % e 38,69 % no teste (+18,29
 [12,84; 23,75]). A máscara comum seleciona o tempo fácil: a comparação da §1.1
@@ -547,7 +596,7 @@ mede C e D no subconjunto mais fácil, não no sinal todo.
 
 ### R2.5 — Quanto da referência cada vocabulário representa
 
-Origem: `data/results/representabilidade_20261116_232349.csv`; tabela
+Origem: `data/results/representabilidade_20261117_004150.csv`; tabela
 `tabelas/tab_vocabulario.tex` (`tab:vocabulario`). % do tempo de referência:
 
 | camada | split | 24 (maj/min) | 60 (+7/maj7/min7) |
@@ -562,13 +611,22 @@ aparecem em chord[1].
 
 ### R2.6 — Sétimas e penalidade de transição
 
-Origem: `data/results/setimas_20261116_232349.csv`. Precisão / revocação de
-sétimas de D0rg (%, ponderadas por tempo): chord[0] val 2,40 / 11,50, teste
-3,29 / 18,28; chord[1] val 9,74 / 25,52, teste 14,18 / 32,54. D0rg emite
+Origem: `data/results/setimas_20261117_004150.csv` e, para os IC,
+`data/results/setimas_resumo_20261117_004150.csv`. Precisão / revocação de
+sétimas de D0rg (%, ponderadas por tempo, IC 95 % por bootstrap de faixas):
+
+| camada | split | precisão | revocação |
+|---|---|---|---|
+| chord[0] | val | 2,40 [1,21; 3,81] | 11,50 [6,24; 17,42] |
+| chord[0] | teste | 3,29 [1,70; 5,15] | 18,28 [11,75; 24,30] |
+| chord[1] | val | 9,74 [6,35; 13,67] | 25,52 [18,65; 32,62] |
+| chord[1] | teste | 14,18 [9,18; 19,59] | 32,54 [24,20; 40,44] |
+
+D0rg emite
 muito mais tempo de sétima do que a referência contém, e a maior parte está
 errada. F0rg não emite sétima (precisão indefinida, revocação 0).
 
-Transição (origem: `data/results/transicao_20261116_232349.csv` e
+Transição (origem: `data/results/transicao_20261117_004150.csv` e
 `data/results/calibracao_revisao_20261116_231220.csv`; figura
 `figuras/fig_transicao.pdf`; `tab:transicao`). Na validação, cp = 2,0 não era
 o ótimo: o melhor valor foi 1,5 para 60 acordes (+0,98 p.p.) e 1,0 para 24
