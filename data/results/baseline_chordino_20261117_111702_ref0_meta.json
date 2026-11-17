@@ -1,0 +1,44 @@
+{
+  "gerado_em": "2026-11-17T11:17:02",
+  "post_review": true,
+  "baseline": "chordino",
+  "variante": "Chordino",
+  "manifest": "data/manifests/idmt_smt_chords.csv",
+  "splits": [
+    "eval"
+  ],
+  "ref_camada": "chord[0]",
+  "ref_is_harte": true,
+  "est_is_harte": true,
+  "dir_lab": "data/cache/baselines/chordino",
+  "n_linhas": 6,
+  "falhas": [],
+  "segundos": 0.4,
+  "versoes": {
+    "python": "3.14.6",
+    "implementacao": "CPython",
+    "numpy": "2.4.6",
+    "mir_eval": "0.8.2"
+  },
+  "projeto": {
+    "commit": "586c322a0cb32b0023831ffdb1f2754ab1006c94",
+    "arvore_suja": false
+  },
+  "transform_id": "vamp:nnls-chroma:chordino:simplechord",
+  "transform_arquivo": "baselines/chordino_simplechord.n3",
+  "transform_sha256": "d7112ca5aeb4724a1f82218dda6c17b64c9833bc35af12bcb78ec55a495cd1bd",
+  "plugin_dll_sha256": "9e6e8b0b9fdcec20807ed050d6a0a99d77c091fefe15058ad0466fbfd2e4ae71",
+  "plugin_version": "5",
+  "parametros": {
+    "boostn": "0.1",
+    "rollon": "0",
+    "s": "0.7",
+    "tuningmode": "0",
+    "useNNLS": "1",
+    "usehartesyntax": "0",
+    "whitening": "1"
+  },
+  "step_size": 2048,
+  "block_size": 16384,
+  "sonic_annotator_version": "1.7"
+}
