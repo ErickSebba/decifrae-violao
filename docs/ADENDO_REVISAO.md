@@ -67,3 +67,30 @@ da amostra** de calibração — só o teste o mede.
 D0rg_cal, F0rg_cal`, nas camadas chord[0] e chord[1], um commit entre as duas.
 As mesmas seis variantes novas rodam também no val, nas duas camadas, antes do
 teste. Nenhum valor deste adendo é revisto depois da leitura do teste.
+
+## 5. Curvas de acerto × cobertura no teste (protocolo, 2026-11-17)
+
+Registrado e commitado **antes** de rodar. Análise pós-especificada
+(`post_review=true`), sem escolha de nenhum valor: não há calibração no teste.
+
+- Script: `curvas_teste_revisao.py`; split `test` (58 faixas), camada chord[0],
+  nível `root`.
+- Curva C: variante C com `confidence_gate` ∈ {0} ∪ {0,50; 0,51; …; 0,90}.
+- Curva D: variante D com `n_logprob` ∈ {−1; −1,25; …; −8} ∪ {−1e9}.
+- Demais campos como em `runner.VARIANTES["C"]`/`["D"]` (inclusive
+  `rel_gate = 0,2`).
+- Por ponto e faixa: cobertura (1 − `frac_n_est`), `root_rotulado` e `root`
+  na faixa toda. Agregação por ponto: média ponderada pela duração da faixa
+  (`root_rotulado` exclui as faixas em que a cobertura é zero).
+- Comparação na mesma cobertura: para cada curva, interpolação linear da
+  métrica agregada em função da cobertura agregada (pontos ordenados por
+  cobertura), nos alvos **60 %, 70 %, 77 % e 90 %**. Δ = D − C.
+- IC 95 %: bootstrap pareado por faixa (10 000 reamostragens, seed 0); em
+  cada reamostragem as duas curvas são reagregadas com os mesmos pesos e
+  reinterpoladas. Alvo fora do intervalo de cobertura de uma curva numa
+  reamostragem → reamostragem descartada para aquele alvo, e o número de
+  reamostragens válidas é reportado.
+- Saídas: `data/results/curvas_teste_<ts>.csv` (uma linha por curva, ponto e
+  faixa), `data/results/cobertura_igualada_teste_<ts>.csv` (resumo),
+  `artigo-ACDSA/tabelas/tab_cobertura_igualada.tex`,
+  `artigo-ACDSA/figuras/fig_cobertura_teste.pdf/.png` (3,5 pol, fonte 8 pt).

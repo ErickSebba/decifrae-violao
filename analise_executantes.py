@@ -19,7 +19,10 @@ Colunas por contraste:
     (Δ exatamente zero não conta como mesmo sinal);
   - n_mesmo_sinal_dev: idem, tomando o sinal de delta_dev (a direção vista
     no desenvolvimento, antes do teste);
-  - delta_min / delta_max: amplitude dos 6 Δ por executante.
+  - delta_min / delta_max: amplitude dos 6 Δ por executante;
+  - ic95_min_XX / ic95_max_XX: IC 95 % do Δ do executante XX, bootstrap
+    pareado reamostrando faixas DENTRO do executante (`stats.bootstrap`,
+    10 000 reamostragens, seed 0, peso = duração).
 
 Saídas:
   data/results/por_executante_<timestamp>.csv + _meta.json
@@ -65,7 +68,9 @@ CSV_FIELDS = (["ref_camada", "par", "variante_a", "variante_b", "metrica",
               + [f"n_faixas_{e}" for e in EXECUTANTES]
               + ["delta_dev", "delta_teste", "delta_todos",
                  "n_mesmo_sinal", "n_mesmo_sinal_dev", "n_executantes",
-                 "delta_min", "delta_max"])
+                 "delta_min", "delta_max"]
+              + [f"ic95_{lado}_{e}" for e in EXECUTANTES
+                 for lado in ("min", "max")])
 
 
 def _executantes():
@@ -111,6 +116,15 @@ def _delta(por_variante, duracoes, a, b, metrica, faixas):
     return _media_ponderada(vb - va, w), len(w)
 
 
+def _ic(por_variante, duracoes, a, b, metrica, faixas):
+    """IC 95 % do Δ, bootstrap pareado por faixa só dentro de `faixas`."""
+    sub = {v: {t: l for t, l in por_variante[v].items() if t in faixas}
+           for v in (a, b)}
+    va, vb, w, _ = _pares_alinhados(sub, duracoes, a, b, metrica)
+    lo, hi, _ = stats.bootstrap(vb - va, w)
+    return lo, hi
+
+
 def _sinal(x):
     return 0 if (x == 0 or np.isnan(x)) else (1 if x > 0 else -1)
 
@@ -133,6 +147,9 @@ def calcular(camada, mapa):
                 d, n = _delta(por_variante, duracoes, a, b, m, faixas_de[e])
                 linha[f"delta_{e}"] = d
                 linha[f"n_faixas_{e}"] = n
+                (linha[f"ic95_min_{e}"],
+                 linha[f"ic95_max_{e}"]) = _ic(por_variante, duracoes, a, b,
+                                               m, faixas_de[e])
                 ds.append(d)
             linha["delta_dev"], _ = _delta(por_variante, duracoes, a, b, m, dev)
             linha["delta_teste"], _ = _delta(por_variante, duracoes, a, b, m,
@@ -201,14 +218,47 @@ def tabela_tex(linhas, csv_nome):
     tex = _tabela("table*", "ll" + "r" * 9, corpo, cap, "tab:executantes")
     tex = tex.replace("% gerado por figuras_artigo.py",
                       "% gerado por analise_executantes.py", 1)
+    tex += "\n" + tabela_ic_tex(linhas, csv_nome)
     destino = TABELAS / "tab_executantes.tex"
     destino.parent.mkdir(parents=True, exist_ok=True)
     destino.write_text(tex, encoding="utf-8")
     return destino
 
 
+def tabela_ic_tex(linhas, csv_nome):
+    """Os 6 contrastes principais (1ª métrica de cada par), Δ e IC 95 %."""
+    from figuras_artigo import _tabela, tex_escape
+    primeiras = {f"{a} vs {b}": m[0] for a, b, m, _ in PARES}
+    corpo = ["Par ($b-a$) & Métrica & "
+             + " & ".join(EXECUTANTES[:4] + [f"{e}$^t$" for e in EXEC_TESTE])
+             + " \\\\", "\\midrule"]
+    for l in linhas:
+        if l["ref_camada"] != "chord[0]" or primeiras[l["par"]] != l["metrica"]:
+            continue
+        celulas = []
+        for e in EXECUTANTES:
+            d, lo, hi = (l[f"delta_{e}"], l[f"ic95_min_{e}"],
+                         l[f"ic95_max_{e}"])
+            celulas.append(f"\\shortstack{{{_pp(d)}\\\\"
+                           f"\\scriptsize[${100*lo:+.1f}$; ${100*hi:+.1f}$]}}")
+        corpo.append(" & ".join(
+            [f"\\texttt{{{tex_escape(l['variante_a'])}}}$\\to$"
+             f"\\texttt{{{tex_escape(l['variante_b'])}}}",
+             f"\\texttt{{{tex_escape(l['metrica'])}}}"] + celulas) + " \\\\")
+    cap = ("Os seis contrastes principais por executante, \\texttt{chord[0]}: "
+           "$\\Delta = b - a$ em pontos percentuais e IC 95 \\% por bootstrap "
+           "pareado reamostrando faixas dentro do executante (10\\,000, seed 0). "
+           "$^t$ executantes do teste. Análise pós-revisão. Fonte: "
+           "\\texttt{" + tex_escape(csv_nome) + "}.")
+    tex = _tabela("table*", "ll" + "c" * 6, corpo, cap, "tab:executantes_ic")
+    return tex.replace("% gerado por figuras_artigo.py",
+                       "% gerado por analise_executantes.py", 1)
+
+
 def main():
     import runner  # só para _commit(); importa o pipeline, mas não o executa
+    # lido ANTES de escrever qualquer saída: senão o próprio CSV novo suja a árvore
+    projeto = runner._commit()
     mapa = _executantes()
     linhas = []
     for camada in ENTRADAS:
@@ -252,7 +302,7 @@ def main():
                                     "de delta_dev"),
         "executantes": {"dev_val": EXEC_DEV, "teste": EXEC_TESTE},
         "saida_tex": _relativo(TABELAS / "tab_executantes.tex"),
-        **runner._commit(),
+        **projeto,
     }
     csv_path.with_name(csv_path.stem + "_meta.json").write_text(
         json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")

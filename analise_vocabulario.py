@@ -214,14 +214,38 @@ def setimas(linhas_manifest):
     return saida
 
 
+def _ic_razao(num, den, n=stats.N_BOOTSTRAP, seed=stats.SEED, alfa=stats.ALFA):
+    """
+    IC 95 % de sum(num)/sum(den) reamostrando FAIXAS com reposição (a faixa
+    viaja com o seu numerador e o seu denominador). Reamostragens com
+    denominador zero ficam de fora; devolve (lo, hi, n_validas).
+    """
+    num, den = np.asarray(num, float), np.asarray(den, float)
+    if den.sum() <= 0:
+        return float("nan"), float("nan"), 0
+    rng = np.random.default_rng(seed)
+    idx = rng.integers(0, len(num), size=(n, len(num)))
+    sn, sd = num[idx].sum(axis=1), den[idx].sum(axis=1)
+    ok = sd > 0
+    r = sn[ok] / sd[ok]
+    lo, hi = np.percentile(r, [100 * alfa / 2, 100 * (1 - alfa / 2)])
+    return float(lo), float(hi), int(ok.sum())
+
+
 def resumo_setimas(linhas):
     """(variante, camada, split) -> precisão e revocação, total e por q."""
     g = defaultdict(lambda: defaultdict(float))
+    porfaixa = defaultdict(lambda: defaultdict(list))
     for l in linhas:
         k = (l["variante"], l["ref_camada"], l["split"])
         for c, v in l.items():
             if c.startswith(("est_", "ref_")) and c != "ref_camada":
                 g[k][c] += float(v)
+        pf = porfaixa[k]
+        pf["e"].append(sum(float(l[f"est_{q}"]) for q in SETIMAS))
+        pf["eok"].append(sum(float(l[f"est_{q}_ok"]) for q in SETIMAS))
+        pf["r"].append(sum(float(l[f"ref_{q}"]) for q in SETIMAS))
+        pf["rok"].append(sum(float(l[f"ref_{q}_ok"]) for q in SETIMAS))
     out = {}
     for k, s in g.items():
         e = sum(s[f"est_{q}"] for q in SETIMAS)
@@ -238,6 +262,12 @@ def resumo_setimas(linhas):
                              if s[f"ref_{q}"] > 0 else float("nan"))
             d[f"t_est_{q}"] = s[f"est_{q}"]
             d[f"t_ref_{q}"] = s[f"ref_{q}"]
+        pf = porfaixa[k]
+        d["prec_ic_min"], d["prec_ic_max"], d["prec_n_boot"] = _ic_razao(
+            pf["eok"], pf["e"])
+        d["rev_ic_min"], d["rev_ic_max"], d["rev_n_boot"] = _ic_razao(
+            pf["rok"], pf["r"])
+        d["n_faixas"] = len(pf["e"])
         out[k] = d
     return out
 
@@ -329,7 +359,7 @@ def _escrever(nome, ts, linhas, entradas, extra=None):
             "entradas": [str(Path(e).relative_to(ROOT)).replace("\\", "/")
                          for e in entradas],
             "seed": stats.SEED, "n_bootstrap": stats.N_BOOTSTRAP,
-            "n_linhas": len(linhas), "projeto": runner._commit()}
+            "n_linhas": len(linhas), "projeto": _PROJETO}
     meta.update(extra or {})
     p.with_name(p.stem + "_meta.json").write_text(
         json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -387,7 +417,11 @@ def tabela(rr, ss, trans, nomes):
             f = ss[("F0rg", c, sp)]
             corpo.append(" & ".join([
                 f"\\texttt{{{c}}}", sp, str(r["n"]), fa.pct(r["r24"]),
-                fa.pct(r["r60"]), fa.pct(d["prec"]), fa.pct(d["rev"]),
+                fa.pct(r["r60"]),
+                f"{fa.pct(d['prec'])} [{fa.pct(d['prec_ic_min'])}; "
+                f"{fa.pct(d['prec_ic_max'])}]",
+                f"{fa.pct(d['rev'])} [{fa.pct(d['rev_ic_min'])}; "
+                f"{fa.pct(d['rev_ic_max'])}]",
                 fa.pct(f["rev"])]) + " \\\\")
     cap1 = ("Representabilidade e sétimas no GuitarSet. \\emph{Repr.}: fração do "
             "tempo de referência cuja qualidade (bitmap do \\texttt{mir\\_eval}, "
@@ -395,7 +429,8 @@ def tabela(rr, ss, trans, nomes):
             "P e R: precisão e revocação de sétima (mesma tônica e mesma qualidade) "
             "de \\texttt{D0rg} (60) e \\texttt{F0rg} (24); \\texttt{F0rg} não emite "
             "sétima, logo sua precisão é indefinida. Valores em \\%, ponderados por "
-            "tempo. Fontes: \\texttt{" + fa.tex_escape(nomes["repr"]) + "}, "
+            "tempo; entre colchetes, IC 95 \\% por bootstrap reamostrando faixas "
+            "(10\\,000, semente 0).Fontes: \\texttt{" + fa.tex_escape(nomes["repr"]) + "}, "
             "\\texttt{" + fa.tex_escape(nomes["set"]) + "}.")
     t1 = fa._tabela("table", "llrrrrrr", corpo, cap1, "tab:vocabulario")
 
@@ -428,6 +463,10 @@ def tabela(rr, ss, trans, nomes):
 
 
 def main(argv=None):
+    # commit e estado da árvore lidos UMA vez, antes de escrever qualquer
+    # saída: senão o primeiro CSV novo suja a árvore para os seguintes
+    global _PROJETO
+    _PROJETO = runner._commit()
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     linhas_manifest = runner._linhas(MANIFEST, set(SPLITS))
     print(f"{len(linhas_manifest)} faixas (val + test, sem excluídas)")
@@ -446,6 +485,13 @@ def main(argv=None):
                      "revocação = t(ref q e est mesma tônica e q)/t(ref q); q em "
                      "{7, maj7, min7}"})
     ss = resumo_setimas(st)
+    resumo = [{"variante": k[0], "ref_camada": k[1], "split": k[2],
+               **{c: (round(v, 9) if isinstance(v, float) else v)
+                  for c, v in d.items()}}
+              for k, d in sorted(ss.items())]
+    p_set_res = _escrever("setimas_resumo", ts, resumo, [p_set], {
+        "definicao": "prec/rev agregadas por soma de tempo; IC 95 % por "
+                     "bootstrap reamostrando faixas (num e den juntos)"})
     dmax, nchk = checar_setimas(st)
 
     tr = transicao()
@@ -472,7 +518,10 @@ def main(argv=None):
         d = ss[k]
         porq = " ".join(f"{q}: P={100*d[f'prec_{q}']:.1f} R={100*d[f'rev_{q}']:.1f}"
                         for q in SETIMAS)
-        print(f"{k[0]:5s} {k[1]} {k[2]:5s} P={100*d['prec']:.2f} R={100*d['rev']:.2f} "
+        print(f"{k[0]:5s} {k[1]} {k[2]:5s} P={100*d['prec']:.2f} "
+              f"[{100*d['prec_ic_min']:.2f}; {100*d['prec_ic_max']:.2f}] "
+              f"R={100*d['rev']:.2f} [{100*d['rev_ic_min']:.2f}; "
+              f"{100*d['rev_ic_max']:.2f}] "
               f"t_est={d['t_est']:.0f}s t_ref={d['t_ref']:.0f}s | {porq}")
     print(f"checagem sevenths vs CSV de teste: max|dif|={dmax:.2e} em {nchk} linhas")
     print("\n== transição ==")
