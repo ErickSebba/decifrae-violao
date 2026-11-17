@@ -618,6 +618,11 @@ Origem: `data/results/representabilidade_20261117_004150.csv`; tabela
 | chord[0] | teste | 86,27 | 95,42 |
 | chord[1] | val | 50,45 | 66,85 |
 | chord[1] | teste | 37,02 | 59,15 |
+| IDMT-SMT-Guitar | external | 50,79 | 73,78 |
+
+Linha do IDMT-SMT-Guitar: `data/results/representabilidade_externo_20261117_143045.csv`
+(mesma definição; denominador com N). Lá, N ocupa 11,87 % e power chords
+(`5`) 8,21 % do tempo; sem o N, 57,63 % e 83,71 %.
 
 Em chord[0] a única sétima presente é `7` (≈ 9 % do tempo); maj7 e min7 só
 aparecem em chord[1].
