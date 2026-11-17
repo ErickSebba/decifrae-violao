@@ -74,8 +74,10 @@ removida (o arquivo não existe).
 
 ## Cópia limpa exportada (2026-11-17)
 
-Gerada em `..\Decifra-Violao-publico` por `git archive` do commit `e525f0d`
-(só arquivos rastreados), mais `README_REPRODUCAO.md` (cópia de
+Gerada em `..\Decifra-Violao-publico` por `git archive` (só arquivos
+rastreados). Primeira versão a partir de `e525f0d`; **regenerada** a partir
+do commit final da branch, o que traz esta versão da nota (a pasta anterior
+foi apagada antes). Inclui `README_REPRODUCAO.md` (cópia de
 `docs/REPRODUCAO.md`). **Nenhum repositório remoto foi criado; nada foi
 publicado.**
 
@@ -83,7 +85,7 @@ publicado.**
   `data/cache/` (os três últimos nem são rastreados), e, por precaução, os
   itens de "decisão do autor": `Api/`, `out/musicas/*_timeline.png` e
   `out/musicas_bench/comparativo.png`.
-- Verificado: 265 arquivos, 12 MB, **nenhum** `.wav`, `.mp3`, `.flac` (nem
+- Verificado na regeneração: 274 arquivos (273 rastreados + o README), **nenhum** `.wav`, `.mp3`, `.flac` (nem
   outro formato de áudio); tipos presentes: csv, json, py, md, tex, png, pdf,
   txt, n3.
 - Na cópia, `pytest`: 223 passam e 27 são pulados (precisam dos dados).
