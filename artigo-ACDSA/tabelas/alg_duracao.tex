@@ -1,0 +1,23 @@
+% Pseudocódigo do filtro de duração mínima. Fiel a pipeline.py:158-197
+% (_merge e _absorb_short); casos de borda fixados em
+% tests/test_filtro_duracao.py. Ver artigo-ACDSA/ESPECIFICACAO.md, item 7.
+% Requer \usepackage{algorithm} e \usepackage{algorithmic}.
+\begin{algorithm}[t]
+  \caption{Absorção de segmentos curtos. $|S_i|$: duração do segmento $S_i$.}
+  \label{alg:duracao}
+  \begin{algorithmic}[1]
+    \REQUIRE segmentos $S = (S_1, \dots, S_n)$ já sem vizinhos de mesmo rótulo; $d_{\min}$
+    \STATE \textbf{se} $d_{\min} \le 0$ \textbf{então devolva} $S$
+    \WHILE{$n > 1$}
+      \STATE $i \leftarrow$ menor índice com $|S_i| = \min_k |S_k|$ \COMMENT{o mais curto da faixa}
+      \STATE \textbf{se} $|S_i| \ge d_{\min}$ \textbf{então interrompa}
+      \IF{$1 < i < n$}
+        \STATE $D \leftarrow S_{i-1}$ se $|S_{i-1}| \ge |S_{i+1}|$; senão $S_{i+1}$ \COMMENT{empate: esquerda}
+      \ELSE
+        \STATE $D \leftarrow$ o único vizinho de $S_i$ \COMMENT{borda da faixa}
+      \ENDIF
+      \STATE rótulo de $S_i \leftarrow$ rótulo de $D$; \quad $S \leftarrow \mathrm{Junta}(S)$; \quad $n \leftarrow |S|$ \COMMENT{durações recalculadas}
+    \ENDWHILE
+    \RETURN $S$
+  \end{algorithmic}
+\end{algorithm}

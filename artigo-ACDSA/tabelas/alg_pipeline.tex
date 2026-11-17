@@ -1,0 +1,25 @@
+% Pseudocódigo do pipeline (variante E, produção). Fiel a pipeline.py:97-113,
+% 139-155, 228-259 e classifier.py:123-153; ver artigo-ACDSA/ESPECIFICACAO.md.
+% Requer \usepackage{algorithm} e \usepackage{algorithmic}.
+\begin{algorithm}[t]
+  \caption{Reconhecimento de acordes por faixa. $\mathcal{T}$: templates binários normalizados em $\ell_2$ (24 ou 60 colunas).}
+  \label{alg:pipeline}
+  \begin{algorithmic}[1]
+    \REQUIRE áudio mono $y$ a 22\,050\,Hz; $\mathcal{T}$; $\kappa, \sigma, \theta, \gamma, \tau, \beta, \rho, \varepsilon, d_{\min}$
+    \STATE $(y_h, y_p) \leftarrow \mathrm{HPSS}(y;\ \text{margem } 3)$
+    \STATE $b \leftarrow \mathrm{BeatTrack}(y_p)$ \COMMENT{quadros de 512 amostras}
+    \STATE $X \leftarrow \mathrm{MedianaTemporal}_{21}\big(\mathrm{ChromaCQT}(y_h;\ 36 \text{ bins/oitava},\ \|\cdot\|_\infty)\big)$
+    \STATE $b \leftarrow \mathrm{unique}(\{0, T\} \cup b)$; \quad $c_k \leftarrow \mathrm{mediana}\,X[:, b_k{:}b_{k+1}]$, $k = 1..K$
+    \STATE $r_k \leftarrow \mathrm{RMS}(y \text{ em } [t_k, t_{k+1}))$; \quad $g \leftarrow \max\big(\varepsilon,\ \rho \cdot \mathrm{mediana}\{r_k : r_k > \varepsilon\}\big)$
+    \FOR{$k = 1$ \TO $K$}
+      \STATE $s_k[j] \leftarrow \cos(c_k, \mathcal{T}_j) - \kappa \max\big(0,\ 1 - \sigma\, \hat{c}_k[\mathrm{ext}_j]\big)$ \COMMENT{só tétrades}
+    \ENDFOR
+    \IF{Viterbi}
+      \STATE $\ell \leftarrow \mathrm{Viterbi}\big(\log\mathrm{softmax}(s/\tau),\ N{=}\beta,\ \text{troca}{=}{-\gamma},\ N \text{ forçado se } r_k < g\big)$
+    \ELSE
+      \STATE $\ell_k \leftarrow \arg\max_j s_k[j]$ (empate: menor $j$) se $\max_j s_k[j] \ge \theta$ e $r_k \ge g$; senão $N$
+    \ENDIF
+    \STATE $S \leftarrow \mathrm{Junta}(\{[t_k, t_{k+1}), \ell_k\})$ \COMMENT{funde vizinhos de mesmo rótulo}
+    \RETURN $\mathrm{AbsorveCurtos}(S, d_{\min})$ \COMMENT{Algoritmo~\ref{alg:duracao}}
+  \end{algorithmic}
+\end{algorithm}
