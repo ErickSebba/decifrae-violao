@@ -270,5 +270,5 @@ nenhuma classe.
 madmom (root, root rotulado, cobertura e overseg são idênticos nas duas
 camadas — verificado nas 464 linhas de ablação do teste; majmin e sevenths
 são de `chord[0]`). `tab_transferencia_curta.tex`: os 6 contrastes
-principais × 3 corpora, Δ e classe (✓ confirmado, = empate, ~ frágil), das
+principais × 3 corpora, Δ e classe (letras S, R, U, F; ver a legenda), das
 mesmas fontes da `tab_transferencia`.
