@@ -265,8 +265,8 @@ IDMT_GUITAR_FIELDS = MANIFEST_FIELDS + ["guitarra", "velocidade", "estilo",
 # quando há sétima menor ('713' = 7 + 13, '79' = 7 + 9), e os números soltos
 # são notas acrescentadas à tríade maior ('13', '11', '9', '913', '1113').
 # Por isso '13' sozinho é maj(13) (add13 = sexta), e NÃO o 13 dominante do
-# jazz: o próprio dataset distingue '13' de '713', e em 6 das 9 formas com
-# baixo ('E13/Db', 'A13/Gb', 'B13/Ab', ...) o baixo é justamente a 6ª, o que
+# jazz: o próprio dataset distingue '13' de '713', e em 3 das 8 formas com
+# baixo ('E13/Db', 'A13/Gb', 'B13/Ab') o baixo é justamente a 6ª, o que
 # só faz sentido num acorde de sexta. As extensões ficam literais, entre
 # parênteses; o mir_eval ignora graus acima da oitava (9, 11, 13) ao
 # codificar, então maj(13), maj(9), maj(11) contam como 'maj' e 7(9), 7(b9),
