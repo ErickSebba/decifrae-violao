@@ -24,6 +24,12 @@ F e os dois baselines saem dessa linha para isolar outras coisas.
     E0   E com n_logprob=-1e9
     F0   F com n_logprob=-1e9
     C0rg/D0rg/E0rg/F0rg  as mesmas, e também com rel_gate=0
+    --- pós-revisão (docs/ADENDO_REVISAO.md; exigem --post-review) ---
+    Crg/Drg      C/D só com rel_gate=0 (completam o fatorial 2x2x2)
+    Cmatch       C com confidence_gate = THETA_MATCH (cobertura de D)
+    Dmatch       D com n_logprob = BETA_MATCH (cobertura de C)
+    D0rg_cal     D0rg com change_penalty = CP_CAL_MEDIUM
+    F0rg_cal     F0rg com change_penalty = CP_CAL_BASIC
 
 AS FONTES DE N
 --------------
@@ -162,6 +168,14 @@ class Variante:
     vocab: str = "MEDIUM"
 
 
+# Valores pós-revisão, escolhidos SÓ na validação por calibracao_revisao.py e
+# registrados em docs/ADENDO_REVISAO.md antes de qualquer execução no teste.
+THETA_MATCH = 0.65      # confidence_gate de Cmatch
+BETA_MATCH = -2.25      # n_logprob de Dmatch
+CP_CAL_MEDIUM = 1.5     # change_penalty de D0rg_cal
+CP_CAL_BASIC = 1.0      # change_penalty de F0rg_cal
+
+
 def _variantes():
     """A matriz, montada por diferença sobre os defaults de config.py."""
     pre_sem_smooth = replace(PRE_CHROMA, smooth=0)
@@ -199,10 +213,29 @@ def _variantes():
         "F0rg": Variante("F0rg", PRE_CHROMA,
                          replace(com_viterbi, n_logprob=n_proibido, rel_gate=0.0),
                          vocab="BASIC"),
+        # --- pós-revisão (camera-ready), ver docs/ADENDO_REVISAO.md ---
+        # fatorial: só o gate relativo desligado, abstenção própria mantida
+        "Crg": Variante("Crg", PRE_CHROMA, replace(com_bias, rel_gate=0.0)),
+        "Drg": Variante("Drg", PRE_CHROMA, replace(com_viterbi, rel_gate=0.0)),
+        # cobertura igualada, valores escolhidos na validação
+        "Cmatch": Variante("Cmatch", PRE_CHROMA,
+                           replace(com_bias, confidence_gate=THETA_MATCH)),
+        "Dmatch": Variante("Dmatch", PRE_CHROMA,
+                           replace(com_viterbi, n_logprob=BETA_MATCH)),
+        # penalidade de transição calibrada por vocabulário, na validação
+        "D0rg_cal": Variante("D0rg_cal", PRE_CHROMA,
+                             replace(com_viterbi, n_logprob=n_proibido,
+                                     rel_gate=0.0, change_penalty=CP_CAL_MEDIUM)),
+        "F0rg_cal": Variante("F0rg_cal", PRE_CHROMA,
+                             replace(com_viterbi, n_logprob=n_proibido,
+                                     rel_gate=0.0, change_penalty=CP_CAL_BASIC),
+                             vocab="BASIC"),
     }
 
 
 VARIANTES = _variantes()
+VARIANTES_POS_REVISAO = ("Crg", "Drg", "Cmatch", "Dmatch", "D0rg_cal",
+                         "F0rg_cal")
 
 # ==========================================================================
 # Classificadores: um por (complexity_penalty, ext_sharpness, vocabulário)
@@ -687,12 +720,16 @@ def main(argv=None):
     ap.add_argument("--splits", default="val",
                     help="lista separada por vírgula (default: val). "
                          "'test' precisa ser pedido explicitamente.")
-    ap.add_argument("--variants", default=",".join(VARIANTES),
-                    help=f"default: todas ({','.join(VARIANTES)})")
+    originais = [n for n in VARIANTES if n not in VARIANTES_POS_REVISAO]
+    ap.add_argument("--variants", default=",".join(originais),
+                    help=f"default: as pré-revisão ({','.join(originais)})")
     ap.add_argument("--ref-layer", type=int, default=REF_CAMADA,
                     choices=(0, 1),
                     help="camada de acorde do GuitarSet: 0 = lead sheet "
                          "instruído (default), 1 = performed/inferred")
+    ap.add_argument("--post-review", action="store_true",
+                    help="marca o meta.json com post_review=true (análises "
+                         "da revisão do camera-ready)")
     args = ap.parse_args(argv)
 
     splits = {s.strip() for s in args.splits.split(",") if s.strip()}
@@ -702,6 +739,8 @@ def main(argv=None):
     if desconhecidas:
         raise SystemExit(f"variante desconhecida: {desconhecidas} "
                          f"(conhecidas: {list(VARIANTES)})")
+    if any(n in VARIANTES_POS_REVISAO for n in nomes) and not args.post_review:
+        raise SystemExit("variantes pós-revisão exigem --post-review")
 
     protegidos = splits & SPLITS_PROTEGIDOS
     if protegidos and "--splits" not in (argv if argv is not None else sys.argv):
@@ -721,6 +760,8 @@ def main(argv=None):
     resumir(resultados, nomes, args.ref_layer)
     meta = _meta(args.manifest, splits, nomes, args.ref_layer, len(resultados),
                  falhas, segundos)
+    if args.post_review:
+        meta["post_review"] = True
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     csv_path, meta_path = escrever(resultados, meta, timestamp,
                                    sufixo=f"_ref{args.ref_layer}")
