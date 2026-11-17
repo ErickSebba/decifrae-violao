@@ -169,7 +169,10 @@ def transferencia():
                     "delta": round(d, 9), "ic95_min": r["ic95_min"],
                     "ic95_max": r["ic95_max"], "classificacao": r["classificacao"],
                     "p_bootstrap_holm": r["p_bootstrap_holm"],
+                    # Δ = 0 exato (sistemas idênticos na base) não é troca
+                    # de sinal: fica "nulo" e sai da contagem
                     "sinal_igual_gs_teste": ("" if chave == "gs_test" else
+                                             "nulo" if d == 0 else
                                              ("sim" if np.sign(d) == s_ref else "nao")),
                 })
     return linhas, fontes
@@ -234,6 +237,13 @@ def tab_externo(resumo, cob, fontes):
     (ARTIGO / "tabelas" / "tab_externo.tex").write_text(tex, encoding="utf-8")
 
 
+def _delta_tex(d):
+    v = 100 * float(d)
+    if v == 0:
+        return "$0$"
+    return f"${v:+.2f}$" if abs(v) < 0.05 else f"${v:+.1f}$"
+
+
 def tab_transferencia(trans, fontes):
     from figuras_artigo import _tabela, tex_escape, CLASSIF
     abrev = {"confirmado": "conf.", "empate": "emp.", "fragil": "frág."}
@@ -251,20 +261,26 @@ def tab_transferencia(trans, fontes):
             cel = []
             for chave, *_ in BASES:
                 l = ls[chave]
-                cel += [f"${100 * l['delta']:+.1f}$", abrev[l["classificacao"]]]
-            mantem = sum(ls[k]["sinal_igual_gs_teste"] == "sim" for k in ("idmt_g", "idmt_c"))
+                cel += [_delta_tex(l["delta"]), abrev[l["classificacao"]]]
+            sinais = [ls[k]["sinal_igual_gs_teste"] for k in ("idmt_g", "idmt_c")]
+            mantem = sinais.count("sim")
+            validos = len(sinais) - sinais.count("nulo")
             if par != ant and ant is not None:
                 corpo.append("\\addlinespace")
             corpo.append(" & ".join(
                 [(f"\\texttt{{{tex_escape(a)}}}$\\to$\\texttt{{{tex_escape(b)}}}"
                   if par != ant else ""), f"\\texttt{{{tex_escape(m)}}}"]
-                + cel + [f"{mantem}/2"]) + " \\\\")
+                + cel + [f"{mantem}/{validos}"
+                         + ("$^\\dagger$" if validos < len(sinais) else "")])
+                + " \\\\")
             ant = par
     cap = ("Os 15 contrastes pré-registrados no \\emph{test} do GuitarSet "
            "(\\texttt{chord[0]}) e nas duas bases externas. $\\Delta$ em pontos "
            "percentuais; classe pelo critério do congelamento (IC 95\\% do bootstrap "
            "pareado por faixa e Holm sobre 15). \\emph{Sinal}: em quantas das duas "
-           "bases externas o sinal de $\\Delta$ é o mesmo do GuitarSet. "
+           "bases externas o sinal de $\\Delta$ é o mesmo do GuitarSet; "
+           "$^\\dagger$: $\\Delta = 0$ exato no IDMT-SMT-Chords (\\texttt{D} e "
+           "\\texttt{E} produzem a mesma saída lá), fora da contagem. "
            "O IDMT-SMT-Chords tem 6 faixas. Análise pós-revisão.")
     tex = _tabela("table*", "ll" + "rl" * len(BASES) + "c", corpo, cap,
                   "tab:transferencia",
@@ -273,6 +289,9 @@ def tab_transferencia(trans, fontes):
     tex = tex.replace("% gerado por figuras_artigo.py",
                       "% gerado por analise_externo.py", 1)
     (ARTIGO / "tabelas" / "tab_transferencia.tex").write_text(tex, encoding="utf-8")
+
+
+X_MIN = -45.0   # eixo cortado; valores abaixo são anotados na borda
 
 
 def fig_transferencia(trans):
@@ -293,14 +312,25 @@ def fig_transferencia(trans):
                  and x["metrica"] == m][0]
             d, lo, hi = (100 * float(l[k]) for k in ("delta", "ic95_min", "ic95_max"))
             y = len(chaves) - 1 - i + dy
-            ax.plot([lo, hi], [y, y], color=cor, lw=0.8)
+            if d < X_MIN:
+                # fora da escala: seta na borda com o valor (e o IC) escrito
+                ax.annotate("", xy=(X_MIN, y), xytext=(X_MIN + 4, y),
+                            arrowprops=dict(arrowstyle="->", color=cor, lw=0.8))
+                ax.text(X_MIN + 4.5, y, f"{d:.1f} [{lo:.1f}; {hi:.1f}]",
+                        color=cor, fontsize=5.5, va="center")
+                ax.plot([], [], mk, color=cor, ms=3,
+                        label=rotulo if i == 0 else None)
+                continue
+            ax.plot([max(lo, X_MIN), hi], [y, y], color=cor, lw=0.8)
             ax.plot(d, y, mk, color=cor, ms=3,
                     label=rotulo if i == 0 else None)
     ax.axvline(0, color="0.3", lw=0.6)
+    ax.set_xlim(X_MIN, None)
     ax.set_yticks(range(len(chaves)))
     ax.set_yticklabels(rot[::-1])
     ax.set_xlabel("Δ = b − a (pontos percentuais), IC 95 %")
-    ax.legend(loc="lower right", frameon=False)
+    ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=2,
+              frameon=False, fontsize=6, handletextpad=0.2, columnspacing=0.8)
     ax.grid(axis="y", visible=False)
     base = ARTIGO / "figuras" / "fig_transferencia"
     for ext, kw in (("pdf", {}), ("png", {"dpi": 200})):
