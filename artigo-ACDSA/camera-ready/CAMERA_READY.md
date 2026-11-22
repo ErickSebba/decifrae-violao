@@ -40,6 +40,7 @@ aceito" indica que o trecho exato precisa ser encontrado no PDF.
 | `REVISOES.md` | texto integral das revisões, com os IDs R2.1–R2.6 e R4 |
 | `RESPOSTA_REVISORES.md` | tabela curta em inglês para a carta de resposta |
 | `figuras/` | figuras propostas (pdf + png) |
+| `figuras_todas/` | todas as 13 figuras utilizáveis, conferidas contra os dados atuais, com índice em `LEIAME.md` |
 | `tabelas/` | tabelas e algoritmos propostos (.tex) |
 | `detalhes/` | especificação, baselines, adendo (protocolos), congelamento, metodologia e resultados completos, splits |
 | `dados/` | CSVs resumidos citados aqui, cada um com seu `_meta.json` (commit, seeds, configuração) |

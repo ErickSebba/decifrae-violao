@@ -1,0 +1,13 @@
+contraste,metrica,corpus,delta_pp,ic95_min_pp,ic95_max_pp,classificacao,sinal_igual_gs_teste,desenho,fora_da_escala,csv_origem
+C→D root,root,GuitarSet_test,7.876,5.2605,10.4844,confirmado,,ponto,nao,data/results/transferencia_20261117_122651.csv
+C→D root,root,IDMT-SMT-Guitar,1.3771,-0.6766,3.5491,empate,sim,ponto,nao,data/results/transferencia_20261117_122651.csv
+C0rg→D0rg majmin,majmin,GuitarSet_test,3.9302,1.9462,6.0227,confirmado,,ponto,nao,data/results/transferencia_20261117_122651.csv
+C0rg→D0rg majmin,majmin,IDMT-SMT-Guitar,1.2627,0.3042,2.2229,fragil,sim,ponto,nao,data/results/transferencia_20261117_122651.csv
+D→E overseg,overseg,GuitarSet_test,9.5384,7.8046,11.3267,confirmado,,ponto,nao,data/results/transferencia_20261117_122651.csv
+D→E overseg,overseg,IDMT-SMT-Guitar,6.7582,6.0992,7.4581,confirmado,sim,ponto,nao,data/results/transferencia_20261117_122651.csv
+V4b→V4 overseg,overseg,GuitarSet_test,17.3594,14.2883,20.5693,confirmado,,ponto,nao,data/results/transferencia_20261117_122651.csv
+V4b→V4 overseg,overseg,IDMT-SMT-Guitar,12.4086,11.4263,13.408,confirmado,sim,ponto,nao,data/results/transferencia_20261117_122651.csv
+V4→F0rg majmin,majmin,GuitarSet_test,3.8053,1.1103,6.5778,confirmado,,ponto,nao,data/results/transferencia_20261117_122651.csv
+V4→F0rg majmin,majmin,IDMT-SMT-Guitar,0.2041,-0.9213,1.346,empate,sim,ponto,nao,data/results/transferencia_20261117_122651.csv
+D0rg→F0rg 7ths,sevenths,GuitarSet_test,12.5557,9.4811,15.8029,confirmado,,ponto,nao,data/results/transferencia_20261117_122651.csv
+D0rg→F0rg 7ths,sevenths,IDMT-SMT-Guitar,1.1024,-1.1475,3.3633,empate,sim,ponto,nao,data/results/transferencia_20261117_122651.csv
