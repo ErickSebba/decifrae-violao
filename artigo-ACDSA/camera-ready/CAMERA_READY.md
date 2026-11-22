@@ -402,7 +402,7 @@ definidas.
 > +7.88 pp, whereas without it Viterbi adds +2.84 pp (+2.72 pp, [1.01, 4.59],
 > in the pre-registered C0rg→D0rg contrast). The relative gate changes root by
 > less than 0.5 pp on average. Comparing both decoders along their coverage
-> curves on the test set (Fig. [fig_cobertura_teste]), labeled-time accuracy
+> curves on the test set (Fig. [fig_cobertura_igualada]), labeled-time accuracy
 > is unresolved at 60%, 70% and 77% coverage and higher for Viterbi at 90%
 > (+2.90 pp, [0.74, 5.23]). C→D is therefore a configuration-level contrast in
 > which coverage dominates; the decoder's own contribution is resolved only
@@ -411,9 +411,10 @@ definidas.
 > run, and are not corrected for multiple comparisons.
 
 **Figura/tabela sugerida.**
-- `fig_cobertura_teste.pdf` — **essencial** (mostra que as curvas se cruzam e
-  só se separam acima de ~80 % de cobertura). Rótulos de eixo em português:
-  precisa de versão em inglês.
+- `fig_cobertura_igualada.pdf` — **essencial** (os quatro Δ com IC; só o de
+  90 % exclui zero). Já está em inglês e no estilo comum (§6.1).
+  `fig_cobertura_teste.pdf` (as curvas inteiras, rótulos em português) passa
+  ao suplementar.
 - `tab_fatorial.tex` — **essencial em forma compacta**: o arquivo atual é
   `table*` (duas colunas) com val e teste; para o artigo basta o bloco de
   teste, ou só as linhas de efeitos. PENDENTE: versão compacta em inglês.
@@ -1353,14 +1354,15 @@ no formato IEEE de duas colunas.
 | `tab_decomposicao` (2 col.) **ou** só os números no texto | IV-A | 0,25 pág. como tabela |
 | `tab_vocabulario` (1 col.) | IV (vocabulário) | 0,2 pág. |
 | `tab_transferencia_curta` (1 col.) | IV-D | 0,2 pág. |
-| `fig_cobertura_teste` (1 col.) | IV-A | 0,3 pág.; pode substituir a figura de cobertura do aceito |
+| `fig_cobertura_igualada` (1 col.) | IV-A | 0,25 pág.; pode substituir a figura de cobertura do aceito |
 | `alg_duracao` (1 col.) | II | 0,15 pág. |
 | texto dos fatoriais, executantes e mecanismo do N | IV-A, IV-D, V | só números no texto, sem tabela |
 
 Ficam fora (material suplementar ou repositório): `tab_fatorial`,
 `tab_executantes`, `tab_externo`, `tab_transferencia`,
 `tab_cobertura_igualada`, `tab_baselines`, `alg_pipeline`,
-`fig_transferencia`, `fig_diagnostico_n`, `fig_transicao`.
+`fig_transferencia`, `fig_transferencia_corpora`, `fig_executantes`,
+`fig_cobertura_teste`, `fig_diagnostico_n`, `fig_transicao`.
 
 **Versão de 7 páginas**
 
@@ -1369,18 +1371,81 @@ Tudo da versão de 6, mais:
 | entra | por quê |
 |---|---|
 | versão compacta de `tab_fatorial` (1 col., só teste) | é a resposta mais direta a R2.3 |
-| `fig_transferencia` (1 col.) | mostra as 15 diferenças nos três corpora com IC; responde a R4 visualmente |
+| `fig_transferencia_corpora` (1 col.) | os 6 contrastes principais no GuitarSet e no IDMT-SMT-Guitar com IC; responde a R4 visualmente |
+| `fig_executantes` (1 col., opcional) | Δ por executante nos três contrastes principais; responde a R2.1 |
 | `tab_baselines` (1 col.) | documenta V4/V4b (R2.6) sem depender do texto |
 | `alg_pipeline` (1 col.) | pseudocódigo completo pedido em R2.2 |
 
 Na versão de 7, `tab_decomposicao` entra como tabela, não só no texto.
-`tab_executantes`, `tab_externo`, `fig_diagnostico_n` e `fig_transicao`
-continuam fora: vão para o material suplementar.
+`tab_executantes`, `tab_externo`, `fig_transferencia`, `fig_cobertura_teste`,
+`fig_diagnostico_n` e `fig_transicao` continuam fora: vão para o material
+suplementar.
 
 ## 6. Figuras e tabelas propostas (com legenda sugerida)
 
 As tabelas estão hoje com cabeçalhos em português, porque foram geradas
 pelos scripts do projeto. A versão em inglês ainda não existe (ver §7).
+
+### 6.1 Figuras novas no estilo comum (prontas, em inglês)
+
+Geradas por `artigo-ACDSA/gerar_fig_*.py` com `artigo-ACDSA/estilo_figuras.py`:
+3,5 × 2,2 pol (uma coluna), Times 8 pt, legíveis em preto e branco, sem título
+interno. Cada figura tem PDF vetorial, PNG 300 dpi e um `_dados.csv` com
+exatamente os números desenhados e o CSV de origem de cada um.
+
+**`figuras/fig_cobertura_igualada.pdf`** — responde a **R2.3** (e apoia R2.4).
+Versão de 6 páginas: **essencial** (substitui `fig_cobertura_teste`, que vai
+para o suplementar). Versão de 7: **essencial**.
+
+![fig_cobertura_igualada](figuras/fig_cobertura_igualada.png)
+
+> Fig. X. Difference in labeled-time root accuracy between Viterbi and
+> independent decoding (D − C) at matched coverage on the GuitarSet test
+> split. Error bars show 95% bootstrap confidence intervals over tracks. Only
+> at 90% coverage does the interval exclude zero (+2.90 pp, 95% CI [0.74,
+> 5.23]).
+
+Valores (`figuras/fig_cobertura_igualada_dados.csv`, origem
+`dados/cobertura_igualada_teste_20261117_011711.csv`): 60 % −1,87 [−6,54;
+3,11]; 70 % −0,13 [−3,22; 3,48]; 77 % +0,91 [−1,71; 4,30]; 90 % +2,90 [0,74;
+5,23]. IC: bootstrap pareado por faixa (10 000 reamostragens, seed 0, 58
+faixas), com as curvas C e D reagregadas e reinterpoladas linearmente no alvo
+de cobertura em cada reamostragem; percentis 2,5/97,5.
+
+**`figuras/fig_executantes.pdf`** — responde a **R2.1**. Versão de 6 páginas:
+fora (suplementar; os números vão no texto de R2.1). Versão de 7:
+**opcional**.
+
+![fig_executantes](figuras/fig_executantes.png)
+
+> Fig. X. Per-performer differences for three main contrasts on the chord[0]
+> layer: (a) C→D root, (b) D→E over-segmentation, (c) D0rg→F0rg sevenths.
+> Open markers: development performers (00–03); filled markers: test
+> performers (04–05). Error bars show 95% bootstrap confidence intervals
+> within each performer; all 18 intervals exclude zero.
+
+Origem: `dados/por_executante_20261117_004132.csv`. Os IC de (b) e (c) estão
+no CSV mas não em nenhuma tabela (`tab_executantes` traz IC só para `root`).
+
+**`figuras/fig_transferencia_corpora.pdf`** — responde a **R4**. Versão de 6
+páginas: fora (a `tab_transferencia_curta` cobre o mesmo conteúdo). Versão de
+7: **opcional**, no lugar de `fig_transferencia` (15 contrastes), que vai para
+o suplementar.
+
+![fig_transferencia_corpora](figuras/fig_transferencia_corpora.png)
+
+> Fig. X. Main contrasts on GuitarSet (test) and IDMT-SMT-Guitar, using
+> configurations frozen on GuitarSet without recalibration. Error bars show
+> 95% confidence intervals. IDMT-SMT-Chords (6 tracks) is omitted from the
+> axis; its values, including −67.9 pp for C→D root and −30.9 pp for
+> D0rg→F0rg sevenths, are given in Table X.
+
+Origem: `dados/transferencia_20261117_122651.csv`. O IDMT-SMT-Chords ficou
+fora do eixo (opção b). Com triângulos na borda, a figura ficava com 18
+linhas em 2,2 pol, a legenda colidia com os dados, e dois dos seis valores (0
+e +0,01 p.p.) nem estão fora da escala.
+
+### 6.2 Lista completa (figuras e tabelas)
 
 | arquivo | prioridade | legenda sugerida (inglês) |
 |---|---|---|
@@ -1388,10 +1453,13 @@ pelos scripts do projeto. A versão em inglês ainda não existe (ver §7).
 | `tabelas/tab_decomposicao.tex` | essencial (6 p.: no texto) | Exact decomposition of the C→D root difference on the test set into time labeled by both systems, by one only, or by neither; the note reports D0rg accuracy inside and outside the common mask as a selection-bias check. Post-hoc analysis. |
 | `tabelas/tab_vocabulario.tex` | essencial | Share of reference time representable by the 24- and 60-chord vocabularies, and seventh-chord precision and recall of D0rg; F0rg emits no sevenths, so its seventh recall is zero by construction. |
 | `tabelas/tab_transferencia_curta.tex` | essencial | Six main contrasts on GuitarSet test and on two external corpora, with configurations frozen on GuitarSet. S: supported with the GuitarSet sign; R: supported with reversed sign; U: 95% CI includes zero; F: CI excludes zero but not supported after Holm correction. |
-| `figuras/fig_cobertura_teste.pdf` | essencial | Test-set root accuracy versus coverage for per-beat arg-max (C, sweeping the confidence threshold) and Viterbi (D, sweeping the N log-probability); top: labeled time only, bottom: whole track. Dotted lines mark the 60, 70, 77 and 90% coverage targets. |
+| `figuras/fig_cobertura_igualada.pdf` | essencial | Ver §6.1. |
+| `figuras/fig_cobertura_teste.pdf` | suplementar | Test-set root accuracy versus coverage for per-beat arg-max (C, sweeping the confidence threshold) and Viterbi (D, sweeping the N log-probability); top: labeled time only, bottom: whole track. Dotted lines mark the 60, 70, 77 and 90% coverage targets. |
 | `tabelas/alg_duracao.tex` | essencial | Minimum-duration filter: the shortest segment of the track is repeatedly relabeled with its longer neighbor (left on ties; the only neighbor at track edges) and merged, until every segment lasts at least d_min or one segment remains. |
 | `tabelas/tab_fatorial.tex` | 7 p. (versão compacta) | 2×2×2 factorial (decoder × decoder-specific abstention × relative silence gate) on the test set, chord[0]: cell means and main and interaction effects with paired-bootstrap 95% CIs; post-specified, no multiplicity correction. |
-| `figuras/fig_transferencia.pdf` | 7 p. | Differences for the 15 pre-registered contrasts on GuitarSet test, IDMT-SMT-Guitar and IDMT-SMT-Chords, with 95% paired-bootstrap intervals; configurations frozen on GuitarSet. |
+| `figuras/fig_transferencia_corpora.pdf` | 7 p. (opcional) | Ver §6.1. |
+| `figuras/fig_executantes.pdf` | 7 p. (opcional) | Ver §6.1. |
+| `figuras/fig_transferencia.pdf` | suplementar | Differences for the 15 pre-registered contrasts on GuitarSet test, IDMT-SMT-Guitar and IDMT-SMT-Chords, with 95% paired-bootstrap intervals; configurations frozen on GuitarSet. |
 | `tabelas/tab_baselines.tex` | 7 p. | Legacy baselines V4 and V4b compared with variants C–F: shared front end, and differences in smoothing, scoring, vocabulary, no-chord handling and temporal model. |
 | `tabelas/alg_pipeline.tex` | 7 p. | Per-track chord recognition: beat-synchronous median chroma, cosine scores against L2-normalized binary templates with a pro-triad penalty, and either thresholded arg-max (C) or Viterbi decoding with an N state (D–F). |
 | `tabelas/tab_executantes.tex` | suplementar | Per-performer contrasts on GuitarSet (chord[0]): Δ = b − a in pp with 95% CIs from a bootstrap that resamples tracks within each performer. Performers 00–03 were used for development; 04–05 form the test set. |

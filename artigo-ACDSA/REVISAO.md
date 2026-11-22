@@ -93,3 +93,19 @@ Antes da montagem, também foram corrigidas fontes do repositório:
 RESULTADOS R2.3 passou a usar a curva D refinada
 (`cobertura_igualada_teste_20261117_011711.csv`), e METODOLOGIA §8 passou a
 remeter à §9 sobre o IDMT-SMT-Chords.
+
+## Revisão das figuras no estilo comum (2026-11-21)
+
+Uma passada por sub-agente novo sobre `fig_cobertura_igualada`,
+`fig_executantes` e `fig_transferencia_corpora`. Os números dos três
+`_dados.csv` bateram com a origem em todas as 34 linhas; o tamanho (3,5 × 2,2
+pol), a fonte embutida (Times, TrueType) e a legibilidade em P&B também
+estavam conformes. Ajustes feitos:
+
+1. `fig_executantes`: rótulos dos eixos voltaram a 8 pt (estavam em 7 pt).
+2. Nome do contraste unificado como "D0rg→F0rg 7ths" nas duas figuras
+   ("sevenths" não cabia no painel (c) em 8 pt).
+3. Texto do método do IC em `fig_cobertura_igualada_dados.csv` explicita os
+   pesos (duração da faixa × multiplicidade na reamostragem).
+4. O preenchimento dos marcadores na `fig_executantes` (cheio = teste) é
+   explicado na legenda do LaTeX, não dentro da figura.
