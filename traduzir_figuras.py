@@ -44,7 +44,7 @@ EN = {
     "F (Viterbi BASIC, n_logprob)": "F (Viterbi, 24 chords, n_logprob)",
     "C→D root_rotulado": "C→D labeled root",
     "GuitarSet teste": "GuitarSet test",
-    "N por dúvida": "N by low confidence",
+    "N por dúvida": "N when unsure",
     "N por silêncio": "N by silence",
     "RMS por segmento": "RMS per segment",
     "absorção de curtos\n(min_dur)": "short-segment absorption\n(min_dur)",
@@ -125,7 +125,11 @@ def savefig_en(self, fname, *args, **kwargs):
             textos = [r.get_text() for r in rotulos]
             novos = [traduz(t) or "" for t in textos]
             if novos != textos:
+                # set_ticks pode alargar o eixo para ticks fora do intervalo:
+                # os limites originais são restaurados
+                lim = ax.get_xlim() if eixo == "x" else ax.get_ylim()
                 set_ticks(get_ticks(), novos)
+                (ax.set_xlim if eixo == "x" else ax.set_ylim)(lim)
     for t in self.findobj(Text):
         s = t.get_text()
         if not s or not s.strip():
