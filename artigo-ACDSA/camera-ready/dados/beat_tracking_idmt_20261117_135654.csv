@@ -1,0 +1,507 @@
+track_id,guitarra,andamento_nominal,andamento_estimado,razao,classe
+acoustic_mic_fast_classical_1_80BPM,acoustic_mic,80.0,80.75,1.0094,~1
+acoustic_mic_fast_classical_2_60BPM,acoustic_mic,60.0,60.093,1.0015,~1
+acoustic_mic_fast_classical_3_60BPM,acoustic_mic,60.0,60.093,1.0015,~1
+acoustic_mic_fast_classical_4_80BPM,acoustic_mic,80.0,80.75,1.0094,~1
+acoustic_mic_fast_classical_5_100BPM,acoustic_mic,100.0,198.768,1.9877,~2
+acoustic_mic_fast_classical_6_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_fast_classical_7_60BPM,acoustic_mic,60.0,117.454,1.9576,~2
+acoustic_mic_fast_classical_8_120BPM,acoustic_mic,120.0,120.185,1.0015,~1
+acoustic_mic_fast_country_1_150BPM,acoustic_mic,150.0,151.999,1.0133,~1
+acoustic_mic_fast_country_2_150BPM,acoustic_mic,150.0,73.828,0.4922,"~0,5"
+acoustic_mic_fast_country_3_120BPM,acoustic_mic,120.0,117.454,0.9788,~1
+acoustic_mic_fast_country_4_100BPM,acoustic_mic,100.0,129.199,1.292,outro
+acoustic_mic_fast_country_5_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_fast_folk_1_110BPM,acoustic_mic,110.0,112.347,1.0213,~1
+acoustic_mic_fast_folk_2_100BPM,acoustic_mic,100.0,49.692,0.4969,"~0,5"
+acoustic_mic_fast_folk_3_180BPM,acoustic_mic,180.0,89.103,0.495,"~0,5"
+acoustic_mic_fast_jazz_1_180BPM,acoustic_mic,180.0,117.454,0.6525,outro
+acoustic_mic_fast_jazz_2_200BPM,acoustic_mic,200.0,151.999,0.76,outro
+acoustic_mic_fast_jazz_3_140BPM,acoustic_mic,140.0,69.837,0.4988,"~0,5"
+acoustic_mic_fast_jazz_4_88BPM,acoustic_mic,88.0,89.103,1.0125,~1
+acoustic_mic_fast_jazz_5_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_fast_jazz_6_180BPM,acoustic_mic,180.0,172.266,0.957,~1
+acoustic_mic_fast_jazz_7_180BPM,acoustic_mic,180.0,107.666,0.5981,outro
+acoustic_mic_fast_jazz_8_120BPM,acoustic_mic,120.0,123.047,1.0254,~1
+acoustic_mic_fast_latin_1_200BPM,acoustic_mic,200.0,107.666,0.5383,"~0,5"
+acoustic_mic_fast_latin_2_120BPM,acoustic_mic,120.0,117.454,0.9788,~1
+acoustic_mic_fast_latin_3_120BPM,acoustic_mic,120.0,117.454,0.9788,~1
+acoustic_mic_fast_latin_4_150BPM,acoustic_mic,150.0,143.555,0.957,~1
+acoustic_mic_fast_latin_5_180BPM,acoustic_mic,180.0,135.999,0.7556,outro
+acoustic_mic_fast_latin_6_140BPM,acoustic_mic,140.0,135.999,0.9714,~1
+acoustic_mic_fast_latin_7_150BPM,acoustic_mic,150.0,99.384,0.6626,outro
+acoustic_mic_fast_latin_8_180BPM,acoustic_mic,180.0,123.047,0.6836,outro
+acoustic_mic_fast_metal_1_180BPM,acoustic_mic,180.0,90.666,0.5037,"~0,5"
+acoustic_mic_fast_metal_2_180BPM,acoustic_mic,180.0,184.57,1.0254,~1
+acoustic_mic_fast_metal_3_135BPM,acoustic_mic,135.0,92.285,0.6836,outro
+acoustic_mic_fast_metal_4_180BPM,acoustic_mic,180.0,89.103,0.495,"~0,5"
+acoustic_mic_fast_metal_5_180BPM,acoustic_mic,180.0,184.57,1.0254,~1
+acoustic_mic_fast_metal_6_130BPM,acoustic_mic,130.0,129.199,0.9938,~1
+acoustic_mic_fast_metal_7_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_fast_metal_8_125BPM,acoustic_mic,125.0,123.047,0.9844,~1
+acoustic_mic_fast_pop_1_160BPM,acoustic_mic,160.0,161.499,1.0094,~1
+acoustic_mic_fast_pop_2_140BPM,acoustic_mic,140.0,135.999,0.9714,~1
+acoustic_mic_fast_pop_3_150BPM,acoustic_mic,150.0,151.999,1.0133,~1
+acoustic_mic_fast_pop_4_120BPM,acoustic_mic,120.0,117.454,0.9788,~1
+acoustic_mic_fast_pop_5_90BPM,acoustic_mic,90.0,117.454,1.305,outro
+acoustic_mic_fast_pop_6_110BPM,acoustic_mic,110.0,112.347,1.0213,~1
+acoustic_mic_fast_pop_7_70BPM,acoustic_mic,70.0,69.837,0.9977,~1
+acoustic_mic_fast_pop_8_100BPM,acoustic_mic,100.0,135.999,1.36,outro
+acoustic_mic_fast_reggae_1_120BPM,acoustic_mic,120.0,60.093,0.5008,"~0,5"
+acoustic_mic_fast_reggae_2_120BPM,acoustic_mic,120.0,60.093,0.5008,"~0,5"
+acoustic_mic_fast_reggae_3_120BPM,acoustic_mic,120.0,60.093,0.5008,"~0,5"
+acoustic_mic_fast_reggae_4_120BPM,acoustic_mic,120.0,117.454,0.9788,~1
+acoustic_mic_fast_ska_1_180BPM,acoustic_mic,180.0,89.103,0.495,"~0,5"
+acoustic_mic_fast_ska_2_180BPM,acoustic_mic,180.0,184.57,1.0254,~1
+acoustic_mic_fast_ska_3_180BPM,acoustic_mic,180.0,184.57,1.0254,~1
+acoustic_mic_fast_ska_4_180BPM,acoustic_mic,180.0,184.57,1.0254,~1
+acoustic_mic_fast_rock_1_120BPM,acoustic_mic,120.0,123.047,1.0254,~1
+acoustic_mic_fast_rock_2_115BPM,acoustic_mic,115.0,112.347,0.9769,~1
+acoustic_mic_fast_rock_3_115BPM,acoustic_mic,115.0,112.347,0.9769,~1
+acoustic_mic_fast_rock_4_125BPM,acoustic_mic,125.0,123.047,0.9844,~1
+acoustic_mic_fast_rock_5_120BPM,acoustic_mic,120.0,117.454,0.9788,~1
+acoustic_mic_fast_rock_6_120BPM,acoustic_mic,120.0,123.047,1.0254,~1
+acoustic_mic_fast_rock_7_120BPM,acoustic_mic,120.0,123.047,1.0254,~1
+acoustic_mic_fast_rock_8_120BPM,acoustic_mic,120.0,117.454,0.9788,~1
+acoustic_mic_slow_classical_1_60BPM,acoustic_mic,60.0,117.454,1.9576,~2
+acoustic_mic_slow_classical_2_50BPM,acoustic_mic,50.0,151.999,3.04,outro
+acoustic_mic_slow_classical_3_50BPM,acoustic_mic,50.0,99.384,1.9877,~2
+acoustic_mic_slow_classical_4_60BPM,acoustic_mic,60.0,117.454,1.9576,~2
+acoustic_mic_slow_classical_5_70BPM,acoustic_mic,70.0,143.555,2.0508,~2
+acoustic_mic_slow_classical_6_75BPM,acoustic_mic,75.0,76.0,1.0133,~1
+acoustic_mic_slow_classical_7_50BPM,acoustic_mic,50.0,99.384,1.9877,~2
+acoustic_mic_slow_classical_8_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_slow_country_1_110BPM,acoustic_mic,110.0,54.978,0.4998,"~0,5"
+acoustic_mic_slow_country_2_110BPM,acoustic_mic,110.0,54.978,0.4998,"~0,5"
+acoustic_mic_slow_country_3_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_slow_country_4_80BPM,acoustic_mic,80.0,103.359,1.292,outro
+acoustic_mic_slow_country_5_80BPM,acoustic_mic,80.0,107.666,1.3458,outro
+acoustic_mic_slow_folk_1_80BPM,acoustic_mic,80.0,78.303,0.9788,~1
+acoustic_mic_slow_folk_2_75BPM,acoustic_mic,75.0,99.384,1.3251,outro
+acoustic_mic_slow_folk_3_130BPM,acoustic_mic,130.0,129.199,0.9938,~1
+acoustic_mic_slow_jazz_1_160BPM,acoustic_mic,160.0,99.384,0.6212,outro
+acoustic_mic_slow_jazz_2_170BPM,acoustic_mic,170.0,129.199,0.76,outro
+acoustic_mic_slow_jazz_3_120BPM,acoustic_mic,120.0,73.828,0.6152,outro
+acoustic_mic_slow_jazz_4_70BPM,acoustic_mic,70.0,143.555,2.0508,~2
+acoustic_mic_slow_jazz_5_80BPM,acoustic_mic,80.0,80.75,1.0094,~1
+acoustic_mic_slow_jazz_6_150BPM,acoustic_mic,150.0,151.999,1.0133,~1
+acoustic_mic_slow_jazz_7_140BPM,acoustic_mic,140.0,107.666,0.769,outro
+acoustic_mic_slow_jazz_8_110BPM,acoustic_mic,110.0,112.347,1.0213,~1
+acoustic_mic_slow_latin_1_160BPM,acoustic_mic,160.0,161.499,1.0094,~1
+acoustic_mic_slow_latin_2_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_slow_latin_3_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_slow_latin_4_130BPM,acoustic_mic,130.0,129.199,0.9938,~1
+acoustic_mic_slow_latin_5_140BPM,acoustic_mic,140.0,143.555,1.0254,~1
+acoustic_mic_slow_latin_6_120BPM,acoustic_mic,120.0,123.047,1.0254,~1
+acoustic_mic_slow_latin_7_130BPM,acoustic_mic,130.0,92.285,0.7099,outro
+acoustic_mic_slow_latin_8_160BPM,acoustic_mic,160.0,105.469,0.6592,outro
+acoustic_mic_slow_metal_1_160BPM,acoustic_mic,160.0,78.303,0.4894,"~0,5"
+acoustic_mic_slow_metal_2_150BPM,acoustic_mic,150.0,151.999,1.0133,~1
+acoustic_mic_slow_metal_3_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_slow_metal_4_130BPM,acoustic_mic,130.0,129.199,0.9938,~1
+acoustic_mic_slow_metal_5_150BPM,acoustic_mic,150.0,151.999,1.0133,~1
+acoustic_mic_slow_metal_6_110BPM,acoustic_mic,110.0,107.666,0.9788,~1
+acoustic_mic_slow_metal_7_75BPM,acoustic_mic,75.0,151.999,2.0267,~2
+acoustic_mic_slow_metal_8_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_slow_pop_1_130BPM,acoustic_mic,130.0,129.199,0.9938,~1
+acoustic_mic_slow_pop_2_120BPM,acoustic_mic,120.0,117.454,0.9788,~1
+acoustic_mic_slow_pop_3_130BPM,acoustic_mic,130.0,129.199,0.9938,~1
+acoustic_mic_slow_pop_4_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_slow_pop_5_78BPM,acoustic_mic,78.0,103.359,1.3251,outro
+acoustic_mic_slow_pop_6_90BPM,acoustic_mic,90.0,89.103,0.99,~1
+acoustic_mic_slow_pop_7_60BPM,acoustic_mic,60.0,60.093,1.0015,~1
+acoustic_mic_slow_pop_8_85BPM,acoustic_mic,85.0,112.347,1.3217,outro
+acoustic_mic_slow_reggae_1_95BPM,acoustic_mic,95.0,47.852,0.5037,"~0,5"
+acoustic_mic_slow_reggae_2_100BPM,acoustic_mic,100.0,49.692,0.4969,"~0,5"
+acoustic_mic_slow_reggae_3_100BPM,acoustic_mic,100.0,151.999,1.52,outro
+acoustic_mic_slow_reggae_4_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_slow_ska_1_150BPM,acoustic_mic,150.0,151.999,1.0133,~1
+acoustic_mic_slow_ska_2_150BPM,acoustic_mic,150.0,151.999,1.0133,~1
+acoustic_mic_slow_ska_3_150BPM,acoustic_mic,150.0,151.999,1.0133,~1
+acoustic_mic_slow_ska_4_150BPM,acoustic_mic,150.0,151.999,1.0133,~1
+acoustic_mic_slow_rock_1_100BPM,acoustic_mic,100.0,198.768,1.9877,~2
+acoustic_mic_slow_rock_2_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_slow_rock_3_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_slow_rock_4_110BPM,acoustic_mic,110.0,112.347,1.0213,~1
+acoustic_mic_slow_rock_5_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_slow_rock_6_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_slow_rock_7_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_mic_slow_rock_8_100BPM,acoustic_mic,100.0,99.384,0.9938,~1
+acoustic_pickup_fast_classical_1_80BPM,acoustic_pickup,80.0,161.499,2.0187,~2
+acoustic_pickup_fast_classical_2_60BPM,acoustic_pickup,60.0,60.093,1.0015,~1
+acoustic_pickup_fast_classical_3_60BPM,acoustic_pickup,60.0,80.75,1.3458,outro
+acoustic_pickup_fast_classical_4_80BPM,acoustic_pickup,80.0,161.499,2.0187,~2
+acoustic_pickup_fast_classical_5_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_fast_classical_6_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_fast_classical_7_60BPM,acoustic_pickup,60.0,117.454,1.9576,~2
+acoustic_pickup_fast_classical_8_120BPM,acoustic_pickup,120.0,117.454,0.9788,~1
+acoustic_pickup_fast_country_1_150BPM,acoustic_pickup,150.0,76.0,0.5067,"~0,5"
+acoustic_pickup_fast_country_2_150BPM,acoustic_pickup,150.0,76.0,0.5067,"~0,5"
+acoustic_pickup_fast_country_3_120BPM,acoustic_pickup,120.0,117.454,0.9788,~1
+acoustic_pickup_fast_country_4_100BPM,acoustic_pickup,100.0,129.199,1.292,outro
+acoustic_pickup_fast_country_5_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_fast_folk_1_110BPM,acoustic_pickup,110.0,112.347,1.0213,~1
+acoustic_pickup_fast_folk_2_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_fast_folk_3_180BPM,acoustic_pickup,180.0,172.266,0.957,~1
+acoustic_pickup_fast_jazz_1_180BPM,acoustic_pickup,180.0,112.347,0.6242,outro
+acoustic_pickup_fast_jazz_2_200BPM,acoustic_pickup,200.0,143.555,0.7178,outro
+acoustic_pickup_fast_jazz_3_140BPM,acoustic_pickup,140.0,68.0,0.4857,"~0,5"
+acoustic_pickup_fast_jazz_4_88BPM,acoustic_pickup,88.0,89.103,1.0125,~1
+acoustic_pickup_fast_jazz_5_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_fast_jazz_6_180BPM,acoustic_pickup,180.0,172.266,0.957,~1
+acoustic_pickup_fast_jazz_7_180BPM,acoustic_pickup,180.0,89.103,0.495,"~0,5"
+acoustic_pickup_fast_jazz_8_120BPM,acoustic_pickup,120.0,117.454,0.9788,~1
+acoustic_pickup_fast_latin_1_200BPM,acoustic_pickup,200.0,99.384,0.4969,"~0,5"
+acoustic_pickup_fast_latin_2_120BPM,acoustic_pickup,120.0,120.185,1.0015,~1
+acoustic_pickup_fast_latin_3_120BPM,acoustic_pickup,120.0,120.185,1.0015,~1
+acoustic_pickup_fast_latin_4_150BPM,acoustic_pickup,150.0,151.999,1.0133,~1
+acoustic_pickup_fast_latin_5_180BPM,acoustic_pickup,180.0,184.57,1.0254,~1
+acoustic_pickup_fast_latin_6_140BPM,acoustic_pickup,140.0,143.555,1.0254,~1
+acoustic_pickup_fast_latin_7_150BPM,acoustic_pickup,150.0,99.384,0.6626,outro
+acoustic_pickup_fast_latin_8_180BPM,acoustic_pickup,180.0,89.103,0.495,"~0,5"
+acoustic_pickup_fast_metal_1_180BPM,acoustic_pickup,180.0,89.103,0.495,"~0,5"
+acoustic_pickup_fast_metal_2_180BPM,acoustic_pickup,180.0,184.57,1.0254,~1
+acoustic_pickup_fast_metal_3_135BPM,acoustic_pickup,135.0,89.103,0.66,outro
+acoustic_pickup_fast_metal_4_180BPM,acoustic_pickup,180.0,89.103,0.495,"~0,5"
+acoustic_pickup_fast_metal_5_180BPM,acoustic_pickup,180.0,184.57,1.0254,~1
+acoustic_pickup_fast_metal_6_130BPM,acoustic_pickup,130.0,129.199,0.9938,~1
+acoustic_pickup_fast_metal_7_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_fast_metal_8_125BPM,acoustic_pickup,125.0,123.047,0.9844,~1
+acoustic_pickup_fast_pop_1_160BPM,acoustic_pickup,160.0,161.499,1.0094,~1
+acoustic_pickup_fast_pop_2_140BPM,acoustic_pickup,140.0,135.999,0.9714,~1
+acoustic_pickup_fast_pop_3_150BPM,acoustic_pickup,150.0,151.999,1.0133,~1
+acoustic_pickup_fast_pop_4_120BPM,acoustic_pickup,120.0,117.454,0.9788,~1
+acoustic_pickup_fast_pop_5_90BPM,acoustic_pickup,90.0,117.454,1.305,outro
+acoustic_pickup_fast_pop_6_110BPM,acoustic_pickup,110.0,112.347,1.0213,~1
+acoustic_pickup_fast_pop_7_70BPM,acoustic_pickup,70.0,69.837,0.9977,~1
+acoustic_pickup_fast_pop_8_100BPM,acoustic_pickup,100.0,135.999,1.36,outro
+acoustic_pickup_fast_reggae_1_120BPM,acoustic_pickup,120.0,60.093,0.5008,"~0,5"
+acoustic_pickup_fast_reggae_2_120BPM,acoustic_pickup,120.0,60.093,0.5008,"~0,5"
+acoustic_pickup_fast_reggae_3_120BPM,acoustic_pickup,120.0,60.093,0.5008,"~0,5"
+acoustic_pickup_fast_reggae_4_120BPM,acoustic_pickup,120.0,117.454,0.9788,~1
+acoustic_pickup_fast_ska_1_180BPM,acoustic_pickup,180.0,89.103,0.495,"~0,5"
+acoustic_pickup_fast_ska_2_180BPM,acoustic_pickup,180.0,184.57,1.0254,~1
+acoustic_pickup_fast_ska_3_180BPM,acoustic_pickup,180.0,89.103,0.495,"~0,5"
+acoustic_pickup_fast_ska_4_180BPM,acoustic_pickup,180.0,89.103,0.495,"~0,5"
+acoustic_pickup_fast_rock_1_120BPM,acoustic_pickup,120.0,117.454,0.9788,~1
+acoustic_pickup_fast_rock_2_115BPM,acoustic_pickup,115.0,112.347,0.9769,~1
+acoustic_pickup_fast_rock_3_115BPM,acoustic_pickup,115.0,117.454,1.0213,~1
+acoustic_pickup_fast_rock_4_125BPM,acoustic_pickup,125.0,123.047,0.9844,~1
+acoustic_pickup_fast_rock_5_120BPM,acoustic_pickup,120.0,117.454,0.9788,~1
+acoustic_pickup_fast_rock_6_120BPM,acoustic_pickup,120.0,123.047,1.0254,~1
+acoustic_pickup_fast_rock_7_120BPM,acoustic_pickup,120.0,123.047,1.0254,~1
+acoustic_pickup_fast_rock_8_120BPM,acoustic_pickup,120.0,117.454,0.9788,~1
+acoustic_pickup_slow_classical_1_60BPM,acoustic_pickup,60.0,120.185,2.0031,~2
+acoustic_pickup_slow_classical_2_50BPM,acoustic_pickup,50.0,151.999,3.04,outro
+acoustic_pickup_slow_classical_3_50BPM,acoustic_pickup,50.0,99.384,1.9877,~2
+acoustic_pickup_slow_classical_4_60BPM,acoustic_pickup,60.0,123.047,2.0508,~2
+acoustic_pickup_slow_classical_5_70BPM,acoustic_pickup,70.0,143.555,2.0508,~2
+acoustic_pickup_slow_classical_6_75BPM,acoustic_pickup,75.0,73.828,0.9844,~1
+acoustic_pickup_slow_classical_7_50BPM,acoustic_pickup,50.0,99.384,1.9877,~2
+acoustic_pickup_slow_classical_8_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_slow_country_1_110BPM,acoustic_pickup,110.0,112.347,1.0213,~1
+acoustic_pickup_slow_country_2_110BPM,acoustic_pickup,110.0,112.347,1.0213,~1
+acoustic_pickup_slow_country_3_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_slow_country_4_80BPM,acoustic_pickup,80.0,107.666,1.3458,outro
+acoustic_pickup_slow_country_5_80BPM,acoustic_pickup,80.0,107.666,1.3458,outro
+acoustic_pickup_slow_folk_1_80BPM,acoustic_pickup,80.0,80.75,1.0094,~1
+acoustic_pickup_slow_folk_2_75BPM,acoustic_pickup,75.0,99.384,1.3251,outro
+acoustic_pickup_slow_folk_3_130BPM,acoustic_pickup,130.0,129.199,0.9938,~1
+acoustic_pickup_slow_jazz_1_160BPM,acoustic_pickup,160.0,99.384,0.6212,outro
+acoustic_pickup_slow_jazz_2_170BPM,acoustic_pickup,170.0,129.199,0.76,outro
+acoustic_pickup_slow_jazz_3_120BPM,acoustic_pickup,120.0,117.454,0.9788,~1
+acoustic_pickup_slow_jazz_4_70BPM,acoustic_pickup,70.0,69.837,0.9977,~1
+acoustic_pickup_slow_jazz_5_80BPM,acoustic_pickup,80.0,80.75,1.0094,~1
+acoustic_pickup_slow_jazz_6_150BPM,acoustic_pickup,150.0,151.999,1.0133,~1
+acoustic_pickup_slow_jazz_7_140BPM,acoustic_pickup,140.0,143.555,1.0254,~1
+acoustic_pickup_slow_jazz_8_110BPM,acoustic_pickup,110.0,112.347,1.0213,~1
+acoustic_pickup_slow_latin_1_160BPM,acoustic_pickup,160.0,161.499,1.0094,~1
+acoustic_pickup_slow_latin_2_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_slow_latin_3_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_slow_latin_4_130BPM,acoustic_pickup,130.0,129.199,0.9938,~1
+acoustic_pickup_slow_latin_5_140BPM,acoustic_pickup,140.0,143.555,1.0254,~1
+acoustic_pickup_slow_latin_6_120BPM,acoustic_pickup,120.0,117.454,0.9788,~1
+acoustic_pickup_slow_latin_7_130BPM,acoustic_pickup,130.0,129.199,0.9938,~1
+acoustic_pickup_slow_latin_8_160BPM,acoustic_pickup,160.0,161.499,1.0094,~1
+acoustic_pickup_slow_metal_1_160BPM,acoustic_pickup,160.0,161.499,1.0094,~1
+acoustic_pickup_slow_metal_2_150BPM,acoustic_pickup,150.0,151.999,1.0133,~1
+acoustic_pickup_slow_metal_3_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_slow_metal_4_130BPM,acoustic_pickup,130.0,129.199,0.9938,~1
+acoustic_pickup_slow_metal_5_150BPM,acoustic_pickup,150.0,151.999,1.0133,~1
+acoustic_pickup_slow_metal_6_110BPM,acoustic_pickup,110.0,107.666,0.9788,~1
+acoustic_pickup_slow_metal_7_75BPM,acoustic_pickup,75.0,151.999,2.0267,~2
+acoustic_pickup_slow_metal_8_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_slow_pop_1_130BPM,acoustic_pickup,130.0,129.199,0.9938,~1
+acoustic_pickup_slow_pop_2_120BPM,acoustic_pickup,120.0,117.454,0.9788,~1
+acoustic_pickup_slow_pop_3_130BPM,acoustic_pickup,130.0,129.199,0.9938,~1
+acoustic_pickup_slow_pop_4_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_slow_pop_5_78BPM,acoustic_pickup,78.0,101.333,1.2991,outro
+acoustic_pickup_slow_pop_6_90BPM,acoustic_pickup,90.0,89.103,0.99,~1
+acoustic_pickup_slow_pop_7_60BPM,acoustic_pickup,60.0,117.454,1.9576,~2
+acoustic_pickup_slow_pop_8_85BPM,acoustic_pickup,85.0,83.354,0.9806,~1
+acoustic_pickup_slow_reggae_1_95BPM,acoustic_pickup,95.0,47.852,0.5037,"~0,5"
+acoustic_pickup_slow_reggae_2_100BPM,acoustic_pickup,100.0,198.768,1.9877,~2
+acoustic_pickup_slow_reggae_3_100BPM,acoustic_pickup,100.0,151.999,1.52,outro
+acoustic_pickup_slow_reggae_4_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_slow_ska_1_150BPM,acoustic_pickup,150.0,151.999,1.0133,~1
+acoustic_pickup_slow_ska_2_150BPM,acoustic_pickup,150.0,151.999,1.0133,~1
+acoustic_pickup_slow_ska_3_150BPM,acoustic_pickup,150.0,151.999,1.0133,~1
+acoustic_pickup_slow_ska_4_150BPM,acoustic_pickup,150.0,151.999,1.0133,~1
+acoustic_pickup_slow_rock_1_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_slow_rock_2_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_slow_rock_3_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_slow_rock_4_110BPM,acoustic_pickup,110.0,107.666,0.9788,~1
+acoustic_pickup_slow_rock_5_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_slow_rock_6_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_slow_rock_7_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+acoustic_pickup_slow_rock_8_100BPM,acoustic_pickup,100.0,99.384,0.9938,~1
+career-sg_fast_classical_1_80BPM,Career SG,80.0,80.75,1.0094,~1
+career-sg_fast_classical_2_60BPM,Career SG,60.0,184.57,3.0762,outro
+career-sg_fast_classical_3_60BPM,Career SG,60.0,117.454,1.9576,~2
+career-sg_fast_classical_4_80BPM,Career SG,80.0,107.666,1.3458,outro
+career-sg_fast_classical_6_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_fast_classical_7_60BPM,Career SG,60.0,117.454,1.9576,~2
+career-sg_fast_classical_8_120BPM,Career SG,120.0,117.454,0.9788,~1
+career-sg_fast_country_1_150BPM,Career SG,150.0,76.0,0.5067,"~0,5"
+career-sg_fast_country_2_150BPM,Career SG,150.0,151.999,1.0133,~1
+career-sg_fast_country_3_120BPM,Career SG,120.0,117.454,0.9788,~1
+career-sg_fast_country_4_100BPM,Career SG,100.0,129.199,1.292,outro
+career-sg_fast_country_5_100BPM,Career SG,100.0,103.359,1.0336,~1
+career-sg_fast_folk_1_110BPM,Career SG,110.0,107.666,0.9788,~1
+career-sg_fast_folk_2_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_fast_jazz_2_200BPM,Career SG,200.0,99.384,0.4969,"~0,5"
+career-sg_fast_jazz_3_140BPM,Career SG,140.0,143.555,1.0254,~1
+career-sg_fast_jazz_4_88BPM,Career SG,88.0,89.103,1.0125,~1
+career-sg_fast_jazz_5_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_fast_jazz_6_180BPM,Career SG,180.0,184.57,1.0254,~1
+career-sg_fast_jazz_7_180BPM,Career SG,180.0,143.555,0.7975,outro
+career-sg_fast_jazz_8_120BPM,Career SG,120.0,123.047,1.0254,~1
+career-sg_fast_latin_2_120BPM,Career SG,120.0,117.454,0.9788,~1
+career-sg_fast_latin_3_120BPM,Career SG,120.0,117.454,0.9788,~1
+career-sg_fast_latin_4_160BPM,Career SG,160.0,161.499,1.0094,~1
+career-sg_fast_latin_5_180BPM,Career SG,180.0,184.57,1.0254,~1
+career-sg_fast_latin_6_140BPM,Career SG,140.0,143.555,1.0254,~1
+career-sg_fast_latin_7_150BPM,Career SG,150.0,107.666,0.7178,outro
+career-sg_fast_latin_8_180BPM,Career SG,180.0,184.57,1.0254,~1
+career-sg_fast_metal_1_180BPM,Career SG,180.0,184.57,1.0254,~1
+career-sg_fast_metal_2_180BPM,Career SG,180.0,184.57,1.0254,~1
+career-sg_fast_metal_3_135BPM,Career SG,135.0,135.999,1.0074,~1
+career-sg_fast_metal_4_180BPM,Career SG,180.0,89.103,0.495,"~0,5"
+career-sg_fast_metal_5_180BPM,Career SG,180.0,89.103,0.495,"~0,5"
+career-sg_fast_metal_6_130BPM,Career SG,130.0,129.199,0.9938,~1
+career-sg_fast_metal_7_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_fast_metal_8_125BPM,Career SG,125.0,123.047,0.9844,~1
+career-sg_fast_pop_1_160BPM,Career SG,160.0,161.499,1.0094,~1
+career-sg_fast_pop_2_140BPM,Career SG,140.0,135.999,0.9714,~1
+career-sg_fast_pop_3_150BPM,Career SG,150.0,151.999,1.0133,~1
+career-sg_fast_pop_4_120BPM,Career SG,120.0,117.454,0.9788,~1
+career-sg_fast_pop_5_90BPM,Career SG,90.0,117.454,1.305,outro
+career-sg_fast_pop_6_110BPM,Career SG,110.0,107.666,0.9788,~1
+career-sg_fast_pop_7_70BPM,Career SG,70.0,69.837,0.9977,~1
+career-sg_fast_pop_8_100BPM,Career SG,100.0,135.999,1.36,outro
+career-sg_fast_reggae_1_120BPM,Career SG,120.0,60.093,0.5008,"~0,5"
+career-sg_fast_reggae_2_120BPM,Career SG,120.0,60.093,0.5008,"~0,5"
+career-sg_fast_reggae_3_120BPM,Career SG,120.0,60.093,0.5008,"~0,5"
+career-sg_fast_reggae_4_120BPM,Career SG,120.0,60.093,0.5008,"~0,5"
+career-sg_fast_ska_1_180BPM,Career SG,180.0,184.57,1.0254,~1
+career-sg_fast_ska_2_180BPM,Career SG,180.0,184.57,1.0254,~1
+career-sg_fast_ska_3_180BPM,Career SG,180.0,184.57,1.0254,~1
+career-sg_fast_ska_4_180BPM,Career SG,180.0,184.57,1.0254,~1
+career-sg_fast_rock_2_115BPM,Career SG,115.0,117.454,1.0213,~1
+career-sg_fast_rock_3_115BPM,Career SG,115.0,112.347,0.9769,~1
+career-sg_fast_rock_4_125BPM,Career SG,125.0,123.047,0.9844,~1
+career-sg_fast_rock_5_120BPM,Career SG,120.0,117.454,0.9788,~1
+career-sg_fast_rock_6_120BPM,Career SG,120.0,117.454,0.9788,~1
+career-sg_fast_rock_7_120BPM,Career SG,120.0,120.185,1.0015,~1
+career-sg_fast_rock_8_120BPM,Career SG,120.0,120.185,1.0015,~1
+career-sg_slow_classical_1_60BPM,Career SG,60.0,123.047,2.0508,~2
+career-sg_slow_classical_2_50BPM,Career SG,50.0,151.999,3.04,outro
+career-sg_slow_classical_3_50BPM,Career SG,50.0,99.384,1.9877,~2
+career-sg_slow_classical_4_60BPM,Career SG,60.0,117.454,1.9576,~2
+career-sg_slow_classical_5_70BPM,Career SG,70.0,143.555,2.0508,~2
+career-sg_slow_classical_6_75BPM,Career SG,75.0,73.828,0.9844,~1
+career-sg_slow_classical_7_50BPM,Career SG,50.0,99.384,1.9877,~2
+career-sg_slow_classical_8_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_slow_country_1_110BPM,Career SG,110.0,107.666,0.9788,~1
+career-sg_slow_country_2_110BPM,Career SG,110.0,107.666,0.9788,~1
+career-sg_slow_country_3_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_slow_country_4_80BPM,Career SG,80.0,107.666,1.3458,outro
+career-sg_slow_country_5_80BPM,Career SG,80.0,161.499,2.0187,~2
+career-sg_slow_folk_1_80BPM,Career SG,80.0,78.303,0.9788,~1
+career-sg_slow_folk_2_75BPM,Career SG,75.0,99.384,1.3251,outro
+career-sg_slow_folk_3_130BPM,Career SG,130.0,129.199,0.9938,~1
+career-sg_slow_jazz_1_160BPM,Career SG,160.0,117.454,0.7341,outro
+career-sg_slow_jazz_2_170BPM,Career SG,170.0,86.133,0.5067,"~0,5"
+career-sg_slow_jazz_3_120BPM,Career SG,120.0,89.103,0.7425,outro
+career-sg_slow_jazz_4_70BPM,Career SG,70.0,69.837,0.9977,~1
+career-sg_slow_jazz_5_80BPM,Career SG,80.0,80.75,1.0094,~1
+career-sg_slow_jazz_6_150BPM,Career SG,150.0,151.999,1.0133,~1
+career-sg_slow_jazz_7_140BPM,Career SG,140.0,112.347,0.8025,outro
+career-sg_slow_jazz_8_110BPM,Career SG,110.0,83.354,0.7578,outro
+career-sg_slow_latin_1_160BPM,Career SG,160.0,107.666,0.6729,outro
+career-sg_slow_latin_2_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_slow_latin_3_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_slow_latin_4_130BPM,Career SG,130.0,129.199,0.9938,~1
+career-sg_slow_latin_5_140BPM,Career SG,140.0,143.555,1.0254,~1
+career-sg_slow_latin_6_120BPM,Career SG,120.0,123.047,1.0254,~1
+career-sg_slow_latin_7_130BPM,Career SG,130.0,92.285,0.7099,outro
+career-sg_slow_latin_8_160BPM,Career SG,160.0,161.499,1.0094,~1
+career-sg_slow_metal_1_160BPM,Career SG,160.0,161.499,1.0094,~1
+career-sg_slow_metal_2_150BPM,Career SG,150.0,151.999,1.0133,~1
+career-sg_slow_metal_3_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_slow_metal_4_130BPM,Career SG,130.0,129.199,0.9938,~1
+career-sg_slow_metal_5_150BPM,Career SG,150.0,151.999,1.0133,~1
+career-sg_slow_metal_6_110BPM,Career SG,110.0,107.666,0.9788,~1
+career-sg_slow_metal_7_75BPM,Career SG,75.0,151.999,2.0267,~2
+career-sg_slow_metal_8_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_slow_pop_1_130BPM,Career SG,130.0,129.199,0.9938,~1
+career-sg_slow_pop_2_120BPM,Career SG,120.0,117.454,0.9788,~1
+career-sg_slow_pop_3_130BPM,Career SG,130.0,129.199,0.9938,~1
+career-sg_slow_pop_4_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_slow_pop_5_78BPM,Career SG,78.0,103.359,1.3251,outro
+career-sg_slow_pop_6_90BPM,Career SG,90.0,184.57,2.0508,~2
+career-sg_slow_pop_7_60BPM,Career SG,60.0,117.454,1.9576,~2
+career-sg_slow_pop_8_85BPM,Career SG,85.0,117.454,1.3818,outro
+career-sg_slow_reggae_1_95BPM,Career SG,95.0,46.982,0.4945,"~0,5"
+career-sg_slow_reggae_2_100BPM,Career SG,100.0,198.768,1.9877,~2
+career-sg_slow_reggae_3_100BPM,Career SG,100.0,151.999,1.52,outro
+career-sg_slow_reggae_4_100BPM,Career SG,100.0,151.999,1.52,outro
+career-sg_slow_ska_1_150BPM,Career SG,150.0,151.999,1.0133,~1
+career-sg_slow_ska_2_150BPM,Career SG,150.0,151.999,1.0133,~1
+career-sg_slow_ska_3_150BPM,Career SG,150.0,151.999,1.0133,~1
+career-sg_slow_ska_4_150BPM,Career SG,150.0,151.999,1.0133,~1
+career-sg_slow_rock_2_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_slow_rock_3_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_slow_rock_4_110BPM,Career SG,110.0,112.347,1.0213,~1
+career-sg_slow_rock_5_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_slow_rock_6_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_slow_rock_7_100BPM,Career SG,100.0,99.384,0.9938,~1
+career-sg_slow_rock_8_100BPM,Career SG,100.0,99.384,0.9938,~1
+ibanez-2820_fast_classical_1_80BPM,Ibanez 2820,80.0,161.499,2.0187,~2
+ibanez-2820_fast_classical_2_60BPM,Ibanez 2820,60.0,89.103,1.485,outro
+ibanez-2820_fast_classical_3_60BPM,Ibanez 2820,60.0,117.454,1.9576,~2
+ibanez-2820_fast_classical_4_80BPM,Ibanez 2820,80.0,161.499,2.0187,~2
+ibanez-2820_fast_classical_5_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_fast_classical_6_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_fast_classical_7_60BPM,Ibanez 2820,60.0,123.047,2.0508,~2
+ibanez-2820_fast_classical_8_120BPM,Ibanez 2820,120.0,117.454,0.9788,~1
+ibanez-2820_fast_country_1_150BPM,Ibanez 2820,150.0,76.0,0.5067,"~0,5"
+ibanez-2820_fast_country_2_150BPM,Ibanez 2820,150.0,151.999,1.0133,~1
+ibanez-2820_fast_country_3_120BPM,Ibanez 2820,120.0,117.454,0.9788,~1
+ibanez-2820_fast_country_4_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_fast_country_5_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_fast_folk_1_110BPM,Ibanez 2820,110.0,107.666,0.9788,~1
+ibanez-2820_fast_folk_2_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_fast_folk_3_180BPM,Ibanez 2820,180.0,184.57,1.0254,~1
+ibanez-2820_fast_jazz_1_180BPM,Ibanez 2820,180.0,89.103,0.495,"~0,5"
+ibanez-2820_fast_jazz_2_200BPM,Ibanez 2820,200.0,99.384,0.4969,"~0,5"
+ibanez-2820_fast_jazz_3_140BPM,Ibanez 2820,140.0,107.666,0.769,outro
+ibanez-2820_fast_jazz_4_88BPM,Ibanez 2820,88.0,89.103,1.0125,~1
+ibanez-2820_fast_jazz_5_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_fast_jazz_6_180BPM,Ibanez 2820,180.0,184.57,1.0254,~1
+ibanez-2820_fast_jazz_7_180BPM,Ibanez 2820,180.0,89.103,0.495,"~0,5"
+ibanez-2820_fast_jazz_8_120BPM,Ibanez 2820,120.0,123.047,1.0254,~1
+ibanez-2820_fast_latin_1_200BPM,Ibanez 2820,200.0,198.768,0.9938,~1
+ibanez-2820_fast_latin_2_120BPM,Ibanez 2820,120.0,123.047,1.0254,~1
+ibanez-2820_fast_latin_3_120BPM,Ibanez 2820,120.0,117.454,0.9788,~1
+ibanez-2820_fast_latin_4_160BPM,Ibanez 2820,160.0,161.499,1.0094,~1
+ibanez-2820_fast_latin_5_180BPM,Ibanez 2820,180.0,184.57,1.0254,~1
+ibanez-2820_fast_latin_6_140BPM,Ibanez 2820,140.0,143.555,1.0254,~1
+ibanez-2820_fast_latin_7_150BPM,Ibanez 2820,150.0,107.666,0.7178,outro
+ibanez-2820_fast_latin_8_180BPM,Ibanez 2820,180.0,89.103,0.495,"~0,5"
+ibanez-2820_fast_metal_1_180BPM,Ibanez 2820,180.0,89.103,0.495,"~0,5"
+ibanez-2820_fast_metal_2_180BPM,Ibanez 2820,180.0,89.103,0.495,"~0,5"
+ibanez-2820_fast_metal_3_135BPM,Ibanez 2820,135.0,135.999,1.0074,~1
+ibanez-2820_fast_metal_4_180BPM,Ibanez 2820,180.0,89.103,0.495,"~0,5"
+ibanez-2820_fast_metal_5_180BPM,Ibanez 2820,180.0,172.266,0.957,~1
+ibanez-2820_fast_metal_6_130BPM,Ibanez 2820,130.0,129.199,0.9938,~1
+ibanez-2820_fast_metal_7_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_fast_metal_8_125BPM,Ibanez 2820,125.0,123.047,0.9844,~1
+ibanez-2820_fast_pop_1_160BPM,Ibanez 2820,160.0,161.499,1.0094,~1
+ibanez-2820_fast_pop_2_140BPM,Ibanez 2820,140.0,135.999,0.9714,~1
+ibanez-2820_fast_pop_3_150BPM,Ibanez 2820,150.0,151.999,1.0133,~1
+ibanez-2820_fast_pop_4_120BPM,Ibanez 2820,120.0,117.454,0.9788,~1
+ibanez-2820_fast_pop_5_90BPM,Ibanez 2820,90.0,123.047,1.3672,outro
+ibanez-2820_fast_pop_6_110BPM,Ibanez 2820,110.0,112.347,1.0213,~1
+ibanez-2820_fast_pop_7_70BPM,Ibanez 2820,70.0,69.837,0.9977,~1
+ibanez-2820_fast_pop_8_100BPM,Ibanez 2820,100.0,135.999,1.36,outro
+ibanez-2820_fast_reggae_1_120BPM,Ibanez 2820,120.0,60.093,0.5008,"~0,5"
+ibanez-2820_fast_reggae_2_120BPM,Ibanez 2820,120.0,60.093,0.5008,"~0,5"
+ibanez-2820_fast_reggae_3_120BPM,Ibanez 2820,120.0,60.093,0.5008,"~0,5"
+ibanez-2820_fast_reggae_4_120BPM,Ibanez 2820,120.0,60.093,0.5008,"~0,5"
+ibanez-2820_fast_ska_1_180BPM,Ibanez 2820,180.0,89.103,0.495,"~0,5"
+ibanez-2820_fast_ska_2_180BPM,Ibanez 2820,180.0,89.103,0.495,"~0,5"
+ibanez-2820_fast_ska_3_180BPM,Ibanez 2820,180.0,89.103,0.495,"~0,5"
+ibanez-2820_fast_ska_4_180BPM,Ibanez 2820,180.0,184.57,1.0254,~1
+ibanez-2820_fast_rock_1_100BPM,Ibanez 2820,100.0,60.093,0.6009,outro
+ibanez-2820_fast_rock_2_115BPM,Ibanez 2820,115.0,117.454,1.0213,~1
+ibanez-2820_fast_rock_3_115BPM,Ibanez 2820,115.0,112.347,0.9769,~1
+ibanez-2820_fast_rock_4_125BPM,Ibanez 2820,125.0,123.047,0.9844,~1
+ibanez-2820_fast_rock_5_120BPM,Ibanez 2820,120.0,117.454,0.9788,~1
+ibanez-2820_fast_rock_6_120BPM,Ibanez 2820,120.0,123.047,1.0254,~1
+ibanez-2820_fast_rock_7_120BPM,Ibanez 2820,120.0,117.454,0.9788,~1
+ibanez-2820_fast_rock_8_120BPM,Ibanez 2820,120.0,117.454,0.9788,~1
+ibanez-2820_slow_classical_1_60BPM,Ibanez 2820,60.0,117.454,1.9576,~2
+ibanez-2820_slow_classical_2_50BPM,Ibanez 2820,50.0,151.999,3.04,outro
+ibanez-2820_slow_classical_3_50BPM,Ibanez 2820,50.0,99.384,1.9877,~2
+ibanez-2820_slow_classical_4_60BPM,Ibanez 2820,60.0,117.454,1.9576,~2
+ibanez-2820_slow_classical_5_70BPM,Ibanez 2820,70.0,135.999,1.9428,~2
+ibanez-2820_slow_classical_6_75BPM,Ibanez 2820,75.0,76.0,1.0133,~1
+ibanez-2820_slow_classical_7_50BPM,Ibanez 2820,50.0,99.384,1.9877,~2
+ibanez-2820_slow_classical_8_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_slow_country_1_110BPM,Ibanez 2820,110.0,107.666,0.9788,~1
+ibanez-2820_slow_country_2_110BPM,Ibanez 2820,110.0,107.666,0.9788,~1
+ibanez-2820_slow_country_3_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_slow_country_4_80BPM,Ibanez 2820,80.0,107.666,1.3458,outro
+ibanez-2820_slow_country_5_80BPM,Ibanez 2820,80.0,161.499,2.0187,~2
+ibanez-2820_slow_folk_1_80BPM,Ibanez 2820,80.0,80.75,1.0094,~1
+ibanez-2820_slow_folk_2_75BPM,Ibanez 2820,75.0,99.384,1.3251,outro
+ibanez-2820_slow_folk_3_130BPM,Ibanez 2820,130.0,129.199,0.9938,~1
+ibanez-2820_slow_jazz_1_160BPM,Ibanez 2820,160.0,117.454,0.7341,outro
+ibanez-2820_slow_jazz_2_170BPM,Ibanez 2820,170.0,86.133,0.5067,"~0,5"
+ibanez-2820_slow_jazz_3_120BPM,Ibanez 2820,120.0,73.828,0.6152,outro
+ibanez-2820_slow_jazz_4_70BPM,Ibanez 2820,70.0,69.837,0.9977,~1
+ibanez-2820_slow_jazz_5_80BPM,Ibanez 2820,80.0,80.75,1.0094,~1
+ibanez-2820_slow_jazz_6_150BPM,Ibanez 2820,150.0,151.999,1.0133,~1
+ibanez-2820_slow_jazz_7_140BPM,Ibanez 2820,140.0,112.347,0.8025,outro
+ibanez-2820_slow_jazz_8_110BPM,Ibanez 2820,110.0,112.347,1.0213,~1
+ibanez-2820_slow_latin_1_160BPM,Ibanez 2820,160.0,161.499,1.0094,~1
+ibanez-2820_slow_latin_2_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_slow_latin_3_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_slow_latin_4_130BPM,Ibanez 2820,130.0,129.199,0.9938,~1
+ibanez-2820_slow_latin_5_140BPM,Ibanez 2820,140.0,135.999,0.9714,~1
+ibanez-2820_slow_latin_6_120BPM,Ibanez 2820,120.0,123.047,1.0254,~1
+ibanez-2820_slow_latin_7_130BPM,Ibanez 2820,130.0,129.199,0.9938,~1
+ibanez-2820_slow_latin_8_160BPM,Ibanez 2820,160.0,161.499,1.0094,~1
+ibanez-2820_slow_metal_1_160BPM,Ibanez 2820,160.0,161.499,1.0094,~1
+ibanez-2820_slow_metal_2_150BPM,Ibanez 2820,150.0,151.999,1.0133,~1
+ibanez-2820_slow_metal_3_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_slow_metal_4_130BPM,Ibanez 2820,130.0,129.199,0.9938,~1
+ibanez-2820_slow_metal_5_150BPM,Ibanez 2820,150.0,151.999,1.0133,~1
+ibanez-2820_slow_metal_6_110BPM,Ibanez 2820,110.0,112.347,1.0213,~1
+ibanez-2820_slow_metal_7_75BPM,Ibanez 2820,75.0,151.999,2.0267,~2
+ibanez-2820_slow_metal_8_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_slow_pop_1_130BPM,Ibanez 2820,130.0,129.199,0.9938,~1
+ibanez-2820_slow_pop_2_120BPM,Ibanez 2820,120.0,117.454,0.9788,~1
+ibanez-2820_slow_pop_3_130BPM,Ibanez 2820,130.0,129.199,0.9938,~1
+ibanez-2820_slow_pop_4_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_slow_pop_5_78BPM,Ibanez 2820,78.0,107.666,1.3803,outro
+ibanez-2820_slow_pop_6_90BPM,Ibanez 2820,90.0,89.103,0.99,~1
+ibanez-2820_slow_pop_7_60BPM,Ibanez 2820,60.0,117.454,1.9576,~2
+ibanez-2820_slow_pop_8_85BPM,Ibanez 2820,85.0,117.454,1.3818,outro
+ibanez-2820_slow_reggae_1_95BPM,Ibanez 2820,95.0,47.852,0.5037,"~0,5"
+ibanez-2820_slow_reggae_2_100BPM,Ibanez 2820,100.0,198.768,1.9877,~2
+ibanez-2820_slow_reggae_3_100BPM,Ibanez 2820,100.0,151.999,1.52,outro
+ibanez-2820_slow_reggae_4_100BPM,Ibanez 2820,100.0,151.999,1.52,outro
+ibanez-2820_slow_ska_1_150BPM,Ibanez 2820,150.0,151.999,1.0133,~1
+ibanez-2820_slow_ska_2_150BPM,Ibanez 2820,150.0,151.999,1.0133,~1
+ibanez-2820_slow_ska_3_150BPM,Ibanez 2820,150.0,151.999,1.0133,~1
+ibanez-2820_slow_ska_4_150BPM,Ibanez 2820,150.0,151.999,1.0133,~1
+ibanez-2820_slow_rock_1_100BPM,Ibanez 2820,100.0,198.768,1.9877,~2
+ibanez-2820_slow_rock_2_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_slow_rock_3_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_slow_rock_4_110BPM,Ibanez 2820,110.0,112.347,1.0213,~1
+ibanez-2820_slow_rock_5_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_slow_rock_6_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_slow_rock_7_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1
+ibanez-2820_slow_rock_8_100BPM,Ibanez 2820,100.0,99.384,0.9938,~1

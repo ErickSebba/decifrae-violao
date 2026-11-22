@@ -1,0 +1,18 @@
+{
+  "gerado_em": "20261117_143045",
+  "gerado_por": "representabilidade_externo.py",
+  "post_review": true,
+  "projeto": {
+    "commit": "e484f2c4f46a0db0228af4bc5587f02f79f858f6",
+    "arvore_suja": false
+  },
+  "manifest": "data/manifests/idmt_smt_guitar.csv",
+  "definicao": "Σ tempo das classes do vocabulário / Σ tempo total de referência (com N); classes por analise_vocabulario.classes",
+  "resumo": {
+    "n_faixas": 506,
+    "t_total_s": 11761.267,
+    "r24": 0.507945,
+    "r60": 0.737768,
+    "f_N": 0.118678
+  }
+}

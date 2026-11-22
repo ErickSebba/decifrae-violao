@@ -1,0 +1,37 @@
+% gerado por analise_externo.py -- não editar à mão
+\begin{table*}[t]
+  \centering
+  \caption{Os 15 contrastes pré-registrados no \emph{test} do GuitarSet (\texttt{chord[0]}) e nas duas bases externas. $\Delta$ em pontos percentuais; classe pelo critério do congelamento (IC 95\% do bootstrap pareado por faixa e Holm sobre 15). \emph{Sinal}: em quantas das duas bases externas o sinal de $\Delta$ é o mesmo do GuitarSet; $^\dagger$: $\Delta = 0$ exato no IDMT-SMT-Chords (\texttt{D} e \texttt{E} produzem a mesma saída lá), fora da contagem. O IDMT-SMT-Chords tem 6 faixas. Análise pós-revisão.}
+  \label{tab:transferencia}
+  \footnotesize
+  \begin{tabular}{llrlrlrlc}
+    \toprule
+    Par ($b-a$) & Métrica & \multicolumn{2}{c}{GuitarSet teste} & \multicolumn{2}{c}{IDMT-SMT-Guitar} & \multicolumn{2}{c}{IDMT-SMT-Chords} & Sinal \\
+    \cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}
+     & & $\Delta$ & classe & $\Delta$ & classe & $\Delta$ & classe & \\
+    \midrule
+    \texttt{C}$\to$\texttt{D} & \texttt{root} & $+7.9$ & conf. & $+1.4$ & emp. & $-67.9$ & conf. & 1/2 \\
+     & \texttt{root\_rotulado} & $-5.5$ & conf. & $-2.3$ & conf. & $-12.6$ & conf. & 2/2 \\
+    \addlinespace
+    \texttt{C0rg}$\to$\texttt{D0rg} & \texttt{root} & $+2.7$ & conf. & $+0.3$ & emp. & $-6.0$ & conf. & 1/2 \\
+     & \texttt{majmin} & $+3.9$ & conf. & $+1.3$ & frág. & $-8.7$ & conf. & 1/2 \\
+    \addlinespace
+    \texttt{D}$\to$\texttt{E} & \texttt{root} & $-1.7$ & conf. & $-2.3$ & conf. & $0$ & emp. & 1/1$^\dagger$ \\
+     & \texttt{seg} & $-1.5$ & emp. & $-6.7$ & conf. & $0$ & emp. & 1/1$^\dagger$ \\
+     & \texttt{overseg} & $+9.5$ & conf. & $+6.8$ & conf. & $0$ & emp. & 1/1$^\dagger$ \\
+    \addlinespace
+    \texttt{V4b}$\to$\texttt{V4} & \texttt{root} & $+1.7$ & frág. & $+1.1$ & emp. & $-1.1$ & frág. & 1/2 \\
+     & \texttt{overseg} & $+17.4$ & conf. & $+12.4$ & conf. & $+0.01$ & conf. & 2/2 \\
+    \addlinespace
+    \texttt{V4}$\to$\texttt{F0rg} & \texttt{root} & $+1.0$ & emp. & $+0.1$ & emp. & $-5.5$ & conf. & 1/2 \\
+     & \texttt{majmin} & $+3.8$ & conf. & $+0.2$ & emp. & $-5.3$ & conf. & 1/2 \\
+     & \texttt{seg} & $-1.5$ & emp. & $-2.1$ & conf. & $-1.5$ & conf. & 2/2 \\
+    \addlinespace
+    \texttt{D0rg}$\to$\texttt{F0rg} & \texttt{root} & $-0.8$ & emp. & $-2.6$ & conf. & $-4.9$ & frág. & 2/2 \\
+     & \texttt{majmin} & $-1.4$ & emp. & $-3.7$ & conf. & $-6.7$ & conf. & 2/2 \\
+     & \texttt{sevenths} & $+12.6$ & conf. & $+1.1$ & emp. & $-30.9$ & conf. & 1/2 \\
+    \bottomrule
+  \end{tabular}
+  \vspace{2pt}
+  \parbox{\linewidth}{\footnotesize Fontes: \texttt{transferencia\_20261117\_122651.csv}}
+\end{table*}

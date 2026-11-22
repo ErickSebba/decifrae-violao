@@ -1,0 +1,55 @@
+% gerado por analise_executantes.py -- não editar à mão
+\begin{table*}[t]
+  \centering
+  \caption{Contrastes pré-registrados por executante do GuitarSet (camada \texttt{chord[0]}). Cada célula é $\Delta = b - a$ em pontos percentuais, média ponderada pela duração das faixas do executante. Executantes 00--03 formam o desenvolvimento (\emph{val}); 04--05, o \emph{test}. \emph{Dev} e \emph{Teste} são os $\Delta$ agregados de cada split; \emph{Sinal} conta os executantes cujo $\Delta$ tem o sinal do $\Delta$ agregado nos seis. Análise pós-revisão. Fonte: \texttt{por\_executante\_20261117\_004132.csv}.}
+  \label{tab:executantes}
+  \footnotesize
+  \begin{tabular}{llrrrrrrrrr}
+    \toprule
+     & & \multicolumn{4}{c}{desenvolvimento} & \multicolumn{2}{c}{teste} & & & \\
+    \cmidrule(lr){3-6}\cmidrule(lr){7-8}
+    Par ($b-a$) & Métrica & 00 & 01 & 02 & 03 & 04 & 05 & Dev & Teste & Sinal \\
+    \midrule
+    \texttt{C}$\to$\texttt{D} & \texttt{root} & $+16.3$ & $+11.7$ & $+17.6$ & $+10.0$ & $+11.2$ & $+4.7$ & $+13.9$ & $+7.9$ & 6/6 \\
+     & \texttt{root\_rotulado} & $-4.0$ & $-16.5$ & $-2.6$ & $-5.9$ & $-5.4$ & $-5.6$ & $-7.3$ & $-5.5$ & 6/6 \\
+    \addlinespace
+    \texttt{C0rg}$\to$\texttt{D0rg} & \texttt{root} & $+2.8$ & $+1.0$ & $+2.0$ & $+2.3$ & $+4.0$ & $+1.5$ & $+2.0$ & $+2.7$ & 6/6 \\
+     & \texttt{majmin} & $+3.7$ & $+1.6$ & $+2.4$ & $+5.1$ & $+5.3$ & $+2.6$ & $+3.2$ & $+3.9$ & 6/6 \\
+    \addlinespace
+    \texttt{D}$\to$\texttt{E} & \texttt{root} & $-1.6$ & $-2.7$ & $-1.4$ & $-0.7$ & $-1.2$ & $-2.1$ & $-1.6$ & $-1.7$ & 6/6 \\
+     & \texttt{seg} & $+5.7$ & $+1.5$ & $+4.2$ & $+2.5$ & $+0.5$ & $-3.3$ & $+3.5$ & $-1.5$ & 5/6 \\
+     & \texttt{overseg} & $+8.7$ & $+9.0$ & $+9.4$ & $+10.5$ & $+8.5$ & $+10.6$ & $+9.4$ & $+9.5$ & 6/6 \\
+    \addlinespace
+    \texttt{V4b}$\to$\texttt{V4} & \texttt{root} & $+2.6$ & $-1.2$ & $-1.9$ & $+3.5$ & $+1.3$ & $+2.1$ & $+0.8$ & $+1.7$ & 4/6 \\
+     & \texttt{overseg} & $+18.4$ & $+14.5$ & $+16.5$ & $+20.8$ & $+19.5$ & $+15.3$ & $+17.5$ & $+17.4$ & 6/6 \\
+    \addlinespace
+    \texttt{V4}$\to$\texttt{F0rg} & \texttt{root} & $-0.5$ & $+3.0$ & $+2.1$ & $+0.3$ & $+0.6$ & $+1.4$ & $+1.2$ & $+1.0$ & 5/6 \\
+     & \texttt{majmin} & $+3.8$ & $+2.7$ & $+4.9$ & $+4.7$ & $+3.4$ & $+4.2$ & $+4.0$ & $+3.8$ & 6/6 \\
+     & \texttt{seg} & $-2.3$ & $+0.0$ & $-1.6$ & $-2.5$ & $-1.5$ & $-1.4$ & $-1.6$ & $-1.5$ & 5/6 \\
+    \addlinespace
+    \texttt{D0rg}$\to$\texttt{F0rg} & \texttt{root} & $-4.3$ & $+11.1$ & $+8.8$ & $-2.3$ & $-2.4$ & $+0.7$ & $+3.3$ & $-0.8$ & 3/6 \\
+     & \texttt{majmin} & $-2.2$ & $+9.4$ & $+6.6$ & $-1.4$ & $-3.5$ & $+0.6$ & $+3.1$ & $-1.4$ & 3/6 \\
+     & \texttt{sevenths} & $+9.4$ & $+18.8$ & $+15.7$ & $+15.5$ & $+13.2$ & $+11.9$ & $+14.9$ & $+12.6$ & 6/6 \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+% gerado por analise_executantes.py -- não editar à mão
+\begin{table*}[t]
+  \centering
+  \caption{Os seis contrastes principais por executante, \texttt{chord[0]}: $\Delta = b - a$ em pontos percentuais e IC 95 \% por bootstrap pareado reamostrando faixas dentro do executante (10\,000, seed 0). $^t$ executantes do teste. Análise pós-revisão. Fonte: \texttt{por\_executante\_20261117\_004132.csv}.}
+  \label{tab:executantes_ic}
+  \footnotesize
+  \begin{tabular}{llcccccc}
+    \toprule
+    Par ($b-a$) & Métrica & 00 & 01 & 02 & 03 & 04$^t$ & 05$^t$ \\
+    \midrule
+    \texttt{C}$\to$\texttt{D} & \texttt{root} & \shortstack{$+16.3$\\\scriptsize[$+12.3$; $+20.2$]} & \shortstack{$+11.7$\\\scriptsize[$+7.9$; $+15.8$]} & \shortstack{$+17.6$\\\scriptsize[$+13.4$; $+21.7$]} & \shortstack{$+10.0$\\\scriptsize[$+5.3$; $+15.2$]} & \shortstack{$+11.2$\\\scriptsize[$+8.0$; $+14.5$]} & \shortstack{$+4.7$\\\scriptsize[$+0.9$; $+8.5$]} \\
+    \texttt{C0rg}$\to$\texttt{D0rg} & \texttt{root} & \shortstack{$+2.8$\\\scriptsize[$+0.2$; $+5.8$]} & \shortstack{$+1.0$\\\scriptsize[$-1.9$; $+4.3$]} & \shortstack{$+2.0$\\\scriptsize[$-1.1$; $+5.0$]} & \shortstack{$+2.3$\\\scriptsize[$+0.4$; $+4.1$]} & \shortstack{$+4.0$\\\scriptsize[$+2.2$; $+5.7$]} & \shortstack{$+1.5$\\\scriptsize[$-1.3$; $+4.9$]} \\
+    \texttt{D}$\to$\texttt{E} & \texttt{root} & \shortstack{$-1.6$\\\scriptsize[$-3.4$; $+0.1$]} & \shortstack{$-2.7$\\\scriptsize[$-4.6$; $-0.8$]} & \shortstack{$-1.4$\\\scriptsize[$-2.8$; $-0.0$]} & \shortstack{$-0.7$\\\scriptsize[$-2.3$; $+0.7$]} & \shortstack{$-1.2$\\\scriptsize[$-2.6$; $-0.0$]} & \shortstack{$-2.1$\\\scriptsize[$-3.8$; $-0.5$]} \\
+    \texttt{V4b}$\to$\texttt{V4} & \texttt{root} & \shortstack{$+2.6$\\\scriptsize[$-0.5$; $+5.9$]} & \shortstack{$-1.2$\\\scriptsize[$-4.5$; $+2.3$]} & \shortstack{$-1.9$\\\scriptsize[$-4.4$; $+0.6$]} & \shortstack{$+3.5$\\\scriptsize[$+0.4$; $+6.6$]} & \shortstack{$+1.3$\\\scriptsize[$-1.0$; $+3.6$]} & \shortstack{$+2.1$\\\scriptsize[$+0.2$; $+4.1$]} \\
+    \texttt{V4}$\to$\texttt{F0rg} & \texttt{root} & \shortstack{$-0.5$\\\scriptsize[$-2.8$; $+1.4$]} & \shortstack{$+3.0$\\\scriptsize[$+0.6$; $+5.6$]} & \shortstack{$+2.1$\\\scriptsize[$-0.2$; $+4.5$]} & \shortstack{$+0.3$\\\scriptsize[$-1.9$; $+2.5$]} & \shortstack{$+0.6$\\\scriptsize[$-2.0$; $+3.2$]} & \shortstack{$+1.4$\\\scriptsize[$-2.0$; $+5.5$]} \\
+    \texttt{D0rg}$\to$\texttt{F0rg} & \texttt{root} & \shortstack{$-4.3$\\\scriptsize[$-8.1$; $-0.4$]} & \shortstack{$+11.1$\\\scriptsize[$+6.7$; $+16.6$]} & \shortstack{$+8.8$\\\scriptsize[$+5.4$; $+12.7$]} & \shortstack{$-2.3$\\\scriptsize[$-6.2$; $+2.0$]} & \shortstack{$-2.4$\\\scriptsize[$-8.2$; $+3.7$]} & \shortstack{$+0.7$\\\scriptsize[$-1.9$; $+3.3$]} \\
+    \bottomrule
+  \end{tabular}
+\end{table*}

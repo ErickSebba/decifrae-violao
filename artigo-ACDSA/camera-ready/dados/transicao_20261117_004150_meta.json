@@ -1,0 +1,24 @@
+{
+  "gerado_em": "2026-11-17T00:42:07",
+  "post_review": true,
+  "script": "analise_vocabulario.py",
+  "entradas": [
+    "data/results/calibracao_revisao_20261116_231220.csv",
+    "data/results/ablation_20260927_014253_ref0.csv",
+    "data/results/ablation_20261116_231650_ref0.csv",
+    "data/results/ablation_20260927_014445_ref1.csv",
+    "data/results/ablation_20261116_231706_ref1.csv"
+  ],
+  "seed": 0,
+  "n_bootstrap": 10000,
+  "n_linhas": 44,
+  "projeto": {
+    "commit": "8166c8e6b27d8bd468ade45dff16fb39e7a20ee0",
+    "arvore_suja": false
+  },
+  "cp_default": 2.0,
+  "cp_calibrado": {
+    "D0rg_cal": 1.5,
+    "F0rg_cal": 1.0
+  }
+}

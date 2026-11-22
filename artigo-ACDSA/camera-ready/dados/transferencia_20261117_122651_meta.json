@@ -1,0 +1,17 @@
+{
+  "gerado_em": "2026-11-17T12:26:52",
+  "post_review": true,
+  "script": "analise_externo.py",
+  "protocolo": "docs/ADENDO_REVISAO.md §8",
+  "n_bootstrap": 10000,
+  "seed": 0,
+  "projeto": {
+    "commit": "3c446f6fe3e55e4e250b38ffe1b82c4e232c251f",
+    "arvore_suja": false
+  },
+  "entradas": [
+    "data/results/stats_test_ref0_20260927_202140.csv",
+    "data/results/stats_external_ref0_20261117_111716.csv",
+    "data/results/stats_eval_ref0_20261117_111718.csv"
+  ]
+}

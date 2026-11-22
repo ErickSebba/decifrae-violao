@@ -1,0 +1,104 @@
+{
+  "script": "analise_executantes.py",
+  "post_review": true,
+  "motivo": "resposta ao revisor R2.1: variação entre executantes",
+  "timestamp": "20261117_004132",
+  "entradas": {
+    "chord[0]": {
+      "val": [
+        "data/results/ablation_20260927_005629_ref0.csv"
+      ],
+      "test": [
+        "data/results/ablation_20260927_014253_ref0.csv",
+        "data/results/ablation_20260927_201422_ref0.csv"
+      ]
+    },
+    "chord[1]": {
+      "val": [
+        "data/results/ablation_20260927_010621_ref1.csv"
+      ],
+      "test": [
+        "data/results/ablation_20260927_014445_ref1.csv",
+        "data/results/ablation_20260927_201649_ref1.csv"
+      ]
+    }
+  },
+  "manifesto": "data/manifests/guitarset_comping.csv",
+  "exclusoes": "faixas com excluded=true no manifesto",
+  "pares": [
+    {
+      "a": "C",
+      "b": "D",
+      "metricas": [
+        "root",
+        "root_rotulado"
+      ],
+      "isola": "o Viterbi na métrica usual"
+    },
+    {
+      "a": "C0rg",
+      "b": "D0rg",
+      "metricas": [
+        "root",
+        "majmin"
+      ],
+      "isola": "o Viterbi com cobertura igualada (nenhuma fonte de N)"
+    },
+    {
+      "a": "D",
+      "b": "E",
+      "metricas": [
+        "root",
+        "seg",
+        "overseg"
+      ],
+      "isola": "o trade-off do min_dur: acurácia contra segmentação"
+    },
+    {
+      "a": "V4b",
+      "b": "V4",
+      "metricas": [
+        "root",
+        "overseg"
+      ],
+      "isola": "a inércia temporal do baseline"
+    },
+    {
+      "a": "V4",
+      "b": "F0rg",
+      "metricas": [
+        "root",
+        "majmin",
+        "seg"
+      ],
+      "isola": "baseline contra a melhor variante"
+    },
+    {
+      "a": "D0rg",
+      "b": "F0rg",
+      "metricas": [
+        "root",
+        "majmin",
+        "sevenths"
+      ],
+      "isola": "o vocabulário (MEDIUM vs BASIC) com cobertura igualada"
+    }
+  ],
+  "definicao_delta": "delta = b - a; por executante, média de (nota_b - nota_a) por faixa ponderada pela duracao_s, só nas faixas daquele executante; valores em fração (multiplique por 100 para pp)",
+  "definicao_n_mesmo_sinal": "executantes cujo delta tem o sinal de delta_todos (agregado nos 6); delta == 0 não conta. n_mesmo_sinal_dev usa o sinal de delta_dev",
+  "executantes": {
+    "dev_val": [
+      "00",
+      "01",
+      "02",
+      "03"
+    ],
+    "teste": [
+      "04",
+      "05"
+    ]
+  },
+  "saida_tex": "artigo-ACDSA/tabelas/tab_executantes.tex",
+  "commit": "7e782afd563c8ee53858d4fae64c82f3d16a32f7",
+  "arvore_suja": false
+}

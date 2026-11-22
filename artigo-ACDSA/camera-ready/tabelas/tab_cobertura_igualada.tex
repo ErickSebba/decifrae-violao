@@ -1,0 +1,24 @@
+% gerado por curvas_teste_revisao.py -- não editar à mão
+\begin{table}[t]
+  \centering
+  \caption{C e D na mesma cobertura, no \emph{test} (\texttt{chord[0]}, \texttt{root}, \%): cada curva (C varia \texttt{confidence\_gate}, D varia \texttt{n\_logprob}) é interpolada linearmente no alvo de cobertura. $\Delta$ em pontos percentuais; IC por bootstrap pareado por faixa (10\,000, semente 0), reinterpolando a cada reamostragem. Análise pós-revisão, protocolo registrado antes da execução. Fonte: \texttt{cobertura\_igualada\_teste\_20261117\_011711.csv}.}
+  \label{tab:cobertura_igualada}
+  \footnotesize
+  \begin{tabular}{llrrrr}
+    \toprule
+    Cobertura & Métrica & C & D & $\Delta$ (D$-$C) [IC 95\%] & $n_{boot}$ \\
+    \midrule
+    60\,\% & rotulado & 63,90 & 62,03 & $-$1,87 [$-$6,54; +3,11] & 10000 \\
+     & faixa toda & 42,63 & 41,45 & $-$1,19 [$-$3,71; +1,08] & 10000 \\
+    \addlinespace
+    70\,\% & rotulado & 60,73 & 60,60 & $-$0,13 [$-$3,22; +3,48] & 10000 \\
+     & faixa toda & 46,35 & 46,14 & $-$0,21 [$-$2,20; +1,91] & 10000 \\
+    \addlinespace
+    77\,\% & rotulado & 58,87 & 59,78 & +0,91 [$-$1,71; +4,30] & 10000 \\
+     & faixa toda & 48,60 & 49,34 & +0,74 [$-$1,20; +3,12] & 10000 \\
+    \addlinespace
+    90\,\% & rotulado & 56,65 & 59,55 & +2,90 [+0,74; +5,23] & 10000 \\
+     & faixa toda & 52,55 & 55,23 & +2,67 [+0,91; +4,52] & 10000 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

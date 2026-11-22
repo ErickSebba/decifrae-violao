@@ -1,0 +1,2 @@
+04_BN3-154-E_comp	timing incorreto (+0,409 s), issue #5 do GuitarSet
+04_Jazz1-200-B_comp	timing incorreto (+0,309 s), issue #5 do GuitarSet

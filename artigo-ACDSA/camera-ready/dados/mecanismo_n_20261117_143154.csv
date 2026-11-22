@@ -1,0 +1,4 @@
+base,rotulo,n_celulas,n_segmentos_ref,mediana_trocas_por_celula,media_trocas_por_celula,frac_celulas_com_troca,mediana_celulas_por_segmento,mediana_custo_n,frac_custo_n_menor_cp,beta,change_penalty
+gs_test,GuitarSet teste,3528,698,0.0,0.174,0.174,4.0,0.9469,1.0,-2.5,2.0
+idmt_g,IDMT-SMT-Guitar,23710,8214,0.0,0.4061,0.379,2.0,0.9121,0.9996,-2.5,2.0
+idmt_c,IDMT-SMT-Chords,1633,1638,1.0,0.9988,0.989,1.0,1.2005,0.9994,-2.5,2.0

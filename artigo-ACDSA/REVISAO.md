@@ -65,3 +65,31 @@ do diagnóstico do N, do beat tracking e do rótulo `13` bateram. Correções:
 3. BASELINES §9: "Vamp Plugin Pack 2.0" não é verificável pelos arquivos de
    resultado; o texto passa a citar o caminho da instalação e o SHA-256 da
    DLL registrado nos metas.
+
+## Revisão do pacote camera-ready (2026-11-21)
+
+Uma passada por sub-agente novo sobre `camera-ready/CAMERA_READY.md` e
+`RESPOSTA_REVISORES.md`: números contra CSV/md, afirmações proibidas, modelo
+de seção e caminhos. Corrigido:
+
+1. Holm de C→D `root` citado como 0,0011 (família de 11); na família de 15 é
+   0,0015.
+2. Primeira avaliação externa: `ac894a9` (11:08), não `1939cd6` (que é o
+   Chordino no GuitarSet).
+3. "Segmentação mantém sinal e classe" no IDMT-SMT-Guitar: o sinal se mantém
+   em 15/15, mas os dois contrastes `seg` mudam de empate para confirmado;
+   só os `overseg` mantêm a classe. Texto ajustado (resumo executivo, G5, G6,
+   resumo do artigo, resposta aos revisores).
+4. "Accuracy effects shrink or reverse": vale para os efeitos de
+   decodificação e vocabulário; C→D `root_rotulado`, D→E `root` e
+   D0rg→F0rg `root`/`majmin` continuam ou passam a confirmados no
+   IDMT-SMT-Guitar. Texto restrito aos efeitos principais.
+5. Duas frases limítrofes de equivalência reescritas: "appears only when…"
+   (R2.3) e "segmentation contrasts are similar in both groups" (R4, G4).
+6. Caminhos: três CSVs `stats_*` faltavam em `dados/`; `splits/` passou a
+   `detalhes/splits/`.
+
+Antes da montagem, também foram corrigidas fontes do repositório:
+RESULTADOS R2.3 passou a usar a curva D refinada
+(`cobertura_igualada_teste_20261117_011711.csv`), e METODOLOGIA §8 passou a
+remeter à §9 sobre o IDMT-SMT-Chords.

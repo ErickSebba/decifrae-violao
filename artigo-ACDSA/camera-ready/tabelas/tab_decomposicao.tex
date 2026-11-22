@@ -1,0 +1,28 @@
+% gerado por analise_decomposicao.py -- não editar à mão
+\begin{table*}[t]
+  \centering
+  \caption{Decomposição exata de $\Delta$root (\texttt{C} $\to$ \texttt{D}), camada \texttt{chord[0]}, na grade comum do \texttt{mir\_eval}. Análise pós-especificada (revisão). Fonte: \texttt{decomposicao\_20261117\_004137.csv}.}
+  \label{tab:decomposicao}
+  \footnotesize
+  \begin{tabular}{llrrrrrrr}
+    \toprule
+    Split & Região & Tempo (s) & Tempo (\%) & Faixas & root \texttt{C} & root \texttt{D} & Parcela de $\Delta$ (p.p.) & IC 95 \% (p.p.) \\
+    \midrule
+    \emph{val} & rotulada por ambos & 2021,1 & 55,3 & 120 & 79,48 & 80,27 & +0,43 & [$-$0,50; +1,36] \\
+     & só por \texttt{D} & 1191,6 & 32,6 & 120 & 0,00 & 49,88 & +16,26 & [+14,44; +18,17] \\
+     & só por \texttt{C} & 189,5 & 5,2 & 73 & 53,96 & 0,00 & $-$2,80 & [$-$3,54; $-$2,12] \\
+     & por nenhum & 254,0 & 6,9 & 74 & 0,00 & 0,00 & +0,00 & [+0,00; +0,00] \\
+     & \multicolumn{6}{l}{Soma = $\Delta$root agregado (resíduo 4e-11)} & +13,90 & \\
+    \midrule
+    \emph{test} & rotulada por ambos & 870,8 & 48,7 & 58 & 77,57 & 77,78 & +0,11 & [$-$0,80; +1,04] \\
+     & só por \texttt{D} & 508,7 & 28,4 & 58 & 0,00 & 40,51 & +11,52 & [+9,43; +13,70] \\
+     & só por \texttt{C} & 150,6 & 8,4 & 42 & 44,58 & 0,00 & $-$3,75 & [$-$4,93; $-$2,69] \\
+     & por nenhum & 258,6 & 14,5 & 39 & 0,00 & 0,00 & +0,00 & [+0,00; +0,00] \\
+     & \multicolumn{6}{l}{Soma = $\Delta$root agregado (resíduo 4e-11)} & +7,88 & \\
+    \bottomrule
+  \end{tabular}
+  \vspace{2pt}
+  \parbox{\linewidth}{\footnotesize Tempo: só células comparáveis no nível root. \emph{Faixas}: número de faixas com tempo na região. Acurácia root agregada por duração dentro da região (N estimado conta como erro). Parcela: contribuição da região para a média ponderada pela duração da faixa; IC 95 \% do bootstrap pareado por faixa (10000 reamostragens, semente 0).}
+  \vspace{2pt}
+  \parbox{\linewidth}{\footnotesize Viés de seleção --- acurácia root de \texttt{D0rg} agregada por duração dentro e fora da máscara comum (células rotuladas por \texttt{C} e por \texttt{D}); IC 95 \% do bootstrap pareado por faixa: \emph{val}: dentro 80,15 \%, fora 48,07 \%, $\Delta$ = +32,08 p.p., IC [+27,64; +36,43], $n$ = 120; \emph{test}: dentro 77,80 \%, fora 38,69 \%, $\Delta$ = +39,11 p.p., IC [+32,04; +45,25], $n$ = 58. Fonte: \texttt{vies\_selecao\_agregado\_20261117\_142816.csv}.}
+\end{table*}

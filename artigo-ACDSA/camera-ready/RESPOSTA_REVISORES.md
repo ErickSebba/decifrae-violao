@@ -1,0 +1,16 @@
+# Response to reviewers — summary table
+
+Paper ID 1766. Section numbers refer to the camera-ready version; adjust
+them to the final numbering. All new analyses were specified in a committed
+protocol before they were run. No configuration was tuned on the test set or
+on the external corpora.
+
+| point | reviewer's concern | change in the paper | section |
+|---|---|---|---|
+| R2.1 | Only two test performers; track-level bootstrap does not capture performer variation. | Findings are now framed as exploratory and performer-conditional throughout. Per-performer contrasts with within-performer CIs are reported for all six GuitarSet performers. GuitarSet has no further held-out performers, so we added two external corpora (see R4). | Abstract, I, IV-D, V (limitations) |
+| R2.2 | Implementation details insufficient for reproduction. | Pseudocode for the pipeline and the duration filter, including track edges, ties and repeated reassignment. We also report library versions, the exact split and exclusions, beat-to-chroma aggregation, template construction and deterministic tie-breaking. | II, III, supplementary material |
+| R2.3 | C→D mixes temporal decoding with no-chord handling. | We state which mechanisms differ in each contrast, add a 2×2×2 factorial (decoder × abstention × gate) and compare C and D at matched coverage. C→D is now reported as a configuration-level contrast: the decoder alone is unresolved up to 77% coverage and adds about 3 pp at 90%. | II-F, IV-A |
+| R2.4 | Common mask must be reproducible; +0.22 pp is not equivalence; selection bias. | We define the mask and its aggregation (duration-weighted) and report tracks and duration retained (58 tracks, 48.7% of test time). An exact decomposition of the C→D difference is given. Selection bias is quantified (D0rg: 77.8% inside vs 38.7% outside the mask). The +0.22 pp result is reported as unresolved, not as equivalence. | IV-A |
+| R2.5 | 24-template advantage at sevenths reflects label-space restriction. | We report the share of reference time each vocabulary can represent, seventh-chord precision and recall, and the shared major/minor (majmin) level. The sevenths advantage on the secondary layer is explicitly attributed to avoiding false seventh labels, not to better recognition. | IV (vocabulary) |
+| R2.6 | V4/V4b unclear; stronger baseline; transition calibration per vocabulary. | V4 and V4b are documented from the code, including their differences from C–F. Chordino and madmom were added as standard references; both outperform every variant in root accuracy on GuitarSet test and IDMT-SMT-Guitar. The transition penalty was calibrated per vocabulary on validation; the gain on test is not distinguishable from zero. | II-F, IV, V |
+| R4 | Single dataset and two performers; verify effects across corpora. | Frozen configurations applied without recalibration to IDMT-SMT-Guitar (506 recordings, four guitars, eight styles) and IDMT-SMT-Chords (6 recordings), with the 15 pre-registered contrasts. Segmentation effects keep their sign on IDMT-SMT-Guitar; the main accuracy effects of decoding and vocabulary shrink there and reverse on IDMT-SMT-Chords, where the decoder's cost structure explains the collapse to no-chord. We make no population-level claim. | IV-D, V |

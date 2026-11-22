@@ -1,0 +1,52 @@
+{
+  "gerado_em": "20261117_135654",
+  "post_review": true,
+  "projeto": {
+    "commit": "4f27b0ca617aab708a9eb8c36e8b2d4ad411efb3",
+    "arvore_suja": false
+  },
+  "protocolo": "docs/ADENDO_REVISAO.md §9.3",
+  "tolerancia": 0.08,
+  "contagem_classes": {
+    "~1": 326,
+    "~2": 47,
+    "~0,5": 58,
+    "outro": 75
+  },
+  "principais": [
+    [
+      "C",
+      "D",
+      "root"
+    ],
+    [
+      "C0rg",
+      "D0rg",
+      "majmin"
+    ],
+    [
+      "D",
+      "E",
+      "overseg"
+    ],
+    [
+      "V4b",
+      "V4",
+      "overseg"
+    ],
+    [
+      "V4",
+      "F0rg",
+      "majmin"
+    ],
+    [
+      "D0rg",
+      "F0rg",
+      "sevenths"
+    ]
+  ],
+  "fontes": [
+    "data/results/ablation_20261117_110819_ref0.csv"
+  ],
+  "nota": "descritivo; IC do bootstrap pareado por faixa, sem Holm"
+}

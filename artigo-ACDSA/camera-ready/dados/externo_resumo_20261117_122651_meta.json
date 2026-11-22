@@ -1,0 +1,26 @@
+{
+  "gerado_em": "2026-11-17T12:26:52",
+  "post_review": true,
+  "script": "analise_externo.py",
+  "protocolo": "docs/ADENDO_REVISAO.md §8",
+  "n_bootstrap": 10000,
+  "seed": 0,
+  "projeto": {
+    "commit": "3c446f6fe3e55e4e250b38ffe1b82c4e232c251f",
+    "arvore_suja": false
+  },
+  "entradas": [
+    "data/results/ablation_20260927_014253_ref0.csv",
+    "data/results/ablation_20260927_201422_ref0.csv",
+    "data/results/baseline_chordino_20261117_111656_ref0.csv",
+    "data/results/baseline_madmom_20261117_122203_ref0.csv",
+    "data/results/ablation_20261117_110819_ref0.csv",
+    "data/results/baseline_chordino_20261117_111707_ref0.csv",
+    "data/results/baseline_madmom_20261117_122429_ref0.csv",
+    "data/results/ablation_20261117_111622_ref0.csv",
+    "data/results/baseline_chordino_20261117_111702_ref0.csv",
+    "data/results/baseline_madmom_20261117_122208_ref0.csv",
+    "data/results/coverage.csv",
+    "data/results/coverage_externo_20261117_102831.csv"
+  ]
+}
