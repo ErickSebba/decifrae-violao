@@ -702,7 +702,9 @@ aplica, em menor grau, a `temp` (0.1), `ext_sharpness` (4.0), `abs_floor`
 variados; a lista completa está em `docs/CONGELAMENTO.md` §4. Ablacionar
 `change_penalty` é o primeiro trabalho que este estudo deixa em aberto.
 
-**IDMT-SMT-Chords fora desta análise.** O segundo benchmark previsto para o
+**IDMT-SMT-Chords fora desta análise** (texto da submissão original; na
+revisão, o IDMT-SMT-Chords e o IDMT-SMT-Guitar foram avaliados como bases
+externas, sem recalibração — ver §9). O segundo benchmark previsto para o
 projeto — IDMT-SMT-Chords, do qual só os seis arquivos de guitarra entrariam
 como conjunto principal — **não** faz parte desta análise. O adaptador de
 anotação, o manifest e a medida de cobertura da sua camada de referência já

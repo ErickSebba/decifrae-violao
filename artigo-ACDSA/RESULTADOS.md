@@ -540,27 +540,27 @@ feito na validação não se manteve no teste para Cmatch (8,9 p.p. a mais de
 cobertura que D), e o de Dmatch já era grosso na validação (+5,96).
 
 Mesma cobertura medida no próprio teste, por interpolação das curvas
-(origem: `data/results/cobertura_igualada_teste_20261117_004111.csv`, pontos em
-`data/results/curvas_teste_20261117_004111.csv`; tabela
+(origem: `data/results/cobertura_igualada_teste_20261117_011711.csv`, pontos em
+`data/results/curvas_teste_20261117_011711.csv`, com a curva D refinada em
+passos de 0,05 de `n_logprob` entre −2,30 e −2,70 (adendo §7); tabela
 `tabelas/tab_cobertura_igualada.tex`; figura `figuras/fig_cobertura_teste.pdf`).
 `root` em %, Δ = D − C em p.p.; 10 000 reamostragens válidas em todos os alvos:
 
 | cobertura | métrica | C | D | Δ [IC 95 %] |
 |---|---|---|---|---|
-| 60 % | rotulado | 63,90 | 61,98 | −1,92 [−6,70; 2,73] |
-| 60 % | faixa toda | 42,63 | 41,36 | −1,27 [−3,74; 0,80] |
-| 70 % | rotulado | 60,73 | 60,69 | −0,04 [−3,65; 3,43] |
-| 70 % | faixa toda | 46,35 | 46,05 | −0,30 [−2,41; 1,78] |
-| 77 % | rotulado | 58,87 | 59,78 | +0,91 [−1,83; 3,93] |
-| 77 % | faixa toda | 48,60 | 49,33 | +0,74 [−1,28; 2,81] |
-| 90 % | rotulado | 56,65 | 59,55 | +2,90 [0,62; 5,21] |
-| 90 % | faixa toda | 52,55 | 55,23 | +2,67 [0,85; 4,50] |
+| 60 % | rotulado | 63,90 | 62,03 | −1,87 [−6,54; 3,11] |
+| 60 % | faixa toda | 42,63 | 41,45 | −1,19 [−3,71; 1,08] |
+| 70 % | rotulado | 60,73 | 60,60 | −0,13 [−3,22; 3,48] |
+| 70 % | faixa toda | 46,35 | 46,14 | −0,21 [−2,20; 1,91] |
+| 77 % | rotulado | 58,87 | 59,78 | +0,91 [−1,71; 4,30] |
+| 77 % | faixa toda | 48,60 | 49,34 | +0,74 [−1,20; 3,12] |
+| 90 % | rotulado | 56,65 | 59,55 | +2,90 [0,74; 5,23] |
+| 90 % | faixa toda | 52,55 | 55,23 | +2,67 [0,91; 4,52] |
 
 Até 77 % de cobertura, C e D não se distinguem; a 90 % D é melhor em cerca de
-3 p.p. Ressalva: entre 58 % e 89 % de cobertura a curva D só tem três pontos
-(`n_logprob` = −2,25, −2,5 e −2,75, com 58,32 %, 77,12 % e 89,26 % de
-cobertura), de modo que os valores de D em 60, 70 e 77 % vêm de um único
-segmento de reta, de 58,32 % a 77,12 % de cobertura.
+3 p.p. A primeira versão desta tabela (`cobertura_igualada_teste_20261117_004111.csv`)
+tinha só três pontos de D entre 58 % e 89 % de cobertura; o refinamento mudou
+os valores só na segunda casa e não mudou nenhuma conclusão.
 
 ### R2.4 — De onde vem o ganho do Viterbi
 
