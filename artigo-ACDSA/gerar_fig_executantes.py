@@ -2,8 +2,9 @@
 gerar_fig_executantes.py
 ========================
 Figura fig_executantes (camera-ready): Δ por executante do GuitarSet com
-IC 95 % (bootstrap pareado dentro do executante), camada chord[0], para três
-contrastes: C→D root, D→E overseg, D0rg→F0rg sevenths.
+IC 95 % (bootstrap pareado dentro do executante), camada chord[0], em painel
+2x2 para quatro contrastes: C→D root, D→E overseg, D0rg→F0rg root e
+D0rg→F0rg sevenths.
 
 Fonte: data/results/por_executante_20261117_004132.csv (a mesma citada em
 tabelas/tab_executantes.tex). Só lê o CSV; nenhum experimento novo.
@@ -15,6 +16,8 @@ fig_executantes_dados.csv.
 import csv
 import sys
 from pathlib import Path
+
+import matplotlib.pyplot as plt
 
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI))
@@ -29,9 +32,11 @@ TESTE = {"04", "05"}
 # (painel, par no CSV, métrica, rótulo curto do painel)
 PAINEIS = [
     ("a", "C vs D", "root", "(a) C→D root"),
-    ("b", "D vs E", "overseg", "(b) D→E overseg"),
-    ("c", "D0rg vs F0rg", "sevenths", "(c) D0rg→F0rg 7ths"),
+    ("b", "D vs E", "overseg", "(b) D→E over-seg. score"),
+    ("c", "D0rg vs F0rg", "root", "(c) D0rg→F0rg root"),
+    ("d", "D0rg vs F0rg", "sevenths", "(d) D0rg→F0rg sevenths"),
 ]
+LARGURA, ALTURA = 7.0, 6.0   # pol; painel 2x2 em duas colunas
 
 
 def ler_linhas():
@@ -49,9 +54,11 @@ def achar(linhas, par, metrica):
 
 def main():
     linhas = ler_linhas()
-    fig, axes = ef.figura(altura=2.2, ncols=3)
+    ef.aplicar()
+    fig, axes = plt.subplots(2, 2, figsize=(LARGURA, ALTURA),
+                             layout="constrained")
     dados = []
-    for ax, (painel, par, metrica, rotulo) in zip(axes, PAINEIS):
+    for ax, (painel, par, metrica, rotulo) in zip(axes.flat, PAINEIS):
         l = achar(linhas, par, metrica)
         a, b = l["variante_a"], l["variante_b"]
         for x, e in enumerate(EXECUTANTES):
@@ -85,8 +92,10 @@ def main():
         # zero sempre visível
         y0, y1 = ax.get_ylim()
         ax.set_ylim(min(y0, -1.0), max(y1, 1.0))
-    axes[0].set_ylabel("Δ (pp)")
-    axes[1].set_xlabel("Player")
+    for ax in axes[:, 0]:
+        ax.set_ylabel("Δ (pp)")
+    for ax in axes[1, :]:
+        ax.set_xlabel("Performer")
     saidas = ef.salvar(fig, "fig_executantes", dados)
     for s in saidas:
         print(s)
