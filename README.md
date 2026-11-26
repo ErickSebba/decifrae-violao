@@ -5,6 +5,8 @@ Reconhecimento de acordes em áudio de violão para o [decifrae.com.br](https://
 60 templates → Viterbi → segmentos de acorde**. Inclui o baseline V4 original,
 um bench sintético e um benchmark em áudio real pontuado com `mir_eval`.
 
+![Acordes reconhecidos em Tempo Perdido: introdução sem acorde e três ciclos de C, Am, Bm, Em](out/musicas/Tempo_Perdido_timeline.png)
+
 Documentação completa em [`docs/`](docs/):
 
 | Documento | Para quê |
@@ -16,7 +18,7 @@ Documentação completa em [`docs/`](docs/):
 | [docs/BENCHMARK.md](docs/BENCHMARK.md) | Como rodar os benchmarks, saídas brutas, uso como regressão |
 | [docs/CHANGELOG.md](docs/CHANGELOG.md) | Progressão v0.1 (V4) → v1.0 |
 
-## Como rodar hoje
+## Como rodar
 
 Requer Python ≥ 3.10 (testado em 3.14.6, librosa 0.11.0). Rodar sempre **de
 dentro desta pasta** — os módulos se importam pelo nome de arquivo.
@@ -29,6 +31,12 @@ python benchmark_musicas.py   # V4 vs atual em Tempo Perdido e Boate Azul (mir_e
 python run_bench.py           # bench sintético cosseno vs V4 -> out/*.png
 ```
 
+As duas faixas do benchmark em áudio real (Tempo Perdido e Boate Azul) não estão no
+repositório por direitos autorais. Para reproduzir os números, coloque os áudios em `Musicas/`
+como `Tempo_Perdido.mp3` e `Boate azul (Am) 2.mp3`; as anotações de acordes usadas como gabarito
+estão em `benchmark_musicas.py` e em [docs/GROUND_TRUTH.md](docs/GROUND_TRUTH.md). Sem elas, o
+benchmark avisa quais faltam.
+
 Smoke tests individuais: `python chord_templates.py`, `python classifier.py`,
 `python viterbi.py`, `python pipeline.py`, `python evaluate.py`.
 
@@ -40,7 +48,7 @@ from chord_templates import build_templates, MEDIUM
 from classifier import CosineChordClassifier
 from pipeline import analyze_track
 
-y, sr = librosa.load("Musicas/Tempo_Perdido.mp3", sr=22050, mono=True)
+y, sr = librosa.load("Musicas/Sol_1.mp3", sr=22050, mono=True)
 clf = CosineChordClassifier(templates=build_templates(MEDIUM),
                             complexity_penalty=0.06, ext_sharpness=4.0)
 for seg in analyze_track(y, sr, clf):          # defaults = valores de musicas.py
@@ -65,7 +73,7 @@ for seg in analyze_track(y, sr, clf):          # defaults = valores de musicas.p
 | `run_bench.py` | Bench sintético: compara **cosseno vs V4**. |
 | `legacy_v4.py` | **V4 + comparar_metodos preservados** e intocados (baseline). |
 | `Api/` | Cópia do backend FastAPI: `audio_processing (1).py` é o pipeline novo standalone. Ver dossiê §2.5. |
-| `Musicas/` | Áudios de teste (Tempo_Perdido, Boate azul (Am) 2, Sol_1, Re_2, TrocaDeAcordes). |
+| `Musicas/` | Áudios de teste gravados para o projeto (Sol_1, Re_2, TrocaDeAcordes). Tempo_Perdido e Boate azul não são versionados por direitos autorais; ver abaixo. |
 | `out/` | Saídas geradas (timelines, PNGs do bench, `metrics.json`, logs). |
 
 ## Pipeline de análise de faixa
@@ -114,6 +122,8 @@ Qualitativo (28/06): Tempo_Perdido sai N (intro) + três ciclos limpos de
 C Am Bm Em (antes: 100 % N); Sol_1 sai N + G limpo; TrocaDeAcordes sai
 C, G, A, F na ordem com resíduos de ~0,9 s nas trocas.
 
+![Acurácia da V4 e da versão atual em duas faixas reais](out/musicas_bench/comparativo.png)
+
 ### O que o bench sintético revelou
 
 1. **Cosseno escala para tétrades; V4 não.** O V4 só conhece maior/menor, então
@@ -150,3 +160,13 @@ C, G, A, F na ordem com resíduos de ~0,9 s nas trocas.
   (necessário só ao ampliar o vocabulário além de MEDIUM).
 - Anotar mais faixas (ex.: `TrocaDeAcordes(C-G-A-F)`) para um número
   comparável/publicável.
+
+## O que aprendi
+
+- **Processamento de áudio na prática:** separação harmônico-percussiva (HPSS), chroma por CQT
+  sincronizado com a batida, pYIN para altura e separação por corda, e por que cada etapa existe.
+- **A bancada de testes foi a decisão que mais mudou o resultado.** Gerar acordes sintéticos com
+  gabarito conhecido, ruído controlado e pausas mostrou onde o V4 falhava (tétrades, ruído em
+  silêncio) antes de testar em música real.
+- **Trabalhar em etapas e medir cada uma:** ajustar uma função até ela funcionar bem, registrar o
+  resultado na documentação e só então passar para a próxima.
