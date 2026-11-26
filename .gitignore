@@ -8,3 +8,7 @@ venv/
 # Músicas de terceiros (direitos autorais): usadas localmente no benchmark, não versionadas
 Musicas/Tempo_Perdido.mp3
 Musicas/Boate azul (Am) 2.mp3
+
+# Material de estudo e de IA (fica só no disco)
+CLAUDE.md
+docs/PROMPT_*.md
