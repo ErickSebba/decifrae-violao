@@ -65,7 +65,7 @@ usar cosseno. Atenção:
 
 - `evaluate.py::_QUALITY_MAP` precisa da tradução para a notação mir_eval do novo sufixo, senão o label vira `'X'` e é ignorado na pontuação.
 - `classifier.py` procura a "nota de extensão" como o maior intervalo ≥ 8 do tipo (para o viés adaptativo). Um tipo sem intervalo ≥ 8 não recebe penalidade.
-- A cópia standalone da API (`Api/audio_processing (1).py`) tem seu **próprio** `CHORD_TYPES` (só MEDIUM) e precisa ser atualizada separadamente.
+- A cópia standalone da API (`Api/audio_processing_v2.py`) tem seu **próprio** `CHORD_TYPES` (só MEDIUM) e precisa ser atualizada separadamente.
 
 ## 5. Os 60 templates do vocabulário MEDIUM
 

@@ -51,7 +51,7 @@ O mesmo fluxo existe em **duas implementações** (ver §4):
 
 1. **Módulos do bench** (`pipeline.py` + `classifier.py` + `viterbi.py` +
    `chord_templates.py`) — usados por `musicas.py` e `benchmark_musicas.py`.
-2. **Cópia standalone para a API** (`Api/audio_processing (1).py`) — tudo em
+2. **Cópia standalone para a API** (`Api/audio_processing_v2.py`) — tudo em
    um arquivo, sem depender dos módulos acima, com o contrato de saída da
    produção (`{"chords": [...], "timestamps": [{start, end, chord}]}`).
 
@@ -98,7 +98,7 @@ O mesmo fluxo existe em **duas implementações** (ver §4):
 |---|---|
 | `Api/main.py` | FastAPI: `POST /process-audio` → `detectar_acordes`; `POST /process-bass` → `pipeline_completo`; `/health`; `/_warmup`. Importa `app.audio_processing` e `app.audio_processing_baixo` (pacote `app/` do backend, não desta pasta). |
 | `Api/audio_processing.py` | Versão **antiga** em produção: `classificar_segmento` (o V4 sem os comentários), `refinar_beat_tracking`, `detectar_acordes`. |
-| `Api/audio_processing (1).py` | Versão **nova**, standalone: templates MEDIUM, `_CosineClassifier` com viés adaptativo, `_viterbi_decode`, gate relativo. Substitui a antiga mantendo `detectar_acordes` e `refinar_beat_tracking` com o mesmo contrato. **É o arquivo a copiar para `app/audio_processing.py` no backend.** |
+| `Api/audio_processing_v2.py` | Versão **nova**, standalone: templates MEDIUM, `_CosineClassifier` com viés adaptativo, `_viterbi_decode`, gate relativo. Substitui a antiga mantendo `detectar_acordes` e `refinar_beat_tracking` com o mesmo contrato. **É o arquivo a copiar para `app/audio_processing.py` no backend.** |
 | `Api/audio_processing_baixo.py` | Módulo de baixo (pYIN + DP + tablatura). Fora do escopo de acordes; está aqui porque `main.py` importa. |
 
 ---
@@ -152,7 +152,7 @@ nome de arquivo (`from classifier import …`). Funciona só com a raiz no
 `sys.path` (rodar de dentro da pasta). Os entry points (`musicas.py`,
 `run_bench.py`, `benchmark_musicas.py`) são scripts com constantes no topo.
 
-A cópia da API (`Api/audio_processing (1).py`) é 100 % standalone e **duplica**
+A cópia da API (`Api/audio_processing_v2.py`) é 100 % standalone e **duplica**
 `chord_templates` (só MEDIUM), a classe do classificador, o softmax, o Viterbi
 e o merge — ~230 linhas que precisariam ser mantidas em sincronia com os
 módulos do bench.
@@ -171,7 +171,7 @@ Os mesmos valores aparecem em 4 lugares (detalhe em
 1. Constantes no topo de `musicas.py` (fonte "oficial" hoje).
 2. Chamada em `benchmark_musicas.py::run_atual` (subconjunto, restante cai nos defaults).
 3. Defaults de `analyze_track` em `pipeline.py` e de `CosineChordClassifier.__init__`.
-4. Constantes no topo de `Api/audio_processing (1).py`.
+4. Constantes no topo de `Api/audio_processing_v2.py`.
 
 Divergências conhecidas: `MIN_DUR` = 0,8 (musicas/benchmark/pipeline) vs
 **0,6** (API); `rms_gate=0.02` passado em `musicas.py` mas não usado por

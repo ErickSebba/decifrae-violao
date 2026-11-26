@@ -72,7 +72,7 @@ for seg in analyze_track(y, sr, clf):          # defaults = valores de musicas.p
 | `bench.py` | Motor do bench sintético: matriz de confusão, teste de pausa, varredura. |
 | `run_bench.py` | Bench sintético: compara **cosseno vs V4**. |
 | `legacy_v4.py` | **V4 + comparar_metodos preservados** e intocados (baseline). |
-| `Api/` | Cópia do backend FastAPI: `audio_processing (1).py` é o pipeline novo standalone. Ver dossiê §2.5. |
+| `Api/` | Cópia do backend FastAPI: `audio_processing_v2.py` é o pipeline novo standalone. Ver dossiê §2.5. |
 | `Musicas/` | Áudios de teste gravados para o projeto (Sol_1, Re_2, TrocaDeAcordes). Tempo_Perdido e Boate azul não são versionados por direitos autorais; ver abaixo. |
 | `out/` | Saídas geradas (timelines, PNGs do bench, `metrics.json`, logs). |
 

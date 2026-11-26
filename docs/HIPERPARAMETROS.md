@@ -8,7 +8,7 @@ lugares. As células vazias significam "não é passado; cai no default da colun
 
 ## 1. Tabela consolidada
 
-| # | Parâmetro | `musicas.py` (topo) | `benchmark_musicas.py` (`run_atual` / `_cos`) | Default em `pipeline.py::analyze_track` / `classifier.py` | `Api/audio_processing (1).py` (topo) | Efeito |
+| # | Parâmetro | `musicas.py` (topo) | `benchmark_musicas.py` (`run_atual` / `_cos`) | Default em `pipeline.py::analyze_track` / `classifier.py` | `Api/audio_processing_v2.py` (topo) | Efeito |
 |---|---|---|---|---|---|---|
 | 1 | `SR` | 22050 | 22050 | — (recebe `sr`) | 22050 | Taxa de amostragem do `librosa.load`. API comenta que 11025 é ~2× mais rápido e menos preciso. |
 | 2 | `METHOD` | `"cqt"` | | `'cqt'` | `"cqt"` | Feature de chroma: `cqt` (36 bins/oitava) \| `cens` \| `stft`. |
@@ -30,7 +30,7 @@ lugares. As células vazias significam "não é passado; cai no default da colun
 
 Os "12 hiperparâmetros" citados nas conversas de planejamento correspondem às
 linhas **1–3, 6, 7, 9–14** (as 11 constantes do topo de
-`Api/audio_processing (1).py`) mais `margin` (4). `bins_per_octave` (5),
+`Api/audio_processing_v2.py`) mais `margin` (4). `bins_per_octave` (5),
 `rms_gate` (15) e `confidence_gate` (16) estão listados por completude — os dois
 últimos são inertes no pipeline com Viterbi.
 
@@ -62,7 +62,7 @@ de `musicas.py`). Resultado: benchmark e `musicas.py` rodam com os mesmos
 valores, mas por caminhos diferentes — alterar um default em `pipeline.py` muda
 o benchmark sem mudar `musicas.py`, e vice-versa.
 
-Para a **API**: só as constantes do topo de `Api/audio_processing (1).py`.
+Para a **API**: só as constantes do topo de `Api/audio_processing_v2.py`.
 
 ## 4. Espaço de busca sugerido (a partir dos comentários do código)
 

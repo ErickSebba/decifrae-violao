@@ -68,7 +68,7 @@ Primeira bancada modular, imports `from V1.x`. Removida do diretório em v1.0
 Pasta `Api/` = cópia do backend FastAPI:
 
 - `audio_processing.py`: versão antiga em produção (V4 sem comentários).
-- `audio_processing (1).py`: pipeline novo **standalone** (templates MEDIUM,
+- `audio_processing_v2.py`: pipeline novo **standalone** (templates MEDIUM,
   cosseno adaptativo, Viterbi, gate relativo, `refinar_beat_tracking`),
   hiperparâmetros centralizados no topo, mesmo contrato `{chords, timestamps}`,
   omite N. `MIN_DUR=0.6` (bench usa 0.8).
