@@ -26,3 +26,7 @@ data/*.zip
 .pytest_cache/
 # Ferramentas de IA (ficam só no disco)
 CLAUDE.md
+
+# Músicas de terceiros (direitos autorais): usadas localmente no benchmark, não versionadas
+Musicas/Tempo_Perdido.mp3
+Musicas/Boate azul (Am) 2.mp3
