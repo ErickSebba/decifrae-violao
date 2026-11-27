@@ -21,3 +21,8 @@ data/results/*
 artigo-ACDSA/slides-ACDSA/
 artigo-ACDSA/slides-ACDSA.zip
 data/*.zip
+
+# Cache dos testes
+.pytest_cache/
+# Ferramentas de IA (ficam só no disco)
+CLAUDE.md
