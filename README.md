@@ -5,6 +5,11 @@ Reconhecimento de acordes em áudio de violão para o [decifrae.com.br](https://
 60 templates → Viterbi → segmentos de acorde**. Inclui o baseline V4 original,
 um bench sintético e um benchmark em áudio real pontuado com `mir_eval`.
 
+*In English: chord recognition for acoustic guitar audio with a classical DSP pipeline (HPSS,
+beat-synchronous CQT chroma, cosine matching against 60 templates, Viterbi decoding). It is the
+basis of a paper accepted at ACDSA 2027 that measures how much each component contributes, on
+GuitarSet and two external datasets.*
+
 ![Acordes reconhecidos em Tempo Perdido: introdução sem acorde e três ciclos de C, Am, Bm, Em](out/musicas/Tempo_Perdido_timeline.png)
 
 Documentação completa em [`docs/`](docs/):
@@ -124,6 +129,21 @@ C, G, A, F na ordem com resíduos de ~0,9 s nas trocas.
 
 ![Acurácia da V4 e da versão atual em duas faixas reais](out/musicas_bench/comparativo.png)
 
+Estes números vêm de **duas faixas** e servem como regressão do desenvolvimento, não como
+avaliação. A avaliação com conjunto de teste está no artigo (abaixo).
+
+### Artigo (ACDSA 2027)
+
+Este módulo é a base do artigo *Disentangling Classical DSP-Based Automatic Chord Recognition:
+Component Contributions and Coverage–Accuracy Trade-offs*, **aceito no ACDSA 2027** (versão final
+em preparação). A avaliação do artigo usa o GuitarSet, com teste separado por músico (58 excertos
+de dois músicos que não entram no ajuste) e configurações congeladas antes da leitura do teste, e
+repete a análise em duas bases externas (IDMT-SMT-Guitar e IDMT-SMT-Chords), comparando com
+Chordino e madmom. O pipeline fica abaixo de Chordino e madmom na tônica (`root`); a contribuição do
+artigo é medir quanto cada componente (decodificador, vocabulário, tratamento do "sem acorde")
+contribui para o resultado. O código, os protocolos e os resultados do artigo estão na branch
+[`revisao-camera-ready`](../../tree/revisao-camera-ready), em `artigo-ACDSA/`, com testes em `tests/`.
+
 ### O que o bench sintético revelou
 
 1. **Cosseno escala para tétrades; V4 não.** O V4 só conhece maior/menor, então
@@ -158,8 +178,8 @@ C, G, A, F na ordem com resíduos de ~0,9 s nas trocas.
 - Fazer a API importar o núcleo em vez da cópia standalone em `Api/`.
 - Detecção de raiz/baixo para quebrar as ambiguidades de rotação e simetria
   (necessário só ao ampliar o vocabulário além de MEDIUM).
-- Anotar mais faixas (ex.: `TrocaDeAcordes(C-G-A-F)`) para um número
-  comparável/publicável.
+- Trazer para esta branch a avaliação do artigo (GuitarSet e bases externas) e os testes da
+  branch `revisao-camera-ready`.
 
 ## O que aprendi
 
