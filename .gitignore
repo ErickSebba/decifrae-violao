@@ -12,3 +12,6 @@ Musicas/Boate azul (Am) 2.mp3
 # Material de estudo e de IA (fica só no disco)
 CLAUDE.md
 docs/PROMPT_*.md
+
+# Cache dos testes
+.pytest_cache/
